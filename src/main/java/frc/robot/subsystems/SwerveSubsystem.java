@@ -13,7 +13,8 @@ import frc.Java_Is_UnderControl.Swerve.Configs.BaseSwerveConfig;
 import frc.Java_Is_UnderControl.Swerve.Configs.SwervePathPlannerConfig;
 import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
 import frc.robot.Joysticks.DriverController;
-import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.generated.TunerConstants;
+
 import java.util.HashMap;
 
 public class SwerveSubsystem extends SubsystemBase {

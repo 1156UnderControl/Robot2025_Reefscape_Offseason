@@ -32,7 +32,8 @@ import edu.wpi.first.units.measure.Voltage;
 import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
 import frc.Java_Is_UnderControl.Swerve.IO.ModuleIO;
 import frc.Java_Is_UnderControl.Swerve.IO.PhoenixOdometryThread;
-import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.generated.TunerConstants;
+
 import java.util.Queue;
 
 public class ModuleIOTalonFX implements ModuleIO {

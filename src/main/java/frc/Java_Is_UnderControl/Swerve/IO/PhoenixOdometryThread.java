@@ -13,7 +13,8 @@ import com.ctre.phoenix6.StatusSignal;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.RobotController;
 import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
-import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.generated.TunerConstants;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;

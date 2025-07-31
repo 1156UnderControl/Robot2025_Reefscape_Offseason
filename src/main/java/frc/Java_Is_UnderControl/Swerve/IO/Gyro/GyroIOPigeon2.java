@@ -11,7 +11,8 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
 import frc.Java_Is_UnderControl.Swerve.IO.PhoenixOdometryThread;
-import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.generated.TunerConstants;
+
 import java.util.Queue;
 
 public class GyroIOPigeon2 implements GyroIO {
