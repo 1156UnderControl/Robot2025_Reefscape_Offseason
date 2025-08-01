@@ -11,9 +11,10 @@ import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
 import frc.Java_Is_UnderControl.Swerve.IO.Gyro.GyroIO;
 import frc.Java_Is_UnderControl.Swerve.IO.Gyro.GyroIO.GyroIOInputs;
 import frc.Java_Is_UnderControl.Swerve.IO.Gyro.GyroIOPigeon2;
+import frc.Java_Is_UnderControl.Swerve.IO.Module.ModuleIO;
 import frc.Java_Is_UnderControl.Swerve.IO.Module.ModuleIOTalonFX;
-import frc.Java_Is_UnderControl.Swerve.IO.ModuleIO;
-import frc.Java_Is_UnderControl.Swerve.IO.ModuleIO.ModuleIOInputs;
+import frc.Java_Is_UnderControl.Swerve.IO.Module.ModuleIO.ModuleIOInputs;
+
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.function.BiFunction;
@@ -22,8 +23,6 @@ public class Drive {
 
   private HashMap<String, Optional<SwerveModuleState>> targetModuleStates;
   private HashMap<String, Optional<SwerveModuleState>> lastTargetModuleStates;
-
-  private HashMap<String, Optional<SwerveModuleState>> lastCurrentModuleStates;
 
   private final ModuleIO frontLeftModule;
   private final ModuleIO frontRightModule;
@@ -106,10 +105,10 @@ public class Drive {
   private SwerveModuleState getTargetModuleState(String moduleName) {
     BiFunction<String,Optional<SwerveModuleState>,SwerveModuleState> resolve = (name, optionalSwerveModuleState) -> {
       if (optionalSwerveModuleState != null && optionalSwerveModuleState.isPresent()) {
-        lastCurrentModuleStates.put(name, optionalSwerveModuleState);
+        this.lastTargetModuleStates.put(name, optionalSwerveModuleState);
         return optionalSwerveModuleState.get();
       }
-      Optional<SwerveModuleState> cached = lastCurrentModuleStates.get(name);
+      Optional<SwerveModuleState> cached = this.lastTargetModuleStates.get(name);
       if (cached != null && cached.isPresent()) {
         return cached.get();
       }
