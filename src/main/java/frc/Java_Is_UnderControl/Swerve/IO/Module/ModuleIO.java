@@ -1,4 +1,4 @@
-package frc.Java_Is_UnderControl.Swerve.IO;
+package frc.Java_Is_UnderControl.Swerve.IO.Module;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
