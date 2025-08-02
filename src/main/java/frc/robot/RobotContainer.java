@@ -2,7 +2,7 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.commands.States.SwerveTeleopState;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.SwerveSubsystem;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -12,9 +12,10 @@ public class RobotContainer {
   private final SwerveSubsystem swerve;
 
   public RobotContainer() {
+    System.out.println("Robot container rodando");
     this.swerve = new SwerveSubsystem();
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
-    this.swerve.setDefaultCommand(new SwerveTeleopState());
+    this.swerve.setDefaultCommand(Commands.run(() -> this.swerve.driveFieldOrientedLockedJoystickAngle(), this.swerve));
     this.configureButtonBindings();
   }
 

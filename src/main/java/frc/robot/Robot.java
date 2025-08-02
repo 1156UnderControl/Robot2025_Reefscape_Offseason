@@ -20,6 +20,7 @@ public class Robot extends LoggedRobot {
   private final RobotContainer m_robotContainer;
 
   public Robot() {
+    m_robotContainer = new RobotContainer();
     Logger.recordMetadata("Robot_Offseason", "MyProject"); // Set a metadata value
 
     if (isReal()) {
@@ -35,8 +36,6 @@ public class Robot extends LoggedRobot {
     Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
 
     Logger.start();
-
-    m_robotContainer = new RobotContainer();
   }
 
   @Override
