@@ -66,7 +66,7 @@ public class BaseSwerveSubsystem implements Subsystem {
           SwerveConstants.ROBOT_MASS,
           SwerveConstants.ROBOT_MOI,
           new ModuleConfig(
-              SwerveConstants.WHEEL_RADIUS,
+              SwerveConstants.WHEEL_RADIUS_METERS,
               TunerConstants.kSpeedAt12Volts.in(MetersPerSecond),
               SwerveConstants.WHEEL_COF,
               DCMotor.getKrakenX60Foc(2).withReduction(SwerveConstants.GEARBOX_REDUCTION),

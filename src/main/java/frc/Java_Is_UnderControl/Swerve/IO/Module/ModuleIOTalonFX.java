@@ -70,7 +70,8 @@ public class ModuleIOTalonFX implements ModuleIO {
   private final Debouncer steerConnectedDebounce = new Debouncer(0.5);
   private final Debouncer steerEncoderConnectedDebounce = new Debouncer(0.5);
 
-  private ModuleIOInputs previousModuleInputs;
+  private ModuleIOInputs moduleInputs;
+
   private SwerveModuleState previousModuleState;
 
   private final SwerveModuleConstants<
@@ -119,6 +120,8 @@ public class ModuleIOTalonFX implements ModuleIO {
         steerAppliedVolts,
         steerCurrent);
     ParentDevice.optimizeBusUtilizationForAll(driveTalon, steerTalon);
+    this.previousModuleState = new SwerveModuleState();
+    this.moduleInputs = new ModuleIOInputs();
   }
 
   private void configureDriveMotor(
@@ -233,12 +236,14 @@ public class ModuleIOTalonFX implements ModuleIO {
     timestampQueue.clear();
     drivePositionQueue.clear();
     steerPositionQueue.clear();
-    this.previousModuleInputs = inputs;
+
+    this.moduleInputs = inputs;
   }
 
   @Override
   public void setDriveVelocity(double metersPerSecond) {
-    double velocityRotPerSec = metersPerSecond / (SwerveConstants.WHEEL_RADIUS * (2 * Math.PI));
+    double velocityRotPerSec = metersPerSecond / (SwerveConstants.WHEEL_RADIUS_METERS * (2 * Math.PI));
+    System.out.println("set velocity:" + velocityRotPerSec);
     driveTalon.setControl(
         switch (constants.DriveMotorClosedLoopOutput) {
           case Voltage -> velocityVoltageRequest.withVelocity(velocityRotPerSec);
@@ -276,12 +281,12 @@ public class ModuleIOTalonFX implements ModuleIO {
 
   @Override
   public SwerveModuleState getCurrentModuleState(){
-    if (!this.previousModuleInputs.driveConnected || !this.previousModuleInputs.steerEncoderConnected) {
+    if (!this.moduleInputs.driveConnected || !this.moduleInputs.steerEncoderConnected) {
         return this.previousModuleState;
     }
   
-    double speedMetersPerSecond = this.previousModuleInputs.driveVelocityRadPerSec * SwerveConstants.WHEEL_RADIUS;
-    Rotation2d angle = this.previousModuleInputs.steerPosition;
+    double speedMetersPerSecond = this.moduleInputs.driveVelocityRadPerSec * SwerveConstants.WHEEL_RADIUS_METERS;
+    Rotation2d angle = this.moduleInputs.steerPosition;
 
     SwerveModuleState state = new SwerveModuleState(speedMetersPerSecond, angle);
     previousModuleState = state;
