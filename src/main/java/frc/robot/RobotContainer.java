@@ -12,7 +12,6 @@ public class RobotContainer {
   private final SwerveSubsystem swerve;
 
   public RobotContainer() {
-    System.out.println("Robot container rodando");
     this.swerve = new SwerveSubsystem();
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
     this.swerve.setDefaultCommand(Commands.run(() -> this.swerve.driveFieldOrientedLockedJoystickAngle(), this.swerve));

@@ -224,7 +224,6 @@ public class BaseSwerveSubsystem implements Subsystem {
 
     ChassisSpeeds finalSpeed = new ChassisSpeeds(speeds.vx, speeds.vy, angularVelocity);
 
-    System.out.println("Estou rodando o método drive field oriented");
     this.targetSpeeds =
         finalSpeed.toFieldRelative(this.robotAngle);
   }
@@ -245,7 +244,6 @@ public class BaseSwerveSubsystem implements Subsystem {
   }
 
   public ChassisSpeeds inputsToChassisSpeeds(double xInput, double yInput) {
-    System.out.println("Estou rodando o método inpus to chassis speeds");
     return new ChassisSpeeds(xInput * this.maxSpeed, yInput * this.maxSpeed, 0);
   }
 
