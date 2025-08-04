@@ -95,6 +95,8 @@ public class Drive {
                                 + " does not have a SwerveModuleConstant defined",
                             new Throwable("Null motor encoder configs"))));
     this.pigeon = pigeon;
+    this.targetModuleStates = new HashMap<>();
+    this.lastTargetModuleStates = new HashMap<>();
   }
 
   public void updateModuleTargetStates(HashMap<String, Optional<SwerveModuleState>> moduleStates) {
