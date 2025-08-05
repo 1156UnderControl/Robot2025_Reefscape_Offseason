@@ -31,7 +31,8 @@ public class GyroIOPigeon2 implements GyroIO {
             TunerConstants.DrivetrainConstants.CANBusName);
     this.configuration = new Pigeon2Configuration();
     this.pigeon.optimizeBusUtilization();
-
+    // this will need to be fixed
+    this.setYaw(90);
     this.yaw = pigeon.getYaw();
     this.yaw.setUpdateFrequency(SwerveConstants.ODOMETRY_FREQUENCY);
 
