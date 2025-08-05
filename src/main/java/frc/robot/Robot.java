@@ -36,7 +36,7 @@ public class Robot extends LoggedRobot {
       default -> Logger.recordMetadata("Robot/GitDirty", "Unknown");
     }
 
-    AutoLogOutputManager.addPackage("UN");
+    AutoLogOutputManager.addPackage("undercontrol");
     SmartDashboard.putData(CommandScheduler.getInstance());
 
     if(isReal()){
