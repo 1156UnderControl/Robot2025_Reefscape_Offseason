@@ -29,9 +29,9 @@ public class SwerveConstants {
   public static final double GEARBOX_REDUCTION = 1.430;
 
   public static final Translation2d[] MODULE_OFFSETS = {
-    new Translation2d(-10.375, 10.375),
-    new Translation2d(-10.375, 10.375),
+    new Translation2d(10.375, 10.375),
+    new Translation2d(10.375, -10.375),
     new Translation2d(-9.75, 9.75),
-    new Translation2d(-10.375, 10.375)
+    new Translation2d(-10.375, -10.375)
   };
 }
