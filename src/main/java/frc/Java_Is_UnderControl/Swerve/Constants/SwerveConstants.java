@@ -1,8 +1,6 @@
 package frc.Java_Is_UnderControl.Swerve.Constants;
 
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.util.Units;
-import frc.robot.subsystems.generated.TunerConstants;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -24,7 +22,7 @@ public class SwerveConstants {
 
   public static final double IS_CONNECTED_DEBOUNCE_TIME = 0.5;
 
-  public static final double WHEEL_RADIUS_METERS = Units.inchesToMeters(TunerConstants.FrontLeft.WheelRadius);
+  public static final double WHEEL_RADIUS_METERS = 0.04937;
   public static final double ROBOT_MASS = 65.163;
   public static final double ROBOT_MOI = 4.957;
   public static final double WHEEL_COF = 1.430;
@@ -33,7 +31,7 @@ public class SwerveConstants {
   public static final Translation2d[] MODULE_OFFSETS = {
     new Translation2d(-10.375, 10.375),
     new Translation2d(-10.375, 10.375),
-    new Translation2d(-10.375, 10.375),
+    new Translation2d(-9.75, 9.75),
     new Translation2d(-10.375, 10.375)
   };
 }

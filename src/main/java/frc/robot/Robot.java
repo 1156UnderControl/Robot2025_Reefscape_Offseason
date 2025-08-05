@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import org.littletonrobotics.junction.AutoLogOutputManager;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -11,6 +12,8 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -21,21 +24,43 @@ public class Robot extends LoggedRobot {
 
   public Robot() {
     m_robotContainer = new RobotContainer();
-    Logger.recordMetadata("Robot_Offseason", "MyProject"); // Set a metadata value
+    Logger.recordMetadata("Robot/ProjectName", BuildConstants.MAVEN_NAME);
+    Logger.recordMetadata("Robot/BuildDate", BuildConstants.BUILD_DATE);
+    Logger.recordMetadata("Robot/GitSHA", BuildConstants.GIT_SHA);
+    Logger.recordMetadata("Robot/GitDate", BuildConstants.GIT_DATE);
+    Logger.recordMetadata("Robot/GitBranch", BuildConstants.GIT_BRANCH);
 
-    if (isReal()) {
+    switch (BuildConstants.DIRTY) {
+      case 0 -> Logger.recordMetadata("Robot/GitDirty", "All changes committed");
+      case 1 -> Logger.recordMetadata("Robot/GitDirty", "Uncomitted changes");
+      default -> Logger.recordMetadata("Robot/GitDirty", "Unknown");
+    }
+
+    AutoLogOutputManager.addPackage("UN");
+    SmartDashboard.putData(CommandScheduler.getInstance());
+
+    if(isReal()){
       Logger.addDataReceiver(new WPILOGWriter()); // Log to a USB stick ("/U/logs")
+      if (!DriverStation.isFMSAttached()) {
+        Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
+      }
+
+    } else if(isSimulation()){
+      Logger.addDataReceiver(new WPILOGWriter()); // Log to the logs folder in the project
       Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
     } else {
       setUseTiming(false); // Run as fast as possible
-      String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
-      Logger.setReplaySource(new WPILOGReader(logPath));
-      Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
+      String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope (or
+      // prompt the user)
+      Logger.setReplaySource(new WPILOGReader(logPath)); // Read replay log
+      Logger.addDataReceiver(
+        new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
     }
-    
-    Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
 
-    Logger.start();
+    // Logger.disableDeterministicTimestamps() // See "Deterministic Timestamps" in the
+    // "Understanding Data Flow" page
+    Logger.start(); // Start logging! No more data receivers, replay sources, or metadata
+    // values may be added.
   }
 
   @Override

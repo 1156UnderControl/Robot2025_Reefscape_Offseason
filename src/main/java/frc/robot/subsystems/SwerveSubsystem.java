@@ -6,6 +6,7 @@ import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.Java_Is_UnderControl.Control.PIDConfig;
 import frc.Java_Is_UnderControl.Swerve.BaseSwerveSubsystem;
@@ -41,21 +42,25 @@ public class SwerveSubsystem extends SubsystemBase {
     this.swerve =
         new BaseSwerveSubsystem(
             new BaseSwerveConfig(
-                0.9,
+                0.75,
                 new SwervePathPlannerConfig(
-                    new PIDConstants(0.1, 0.1, 0.1),
-                    new PIDConstants(0.1, 0.1, 0.1),
-                    new PathConstraints(5, 5, 2, 1)),
-                new PIDConfig(0.1, 0.1, 0.1, 0.1)),
+                    new PIDConstants(5, 0.1, 0.1),
+                    new PIDConstants(5, 0.1, 0.1),
+                    new PathConstraints(3.0, 4.0, Units.degreesToRadians(540), Units.degreesToRadians(720))),
+                new PIDConfig(0.01, 0, 0, 0.1)),
             this.moduleConstants);
   }
 
   public void driveFieldOrientedLockedJoystickAngle() {
-    System.out.println("Comecei a rodar o comando");
     ChassisSpeeds joystickSpeeds =
         swerve.inputsToChassisSpeeds(
             driverController.getXtranslation(), driverController.getYtranslation());
     this.swerve.driveFieldOrientedLockedJoystickAngle(
         joystickSpeeds, driverController.getCOS_Joystick(), driverController.getSIN_Joystick());
+  }
+
+  @Override
+  public void periodic() {
+    this.swerve.periodic();
   }
 }
