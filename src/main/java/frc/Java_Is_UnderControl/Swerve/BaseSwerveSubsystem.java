@@ -203,6 +203,8 @@ public class BaseSwerveSubsystem implements Subsystem {
     this.drive.updateModuleTargetStates(this.chassisTrancription.getModuleInputs());
     this.robotSpeeds = this.drive.getRobotSpeeds();
     this.robotAngle = this.drive.getRobotAngle();
+    Logger.recordOutput("Module States", this.drive.getRobotModuleStates());
+    Logger.recordOutput("Module Target States", this.drive.getRobotModuleTargetStates());
   }
 
   public void driveFieldOrientedLockedAngle(ChassisSpeeds speeds, Rotation2d targetHeading) {

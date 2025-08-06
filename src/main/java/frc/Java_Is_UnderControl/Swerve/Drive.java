@@ -170,6 +170,16 @@ public class Drive {
     this.backLeftModule.getCurrentModuleState(), this.backRightModule.getCurrentModuleState());
   }
 
+  public SwerveModuleState[] getRobotModuleStates(){ 
+    return new SwerveModuleState[] {this.frontLeftModule.getCurrentModuleState(), this.frontRightModule.getCurrentModuleState(), 
+    this.backLeftModule.getCurrentModuleState(), this.backRightModule.getCurrentModuleState()};
+  }
+
+  public SwerveModuleState[] getRobotModuleTargetStates(){
+    return new SwerveModuleState[] {this.getTargetModuleState(SwerveConstants.FRONT_LEFT_MODULE_NAME), this.getTargetModuleState(SwerveConstants.FRONT_RIGHT_MODULE_NAME), 
+      this.getTargetModuleState(SwerveConstants.BACK_LEFT_MODULE_NAME), this.getTargetModuleState(SwerveConstants.BACK_RIGHT_MODULE_NAME)};
+  }
+
   public Rotation2d getRobotAngle(){
     return this.pigeon.getInputs().yawPosition;
   }
