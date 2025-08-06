@@ -14,6 +14,7 @@ public interface MotorIO {
 
     @AutoLog
     public static class MotorIOInputs{
+        public int motorID = 0;
         public double appliedOutput = 0.0;
         public double targetOutput = 0.0;
         public double current = 0.0;
