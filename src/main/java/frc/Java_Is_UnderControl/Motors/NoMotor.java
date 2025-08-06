@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
-public class NoMotor implements IMotor {
+public class NoMotor implements MotorIO {
 
   @Override
   public String getMotorName() {
@@ -221,7 +221,7 @@ public class NoMotor implements IMotor {
   }
 
   @Override
-  public void setTwoSysIDMotors(Subsystem currentSubsystem, IMotor otherMotor) {
+  public void setTwoSysIDMotors(Subsystem currentSubsystem, MotorIO otherMotor) {
     return;
   }
 

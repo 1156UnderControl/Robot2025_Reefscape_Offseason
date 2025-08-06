@@ -40,7 +40,7 @@ import frc.Java_Is_UnderControl.Logging.enhanced_loggers.CustomDoubleLogger;
 import frc.Java_Is_UnderControl.Logging.enhanced_loggers.CustomIntegerLogger;
 import frc.Java_Is_UnderControl.Util.Phoenix6Util;
 
-public class TalonFXMotor implements IMotor {
+public class TalonFXMotor implements MotorIO {
   private TalonFX motor;
 
   private GravityTypeValue gravityType;
@@ -543,7 +543,7 @@ public class TalonFXMotor implements IMotor {
   }
 
   @Override
-  public void setTwoSysIDMotors(Subsystem currentSubsystem, IMotor otherMotor) {
+  public void setTwoSysIDMotors(Subsystem currentSubsystem, MotorIO otherMotor) {
     this.sysIdRoutine =
         new SysIdRoutine(
             new SysIdRoutine.Config(

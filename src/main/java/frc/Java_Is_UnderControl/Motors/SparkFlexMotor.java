@@ -40,7 +40,7 @@ import frc.Java_Is_UnderControl.Logging.enhanced_loggers.CustomDoubleLogger;
 import frc.Java_Is_UnderControl.Logging.enhanced_loggers.CustomIntegerLogger;
 import java.util.function.Supplier;
 
-public class SparkFlexMotor implements IMotor {
+public class SparkFlexMotor implements MotorIO {
 
   private SparkFlex motor;
 
@@ -506,7 +506,7 @@ public class SparkFlexMotor implements IMotor {
   }
 
   @Override
-  public void setTwoSysIDMotors(Subsystem currentSubsystem, IMotor otherMotor) {
+  public void setTwoSysIDMotors(Subsystem currentSubsystem, MotorIO otherMotor) {
     this.sysIdRoutine =
         new SysIdRoutine(
             new SysIdRoutine.Config(

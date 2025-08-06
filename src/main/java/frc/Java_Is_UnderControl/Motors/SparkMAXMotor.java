@@ -41,7 +41,7 @@ import frc.Java_Is_UnderControl.Logging.enhanced_loggers.CustomDoubleLogger;
 import frc.Java_Is_UnderControl.Logging.enhanced_loggers.CustomIntegerLogger;
 import java.util.function.Supplier;
 
-public class SparkMAXMotor implements IMotor {
+public class SparkMAXMotor implements MotorIO {
 
   private boolean factoryDefaultOcurred = false;
 
@@ -505,7 +505,7 @@ public class SparkMAXMotor implements IMotor {
   }
 
   @Override
-  public void setTwoSysIDMotors(Subsystem currentSubsystem, IMotor otherMotor) {
+  public void setTwoSysIDMotors(Subsystem currentSubsystem, MotorIO otherMotor) {
     this.sysIdRoutine =
         new SysIdRoutine(
             new SysIdRoutine.Config(
