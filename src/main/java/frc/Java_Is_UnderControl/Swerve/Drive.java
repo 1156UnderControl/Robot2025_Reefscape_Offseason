@@ -12,12 +12,14 @@ import frc.Java_Is_UnderControl.Swerve.IO.Gyro.GyroIO;
 import frc.Java_Is_UnderControl.Swerve.IO.Gyro.GyroIO.GyroIOInputs;
 import frc.Java_Is_UnderControl.Swerve.IO.Gyro.GyroIOPigeon2;
 import frc.Java_Is_UnderControl.Swerve.IO.Module.ModuleIO;
+import frc.Java_Is_UnderControl.Swerve.IO.Module.ModuleIOInputsAutoLogged;
 import frc.Java_Is_UnderControl.Swerve.IO.Module.ModuleIOTalonFX;
-import frc.Java_Is_UnderControl.Swerve.IO.Module.ModuleIO.ModuleIOInputs;
 
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.function.BiFunction;
+
+import org.littletonrobotics.junction.Logger;
 
 public class Drive {
 
@@ -30,12 +32,12 @@ public class Drive {
   private final ModuleIO backRightModule;
   private final GyroIO pigeon;
 
-  private static final ModuleIOInputs frontLeftInputs = new ModuleIOInputs();
-  private static final ModuleIOInputs frontRightInputs = new ModuleIOInputs();
-  private static final ModuleIOInputs backLeftInputs = new ModuleIOInputs();
-  private static final ModuleIOInputs backRightInputs = new ModuleIOInputs();
-
   private static final GyroIOInputs pigeonInputs = new GyroIOInputs();
+
+  private final ModuleIOInputsAutoLogged frontLeftModuleAutoLogged = new ModuleIOInputsAutoLogged();
+  private final ModuleIOInputsAutoLogged frontRightModuleAutoLogged = new ModuleIOInputsAutoLogged();
+  private final ModuleIOInputsAutoLogged backLeftModuleAutoLogged = new ModuleIOInputsAutoLogged();
+  private final ModuleIOInputsAutoLogged backRightModuleAutoLogged = new ModuleIOInputsAutoLogged();
 
   private final SwerveDriveKinematics kinematics =
     new SwerveDriveKinematics(
@@ -129,7 +131,6 @@ public class Drive {
   }
 
   private void setInputs() {
-    this.updateModuleInputs();
     this.updatePigeonInputs();
     this.setModuleInputs();
   }
@@ -154,13 +155,6 @@ public class Drive {
         this.getModuleSteerTargetAngle(SwerveConstants.BACK_RIGHT_MODULE_NAME));
   }
 
-  private void updateModuleInputs() {
-    this.frontLeftModule.updateInputs(frontLeftInputs);
-    this.frontRightModule.updateInputs(frontRightInputs);
-    this.backLeftModule.updateInputs(backLeftInputs);
-    this.backRightModule.updateInputs(backRightInputs);
-  }
-
   private void updatePigeonInputs() {
     this.pigeon.updateInputs(pigeonInputs);
   }
@@ -178,6 +172,18 @@ public class Drive {
   public SwerveModuleState[] getRobotModuleTargetStates(){
     return new SwerveModuleState[] {this.getTargetModuleState(SwerveConstants.FRONT_LEFT_MODULE_NAME), this.getTargetModuleState(SwerveConstants.FRONT_RIGHT_MODULE_NAME), 
       this.getTargetModuleState(SwerveConstants.BACK_LEFT_MODULE_NAME), this.getTargetModuleState(SwerveConstants.BACK_RIGHT_MODULE_NAME)};
+  }
+
+  public void updateLogs() {
+    this.frontLeftModule.updateInputs(frontLeftModuleAutoLogged);
+    this.frontRightModule.updateInputs(frontRightModuleAutoLogged);
+    this.backLeftModule.updateInputs(backLeftModuleAutoLogged);
+    this.backRightModule.updateInputs(backRightModuleAutoLogged);
+
+    Logger.processInputs(SwerveConstants.FRONT_LEFT_MODULE_NAME + " Inputs", frontLeftModuleAutoLogged);
+    Logger.processInputs(SwerveConstants.FRONT_RIGHT_MODULE_NAME + " Inputs", frontRightModuleAutoLogged);
+    Logger.processInputs(SwerveConstants.BACK_LEFT_MODULE_NAME + " Inputs", backLeftModuleAutoLogged);
+    Logger.processInputs(SwerveConstants.BACK_RIGHT_MODULE_NAME + " Inputs", backRightModuleAutoLogged);
   }
 
   public Rotation2d getRobotAngle(){

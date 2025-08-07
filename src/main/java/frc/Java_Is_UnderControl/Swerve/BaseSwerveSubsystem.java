@@ -36,7 +36,6 @@ import frc.robot.util.LocalADStarAK;
 
 import java.util.HashMap;
 import java.util.Optional;
-
 import org.littletonrobotics.junction.Logger;
 
 public class BaseSwerveSubsystem implements Subsystem {
@@ -201,6 +200,7 @@ public class BaseSwerveSubsystem implements Subsystem {
     }
 
     this.drive.updateModuleTargetStates(this.chassisTrancription.getModuleInputs());
+    this.drive.updateLogs();
     this.robotSpeeds = this.drive.getRobotSpeeds();
     this.robotAngle = this.drive.getRobotAngle();
     Logger.recordOutput("Module States", this.drive.getRobotModuleStates());
