@@ -1,0 +1,63 @@
+{
+    "Swerve": {
+      "massKilograms": 0, 
+      "momentOfInertia": 0,
+      "maxSpeedMetersPerSecond": 0,
+      "wheelRadiusMeters": 0,
+      "gearboxReduction": 0,
+      "wheelCof": 0
+    },
+
+    "Modules": {
+
+      "pigeonID": 0,
+
+      "Front Left Module": {
+        "Position": {
+          "xPosition": 10.35,
+          "yPosition": 10.35
+        },
+        "driveMotorId": 5,
+        "steerMotorId": 6,
+        "cancoderId": 1,
+        "slipCurrent": 0,
+        "offsetRadians": 0
+      },
+
+      "Front Right Module": {
+        "Position": {
+          "xPosition": 10.35,
+          "yPosition": -10.35
+        },
+        "driveMotorId": 7,
+        "steerMotorId": 8,
+        "cancoderId": 2,
+        "slipCurrent": 0,
+        "offsetRadians": 0
+      },
+
+      "Back Left Module": {
+        "Position": {
+          "xPosition": -9.75,
+          "yPosition": 9.75
+        },
+        "driveMotorId": 9,
+        "steerMotorId": 10,
+        "cancoderId": 3,
+        "slipCurrent": 0,
+        "offsetRadians": 0
+      },
+
+      "Back Right Module": {
+        "Position": {
+          "xPosition": -10.35,
+          "yPosition": -10.35
+        },
+        "driveMotorId": 11,
+        "steerMotorId": 12,
+        "cancoderId": 4,
+        "slipCurrent": 0,
+        "offsetRadians": 0
+      }
+    }
+  }
