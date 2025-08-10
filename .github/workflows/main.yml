@@ -1,0 +1,65 @@
+name: notify
+
+on:
+  pull_request:
+    types: [opened, closed]
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Send message for pull request opened
+        if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        uses: appleboy/discord-action@master
+        with:
+          webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
+          webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
+          color: "#48f442"
+          username: "The Bot"
+          message: |
+            Novo Pull request aberto!
+
+            Reaja com ✅ para dizer que vai checar!
+            
+            **${{ github.event.pull_request.title }}**
+
+            ${{ github.event.pull_request.body }}
+
+            [Repositório](${{
+              github.event.repository.html_url
+            }})
+              
+            [Pull Request](${{
+              github.event.pull_request.html_url
+            }})
+
+      - name: Send message for merge to master
+        if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
+        uses: appleboy/discord-action@master
+        with:
+          webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
+          webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
+          color: "#48f442"
+          username: "The Bot"
+          message: |
+            🚀 Pull request merged!
+
+            **${{ github.event.pull_request.title }}**
+
+            Autor: ${{ github.event.pull_request.user.login }}
+
+            [Repositório](${{
+              github.event.repository.html_url
+            }})
+
+            [Pull Request](${{
+              github.event.pull_request.html_url
+            }})
