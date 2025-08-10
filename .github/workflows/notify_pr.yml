@@ -20,21 +20,10 @@ jobs:
         if: github.event_name == 'pull_request' && github.event.action == 'opened'
         uses: appleboy/discord-action@master
         with:
-          webhook_url: https://discord.com/api/webhooks/1403925566163390526/FNtkkMganwkzz2kYjXfoiRwHHcNQTUC_cUgH1NHfLkByhBTGtq2WGLIEOSiVa07L1wJR
+          webhook_url: ${{ secrets.WEBHOOK_URL }}
           color: "#48f442"
           username: "Pull Request BOT"
-          message: |
-            Novo Pull request aberto!
-
-            Reaja com ✅ para dizer que vai checar!
-            
-            **${{ github.event.pull_request.title }}**
-
-            ${{ github.event.pull_request.body }}
-
-            [Repositório](${{ github.event.repository.html_url }})
-              
-            [Pull Request](${{ github.event.pull_request.html_url }})
+          message: Novo Pull request aberto! Reaja com ✅ para dizer que vai checar! **${{ github.event.pull_request.title }}**
 
       - name: Send message for merge to master
         if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
