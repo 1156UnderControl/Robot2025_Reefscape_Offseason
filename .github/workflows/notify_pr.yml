@@ -23,7 +23,7 @@ jobs:
           webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
           webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
           color: "#48f442"
-          username: "The Bot"
+          username: "Pull Request BOT"
           message: |
             Novo Pull request aberto!
 
