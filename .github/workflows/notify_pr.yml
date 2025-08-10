@@ -33,13 +33,9 @@ jobs:
 
             ${{ github.event.pull_request.body }}
 
-            [Repositório](${{
-              github.event.repository.html_url
-            }})
+            [Repositório](${{ github.event.repository.html_url }})
               
-            [Pull Request](${{
-              github.event.pull_request.html_url
-            }})
+            [Pull Request](${{ github.event.pull_request.html_url }})
 
       - name: Send message for merge to master
         if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
@@ -56,10 +52,6 @@ jobs:
 
             Autor: ${{ github.event.pull_request.user.login }}
 
-            [Repositório](${{
-              github.event.repository.html_url
-            }})
+            [Repositório](${{ github.event.repository.html_url }})
 
-            [Pull Request](${{
-              github.event.pull_request.html_url
-            }})
+            [Pull Request](${{ github.event.pull_request.html_url }})
