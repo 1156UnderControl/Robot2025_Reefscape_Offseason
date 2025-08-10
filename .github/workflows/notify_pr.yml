@@ -20,8 +20,7 @@ jobs:
         if: github.event_name == 'pull_request' && github.event.action == 'opened'
         uses: appleboy/discord-action@master
         with:
-          webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
-          webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
+          webhook_url: ${{ secrets.WEBHOOK_URL }}
           color: "#48f442"
           username: "Pull Request BOT"
           message: |
