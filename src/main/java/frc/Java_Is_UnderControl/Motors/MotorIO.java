@@ -6,7 +6,6 @@ import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.Java_Is_UnderControl.Swerve.IO.Module.ModuleIO.ModuleIOInputs;
 
 public interface MotorIO {
 
@@ -16,7 +15,6 @@ public interface MotorIO {
     public static class MotorIOInputs{
         public int motorID = 0;
         public double appliedOutput = 0.0;
-        public double targetOutput = 0.0;
         public double current = 0.0;
         public double position = 0.0;
         public double velocity = 0.0;
@@ -24,11 +22,10 @@ public interface MotorIO {
         public int faults = 0;
         public double targetPosition = 0.0;
         public double targetSpeed = 0.0;
-        public String description = "";
         public boolean isInverted = false;
     }
 
-    void updateInputs(ModuleIOInputs inputs);
+    void updateInputs(MotorIOInputs inputs);
 
     String getMotorName();
 
@@ -147,6 +144,4 @@ public interface MotorIO {
     Command sysIdQuasistatic(SysIdRoutine.Direction direction);
 
     Command sysIdDynamic(SysIdRoutine.Direction direction);
-
-    void updateLogs();
 }   

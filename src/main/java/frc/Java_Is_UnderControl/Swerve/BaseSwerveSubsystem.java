@@ -31,7 +31,7 @@ import frc.Java_Is_UnderControl.Swerve.Configs.BaseSwerveConfig;
 import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
 import frc.Java_Is_UnderControl.Swerve.IO.Gyro.GyroIOPigeon2;
 import frc.Java_Is_UnderControl.Util.CustomMath;
-import frc.robot.subsystems.generated.TunerConstants;
+import frc.robot.subsystems.swerve.generated.TunerConstants;
 import frc.robot.util.LocalADStarAK;
 
 import java.util.HashMap;

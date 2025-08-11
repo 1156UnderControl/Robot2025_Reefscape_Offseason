@@ -31,7 +31,7 @@ import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
 import frc.Java_Is_UnderControl.Swerve.IO.PhoenixOdometryThread;
-import frc.robot.subsystems.generated.TunerConstants;
+import frc.robot.subsystems.swerve.generated.TunerConstants;
 
 import java.util.Queue;
 

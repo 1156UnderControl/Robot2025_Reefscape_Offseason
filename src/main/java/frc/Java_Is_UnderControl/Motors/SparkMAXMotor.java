@@ -19,8 +19,6 @@ import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
-import edu.wpi.first.datalog.BooleanLogEntry;
-import edu.wpi.first.datalog.StringLogEntry;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.units.VoltageUnit;
@@ -30,15 +28,12 @@ import edu.wpi.first.units.measure.MutVoltage;
 import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.units.measure.Voltage;
-import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.Java_Is_UnderControl.Logging.enhanced_loggers.CustomDoubleLogger;
-import frc.Java_Is_UnderControl.Logging.enhanced_loggers.CustomIntegerLogger;
 import java.util.function.Supplier;
 
 public class SparkMAXMotor implements MotorIO {
@@ -58,17 +53,6 @@ public class SparkMAXMotor implements MotorIO {
   private boolean isInverted = false;
   private boolean usingAlternateEncoder = false;
 
-  private CustomDoubleLogger appliedOutputLog;
-  private CustomDoubleLogger targetOutputLog;
-  private CustomDoubleLogger currentLog;
-  private CustomDoubleLogger positionLog;
-  private CustomDoubleLogger velocityLog;
-  private CustomDoubleLogger temperatureLog;
-  private CustomIntegerLogger faultsLog;
-  private CustomDoubleLogger targetPositionLog;
-  private CustomDoubleLogger targetSpeedLog;
-  private CustomDoubleLogger externalEncoderPositionLog;
-  private CustomDoubleLogger externalEncoderVelocityLog;
 
   private double targetPercentage;
   private double targetPosition;
@@ -104,8 +88,6 @@ public class SparkMAXMotor implements MotorIO {
     this.usingAlternateEncoder = usingAlternateEncoder;
     clearStickyFaults();
     this.setAlternateEncoder(usingAlternateEncoder);
-    this.setupLogs(motorID, usingAlternateEncoder);
-    this.updateLogs();
   }
 
   private void setAlternateEncoder(boolean usingAlternateEncoder) {
@@ -115,49 +97,6 @@ public class SparkMAXMotor implements MotorIO {
     } else {
       this.config.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
     }
-  }
-
-  private void setupLogs(int motorId, boolean isAlternateEncoder) {
-    this.appliedOutputLog = new CustomDoubleLogger("/motors/" + motorId + "/appliedOutput");
-    this.targetOutputLog = new CustomDoubleLogger("/motors/" + motorId + "/targetOutput");
-    this.currentLog = new CustomDoubleLogger("/motors/" + motorId + "/current");
-    this.positionLog = new CustomDoubleLogger("/motors/" + motorId + "/position");
-    this.velocityLog = new CustomDoubleLogger("/motors/" + motorId + "/velocity");
-    this.temperatureLog = new CustomDoubleLogger("/motors/" + motorId + "/temperature");
-    this.faultsLog = new CustomIntegerLogger("/motors/" + motorId + "/faults");
-    this.targetPositionLog = new CustomDoubleLogger("/motors/" + motorId + "/targetPosition");
-    this.targetSpeedLog = new CustomDoubleLogger("/motors/" + motorId + "/targetSpeed");
-    this.externalEncoderPositionLog =
-        new CustomDoubleLogger("/motors/" + motorId + "/externalEncoderPosition");
-    this.externalEncoderVelocityLog =
-        new CustomDoubleLogger("/motors/" + motorId + "/externalEncoderVelocity");
-    StringLogEntry firmwareVersionLog =
-        new StringLogEntry(DataLogManager.getLog(), "/motors/" + motorId + "/firmwareVersion");
-    firmwareVersionLog.append(this.motor.getFirmwareString());
-    BooleanLogEntry isAlternateEncoderLog =
-        new BooleanLogEntry(DataLogManager.getLog(), "/motors/" + motorId + "/isAlternateEncoder");
-    isAlternateEncoderLog.append(isAlternateEncoder);
-    BooleanLogEntry isFollowerLog =
-        new BooleanLogEntry(DataLogManager.getLog(), "/motors/" + motorId + "/isFollower");
-    isFollowerLog.append(this.motor.isFollower());
-    BooleanLogEntry isInvertedLog =
-        new BooleanLogEntry(DataLogManager.getLog(), "/motors/" + motorId + "/isInverted");
-    isInvertedLog.append(isInverted);
-  }
-
-  @Override
-  public void updateLogs() {
-    this.appliedOutputLog.append(this.getAppliedOutput());
-    // this.targetOutputLog.append(this.targetPercentage);
-    // this.currentLog.append(this.getVoltage());
-    this.positionLog.append(this.getPosition());
-    // this.velocityLog.append(this.getVelocity());
-    // this.temperatureLog.append(this.motor.getMotorTemperature());
-    // this.faultsLog.append(this.motor.getFaults());
-    this.externalEncoderPositionLog.append(this.getPositionExternalEncoder());
-    this.targetPositionLog.append(this.targetPosition);
-    // this.targetSpeedLog.append(this.targetVelocity);
-    // this.externalEncoderVelocityLog.append(this.getVelocityExternalEncoder());
   }
 
   private void configureSparkMax(Supplier<REVLibError> config) {
@@ -198,6 +137,20 @@ public class SparkMAXMotor implements MotorIO {
         () ->
             motor.configure(
                 config, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters));
+  }
+
+  @Override
+  public void updateInputs(MotorIOInputs inputs){
+    inputs.motorID = this.motor.getBusId();
+    inputs.appliedOutput = this.getAppliedOutput();
+    inputs.current = this.getVoltage();
+    inputs.position = this.getPosition();
+    inputs.velocity = this.getVelocity();
+    inputs.temperature = this.motor.getMotorTemperature();
+    inputs.faults = this.motor.getFaults().rawBits;
+    inputs.targetPosition = this.targetPosition;
+    inputs.targetSpeed = this.targetVelocity;
+    inputs.isInverted = this.isInverted;
   }
 
   // To implement the Kg, Ks and Kv its necessary to wait until revlib 2025 is
@@ -272,7 +225,6 @@ public class SparkMAXMotor implements MotorIO {
     this.targetPercentage = percentOutput;
     this.targetPosition = Double.NaN;
     this.targetVelocity = Double.NaN;
-    this.updateLogs();
   }
 
   @Override
@@ -283,7 +235,6 @@ public class SparkMAXMotor implements MotorIO {
     this.targetPercentage = percentOutput.in(Volts);
     this.targetPosition = Double.NaN;
     this.targetVelocity = Double.NaN;
-    this.updateLogs();
   }
 
   @Override
@@ -294,7 +245,6 @@ public class SparkMAXMotor implements MotorIO {
     this.targetPercentage = Double.NaN;
     this.targetVelocity = Double.NaN;
     this.targetPosition = position;
-    this.updateLogs();
   }
 
   public void setPositionReference(double position, double arbFF) {
@@ -306,7 +256,6 @@ public class SparkMAXMotor implements MotorIO {
     this.targetPercentage = Double.NaN;
     this.targetVelocity = Double.NaN;
     this.targetPosition = position;
-    this.updateLogs();
   }
 
   @Override
@@ -388,7 +337,6 @@ public class SparkMAXMotor implements MotorIO {
     this.targetPercentage = Double.NaN;
     this.targetVelocity = velocity;
     this.targetPosition = Double.NaN;
-    this.updateLogs();
   }
 
   @Override
