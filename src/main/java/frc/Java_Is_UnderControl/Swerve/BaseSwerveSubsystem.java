@@ -45,12 +45,12 @@ public class BaseSwerveSubsystem implements Subsystem {
   private Pose2d robotPose = new Pose2d();
 
   private ChassisSpeeds targetSpeeds = new ChassisSpeeds();
-  private final GyroIOPigeon2 pigeon;
+  private final GyroIOPigeon2 gyro;
   private final BaseSwerveConfig config;
   private final PIDController headingPidController;
 
   public final double maxSpeed;
-  public final  double maxAngularRate;
+  public final double maxAngularRate;
 
   private final SwerveChassisTrancription chassisTrancription;
 
@@ -60,46 +60,34 @@ public class BaseSwerveSubsystem implements Subsystem {
 
   private double targetHeadingDegrees = 0;
 
-  private static final RobotConfig PP_CONFIG =
-      new RobotConfig(
-          SwerveConstants.ROBOT_MASS,
-          SwerveConstants.ROBOT_MOI,
-          new ModuleConfig(
-              SwerveConstants.WHEEL_RADIUS_METERS,
-              TunerConstants.kSpeedAt12Volts.in(MetersPerSecond),
-              SwerveConstants.WHEEL_COF,
-              DCMotor.getKrakenX60Foc(2).withReduction(SwerveConstants.GEARBOX_REDUCTION),
-              TunerConstants.FrontLeft.SlipCurrent,
-              2),
-          SwerveConstants.MODULE_OFFSETS);
+  private static final RobotConfig PP_CONFIG = new RobotConfig(
+      SwerveConstants.ROBOT_MASS,
+      SwerveConstants.ROBOT_MOI,
+      new ModuleConfig(
+          SwerveConstants.WHEEL_RADIUS_METERS,
+          TunerConstants.kSpeedAt12Volts.in(MetersPerSecond),
+          SwerveConstants.WHEEL_COF,
+          DCMotor.getKrakenX60Foc(2).withReduction(SwerveConstants.GEARBOX_REDUCTION),
+          TunerConstants.FrontLeft.SlipCurrent,
+          2),
+      SwerveConstants.MODULE_OFFSETS);
 
-  private final HashMap<
-          String,
-          Optional<
-              SwerveModuleConstants<
-                  TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>>>
-      motorConstants;
+  private final HashMap<String, Optional<SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>>> motorConstants;
 
   private final Drive drive;
 
   public BaseSwerveSubsystem(
       BaseSwerveConfig config,
-      HashMap<
-              String,
-              SwerveModuleConstants<
-                  TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>>
-          moduleConstants) {
-    this.maxAngularRate =
-        RotationsPerSecond.of(config.maxRotationRateInFractions)
-            .in(RadiansPerSecond); // fraction of a rotation per second
+      HashMap<String, SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>> moduleConstants) {
+    this.maxAngularRate = RotationsPerSecond.of(config.maxRotationRateInFractions)
+        .in(RadiansPerSecond); // fraction of a rotation per second
     this.chassisTrancription = new SwerveChassisTrancription();
     this.config = config;
-    this.headingPidController =
-        new PIDController(
-            this.config.headingPidConfig.kP,
-            this.config.headingPidConfig.kI,
-            this.config.headingPidConfig.kD,
-            this.config.headingPidConfig.kF);
+    this.headingPidController = new PIDController(
+        this.config.headingPidConfig.kP,
+        this.config.headingPidConfig.kI,
+        this.config.headingPidConfig.kD,
+        this.config.headingPidConfig.kF);
     if (Utils.isSimulation()) {
       startSimThread();
     }
@@ -119,8 +107,8 @@ public class BaseSwerveSubsystem implements Subsystem {
     this.motorConstants.put(
         SwerveConstants.BACK_RIGHT_MODULE_NAME,
         Optional.of(moduleConstants.get(SwerveConstants.BACK_RIGHT_MODULE_NAME)));
-    this.pigeon = new GyroIOPigeon2();
-    this.drive = new Drive(this.motorConstants, pigeon);
+    this.gyro = new GyroIOPigeon2();
+    this.drive = new Drive(this.motorConstants, gyro);
   }
 
   // Tem na documentação do advantagekit de como fazer
@@ -168,15 +156,20 @@ public class BaseSwerveSubsystem implements Subsystem {
     return null;
   }
 
-  public void setHeadingCorrection(boolean active) {}
+  public void setHeadingCorrection(boolean active) {
+  }
 
-  private void setPose(Pose2d pose) {}
+  private void setPose(Pose2d pose) {
+  }
 
-  public void resetOdometry(Pose2d initialHolonomicPose) {}
+  public void resetOdometry(Pose2d initialHolonomicPose) {
+  }
 
-  public void resetTranslation(Pose2d translationToReset) {}
+  public void resetTranslation(Pose2d translationToReset) {
+  }
 
-  private void runVelocity(ChassisSpeeds speeds, DriveFeedforwards feedforwards) {}
+  private void runVelocity(ChassisSpeeds speeds, DriveFeedforwards feedforwards) {
+  }
 
   public double getAbsoluteRobotVelocity() {
     return CustomMath.toAbsoluteSpeed(this.getRobotSpeeds());
@@ -213,8 +206,7 @@ public class BaseSwerveSubsystem implements Subsystem {
 
     ChassisSpeeds finalSpeed = new ChassisSpeeds(speeds.vx, speeds.vy, angularVelocity);
 
-    this.targetSpeeds =
-        finalSpeed.toFieldRelative(this.robotAngle);
+    this.targetSpeeds = finalSpeed.toFieldRelative(this.robotAngle);
   }
 
   public void driveFieldOrientedLockedJoystickAngle(
@@ -226,18 +218,15 @@ public class BaseSwerveSubsystem implements Subsystem {
 
     ChassisSpeeds finalSpeed = new ChassisSpeeds(speeds.vx, speeds.vy, angularVelocity);
 
-    this.targetSpeeds =
-        finalSpeed.toFieldRelative(this.robotAngle);
+    this.targetSpeeds = finalSpeed.toFieldRelative(this.robotAngle);
   }
 
   public void driveFieldOriented(ChassisSpeeds speeds) {
-    this.targetSpeeds =
-        speeds.toRobotRelative(this.robotAngle);
+    this.targetSpeeds = speeds.toRobotRelative(this.robotAngle);
   }
 
   public void driveRobotOriented(ChassisSpeeds speeds) {
-    this.targetSpeeds =
-        speeds.toRobotRelative(this.robotAngle);
+    this.targetSpeeds = speeds.toRobotRelative(this.robotAngle);
   }
 
   public ChassisSpeeds inputsToChassisSpeeds(double xInput, double yInput, double AngularRate) {
@@ -261,5 +250,6 @@ public class BaseSwerveSubsystem implements Subsystem {
   }
 
   // o que é isso aqui mesmo? Apaguei pra parar de dar erro
-  private void startSimThread() {}
+  private void startSimThread() {
+  }
 }
