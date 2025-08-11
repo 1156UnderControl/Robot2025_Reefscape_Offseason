@@ -5,7 +5,7 @@
 // license that can be found in the LICENSE file
 // at the root directory of this project.
 
-package frc.Java_Is_UnderControl.Swerve.IO;
+package frc.Java_Is_UnderControl.Swerve.IO.SIgnals;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.CANBus;

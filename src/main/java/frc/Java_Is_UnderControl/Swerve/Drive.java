@@ -10,10 +10,11 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
 import frc.Java_Is_UnderControl.Swerve.IO.Gyro.GyroIO;
 import frc.Java_Is_UnderControl.Swerve.IO.Gyro.GyroIO.GyroIOInputs;
+import frc.Java_Is_UnderControl.Swerve.IO.Gyro.Logging.GyroIOInputsAutoLogged;
 import frc.Java_Is_UnderControl.Swerve.IO.Gyro.GyroIOPigeon2;
 import frc.Java_Is_UnderControl.Swerve.IO.Module.ModuleIO;
-import frc.Java_Is_UnderControl.Swerve.IO.Module.ModuleIOInputsAutoLogged;
 import frc.Java_Is_UnderControl.Swerve.IO.Module.ModuleIOTalonFX;
+import frc.Java_Is_UnderControl.Swerve.IO.Module.Logging.ModuleIOInputsAutoLogged;
 
 import java.util.HashMap;
 import java.util.Optional;
@@ -32,12 +33,12 @@ public class Drive {
   private final ModuleIO backRightModule;
   private final GyroIO pigeon;
 
-  private static final GyroIOInputs pigeonInputs = new GyroIOInputs();
+  private final GyroIOInputsAutoLogged gyroInputs;
 
-  private final ModuleIOInputsAutoLogged frontLeftModuleAutoLogged = new ModuleIOInputsAutoLogged();
-  private final ModuleIOInputsAutoLogged frontRightModuleAutoLogged = new ModuleIOInputsAutoLogged();
-  private final ModuleIOInputsAutoLogged backLeftModuleAutoLogged = new ModuleIOInputsAutoLogged();
-  private final ModuleIOInputsAutoLogged backRightModuleAutoLogged = new ModuleIOInputsAutoLogged();
+  private final ModuleIOInputsAutoLogged frontLeftModuleInputs;
+  private final ModuleIOInputsAutoLogged frontRightModuleInputs;
+  private final ModuleIOInputsAutoLogged backLeftModuleInputs;
+  private final ModuleIOInputsAutoLogged backRightModuleInputs;
 
   private final SwerveDriveKinematics kinematics =
     new SwerveDriveKinematics(
@@ -99,6 +100,12 @@ public class Drive {
     this.pigeon = pigeon;
     this.targetModuleStates = new HashMap<>();
     this.lastTargetModuleStates = new HashMap<>();
+
+    this.gyroInputs = new GyroIOInputsAutoLogged();
+    this.frontLeftModuleInputs = new ModuleIOInputsAutoLogged();
+    this.frontRightModuleInputs = new ModuleIOInputsAutoLogged();
+    this.backLeftModuleInputs = new ModuleIOInputsAutoLogged();
+    this.backRightModuleInputs = new ModuleIOInputsAutoLogged();
   }
 
   public void updateModuleTargetStates(HashMap<String, Optional<SwerveModuleState>> moduleStates) {
@@ -131,7 +138,6 @@ public class Drive {
   }
 
   private void setInputs() {
-    this.updatePigeonInputs();
     this.setModuleInputs();
   }
 
@@ -155,10 +161,6 @@ public class Drive {
         this.getModuleSteerTargetAngle(SwerveConstants.BACK_RIGHT_MODULE_NAME));
   }
 
-  private void updatePigeonInputs() {
-    this.pigeon.updateInputs(pigeonInputs);
-  }
-
   public ChassisSpeeds getRobotSpeeds(){
     return kinematics.toChassisSpeeds(this.frontLeftModule.getCurrentModuleState(), this.frontRightModule.getCurrentModuleState(), 
     this.backLeftModule.getCurrentModuleState(), this.backRightModule.getCurrentModuleState());
@@ -175,15 +177,18 @@ public class Drive {
   }
 
   public void updateLogs() {
-    this.frontLeftModule.updateInputs(frontLeftModuleAutoLogged);
-    this.frontRightModule.updateInputs(frontRightModuleAutoLogged);
-    this.backLeftModule.updateInputs(backLeftModuleAutoLogged);
-    this.backRightModule.updateInputs(backRightModuleAutoLogged);
+    this.frontLeftModule.updateInputs(this.frontLeftModuleInputs);
+    this.frontRightModule.updateInputs(this.frontRightModuleInputs);
+    this.backLeftModule.updateInputs(this.backLeftModuleInputs);
+    this.backRightModule.updateInputs(this.backRightModuleInputs);
 
-    Logger.processInputs(SwerveConstants.FRONT_LEFT_MODULE_NAME + " Inputs", frontLeftModuleAutoLogged);
-    Logger.processInputs(SwerveConstants.FRONT_RIGHT_MODULE_NAME + " Inputs", frontRightModuleAutoLogged);
-    Logger.processInputs(SwerveConstants.BACK_LEFT_MODULE_NAME + " Inputs", backLeftModuleAutoLogged);
-    Logger.processInputs(SwerveConstants.BACK_RIGHT_MODULE_NAME + " Inputs", backRightModuleAutoLogged);
+    this.pigeon.updateInputs(this.gyroInputs);
+
+    Logger.processInputs("Subsystems/Swerve"+ SwerveConstants.FRONT_LEFT_MODULE_NAME, this.frontLeftModuleInputs);
+    Logger.processInputs("Subsystems/Swerve"+ SwerveConstants.FRONT_RIGHT_MODULE_NAME, this.frontRightModuleInputs);
+    Logger.processInputs("Subsystems/Swerve"+ SwerveConstants.BACK_LEFT_MODULE_NAME, this.backLeftModuleInputs);
+    Logger.processInputs("Subsystems/Swerve"+ SwerveConstants.BACK_RIGHT_MODULE_NAME, this.backRightModuleInputs);
+    Logger.processInputs("Subsystems/Swerve", this.gyroInputs);
   }
 
   public Rotation2d getRobotAngle(){

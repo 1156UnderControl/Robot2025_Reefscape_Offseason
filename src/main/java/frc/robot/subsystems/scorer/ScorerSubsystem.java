@@ -1,5 +1,7 @@
 package frc.robot.subsystems.scorer;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.signals.GravityTypeValue;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -14,7 +16,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     private final MotorIO elevatorLead;
     private final MotorIO elevatorFollower;
 
-    private final ScorerIOInputs scorerInputs;
+    private final ScorerIOInputsAutoLogged scorerInputs;
     private final MotorIOInputs elevatorLeadInputs;
     private final MotorIOInputs elevatorFollowerInputs;
 
@@ -26,7 +28,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     }
 
     private ScorerSubsystem(){
-        this.scorerInputs = new ScorerIOInputs();
+        this.scorerInputs = new ScorerIOInputsAutoLogged();
         this.elevatorLeadInputs = new MotorIOInputs();
         this.elevatorFollowerInputs = new MotorIOInputs();
 
@@ -40,18 +42,20 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         elevatorLead.set(dutyCicle);
     }
 
-    private void updateScorerInputs(ScorerIOInputs scorerInputs) {
+    private void updateScorerInputs(ScorerIOInputsAutoLogged scorerInputs) {
         scorerInputs.elevatorLeadPosition = elevatorLeadInputs.position;
-        scorerInputs.televatorLeadTargetPosition = elevatorLeadInputs.targetPosition;
+        scorerInputs.elevatorLeadTargetPosition = elevatorLeadInputs.targetPosition;
         scorerInputs.elevatorLeadVelocity = elevatorLeadInputs.velocity;
         scorerInputs.elevatorLeadTargetVelocity = elevatorLeadInputs.targetSpeed;
         scorerInputs.elevatorLeadIsInverted = elevatorLeadInputs.isInverted;
 
         scorerInputs.elevatorFollowerPosition = elevatorFollowerInputs.position;
-        scorerInputs.televatorFollowerTargetPosition = elevatorFollowerInputs.targetPosition;
+        scorerInputs.elevatorFollowerTargetPosition = elevatorFollowerInputs.targetPosition;
         scorerInputs.elevatorFollowerVelocity = elevatorFollowerInputs.velocity;
         scorerInputs.elevatorFollowerTargetVelocity = elevatorFollowerInputs.targetSpeed;
-        scorerInputs. elevatorFollowerIsInverted = elevatorFollowerInputs.isInverted;
+        scorerInputs.elevatorFollowerIsInverted = elevatorFollowerInputs.isInverted;
+
+        Logger.processInputs("Subsystems/Scorer", scorerInputs);
     }
 
     @Override

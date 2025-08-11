@@ -100,9 +100,6 @@ public class BaseSwerveSubsystem implements Subsystem {
             this.config.headingPidConfig.kI,
             this.config.headingPidConfig.kD,
             this.config.headingPidConfig.kF);
-    if (Utils.isSimulation()) {
-      startSimThread();
-    }
     configureAutoBuilder();
     this.maxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
 
@@ -203,8 +200,8 @@ public class BaseSwerveSubsystem implements Subsystem {
     this.drive.updateLogs();
     this.robotSpeeds = this.drive.getRobotSpeeds();
     this.robotAngle = this.drive.getRobotAngle();
-    Logger.recordOutput("Module States", this.drive.getRobotModuleStates());
-    Logger.recordOutput("Module Target States", this.drive.getRobotModuleTargetStates());
+
+    this.updateSwerveLogs();
   }
 
   public void driveFieldOrientedLockedAngle(ChassisSpeeds speeds, Rotation2d targetHeading) {
@@ -260,6 +257,11 @@ public class BaseSwerveSubsystem implements Subsystem {
     return isAtHeading;
   }
 
-  // o que é isso aqui mesmo? Apaguei pra parar de dar erro
-  private void startSimThread() {}
+  public void updateSwerveLogs(){
+    Logger.recordOutput("/Swerve/Subsystems/Robot Angle", this.robotAngle.getDegrees());
+    Logger.recordOutput("/Swerve/Subsystems/Robot Speeds", this.robotSpeeds);
+    Logger.recordOutput("/Swerve/Subsystems/Target Speeds", this.targetSpeeds);
+    Logger.recordOutput("/Subsystems/Swerve/Module States", this.drive.getRobotModuleStates());
+    Logger.recordOutput("/Subsystems/Swerve/Module Target States", this.drive.getRobotModuleTargetStates());
+  }
 }
