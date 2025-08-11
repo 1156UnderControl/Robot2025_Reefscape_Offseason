@@ -25,7 +25,6 @@ public class NoMotor implements MotorIO {
 
   @Override
   public void updateInputs(MotorIOInputs inputs){
-    inputs.motorID = 0;
     inputs.appliedOutput = 0.0;
     inputs.current = 0.0;
     inputs.position = 0.0;

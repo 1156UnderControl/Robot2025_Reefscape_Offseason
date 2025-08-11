@@ -179,7 +179,6 @@ public class TalonFXMotor implements MotorIO {
 
   @Override
   public void updateInputs(MotorIOInputs inputs) {
-    inputs.motorID = this.motor.getDeviceID();
     inputs.appliedOutput = this.getAppliedOutput();
     inputs.current = this.current.getValueAsDouble();
     inputs.position = this.position.getValueAsDouble();

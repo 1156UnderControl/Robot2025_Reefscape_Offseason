@@ -9,12 +9,11 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
 import frc.Java_Is_UnderControl.Swerve.IO.Gyro.GyroIO;
-import frc.Java_Is_UnderControl.Swerve.IO.Gyro.GyroIO.GyroIOInputs;
-import frc.Java_Is_UnderControl.Swerve.IO.Gyro.Logging.GyroIOInputsAutoLogged;
+import frc.Java_Is_UnderControl.Swerve.IO.Gyro.GyroIOInputsAutoLogged;
 import frc.Java_Is_UnderControl.Swerve.IO.Gyro.GyroIOPigeon2;
 import frc.Java_Is_UnderControl.Swerve.IO.Module.ModuleIO;
+import frc.Java_Is_UnderControl.Swerve.IO.Module.ModuleIOInputsAutoLogged;
 import frc.Java_Is_UnderControl.Swerve.IO.Module.ModuleIOTalonFX;
-import frc.Java_Is_UnderControl.Swerve.IO.Module.Logging.ModuleIOInputsAutoLogged;
 
 import java.util.HashMap;
 import java.util.Optional;
@@ -184,11 +183,11 @@ public class Drive {
 
     this.pigeon.updateInputs(this.gyroInputs);
 
-    Logger.processInputs("Subsystems/Swerve"+ SwerveConstants.FRONT_LEFT_MODULE_NAME, this.frontLeftModuleInputs);
-    Logger.processInputs("Subsystems/Swerve"+ SwerveConstants.FRONT_RIGHT_MODULE_NAME, this.frontRightModuleInputs);
-    Logger.processInputs("Subsystems/Swerve"+ SwerveConstants.BACK_LEFT_MODULE_NAME, this.backLeftModuleInputs);
-    Logger.processInputs("Subsystems/Swerve"+ SwerveConstants.BACK_RIGHT_MODULE_NAME, this.backRightModuleInputs);
-    Logger.processInputs("Subsystems/Swerve", this.gyroInputs);
+    Logger.processInputs("Subsystems/Swerve/"+ SwerveConstants.FRONT_LEFT_MODULE_NAME, this.frontLeftModuleInputs);
+    Logger.processInputs("Subsystems/Swerve/"+ SwerveConstants.FRONT_RIGHT_MODULE_NAME, this.frontRightModuleInputs);
+    Logger.processInputs("Subsystems/Swerve/"+ SwerveConstants.BACK_LEFT_MODULE_NAME, this.backLeftModuleInputs);
+    Logger.processInputs("Subsystems/Swerve/"+ SwerveConstants.BACK_RIGHT_MODULE_NAME, this.backRightModuleInputs);
+    Logger.processInputs("Subsystems/Swerve/Pigeon", this.gyroInputs);
   }
 
   public Rotation2d getRobotAngle(){

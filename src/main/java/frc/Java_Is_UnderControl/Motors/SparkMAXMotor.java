@@ -141,7 +141,6 @@ public class SparkMAXMotor implements MotorIO {
 
   @Override
   public void updateInputs(MotorIOInputs inputs){
-    inputs.motorID = this.motor.getBusId();
     inputs.appliedOutput = this.getAppliedOutput();
     inputs.current = this.getVoltage();
     inputs.position = this.getPosition();

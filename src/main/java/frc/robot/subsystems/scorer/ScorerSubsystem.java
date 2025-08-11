@@ -6,8 +6,8 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.Java_Is_UnderControl.Motors.MotorIO;
+import frc.Java_Is_UnderControl.Motors.MotorIOInputsAutoLogged;
 import frc.Java_Is_UnderControl.Motors.TalonFXMotor;
-import frc.Java_Is_UnderControl.Motors.MotorIO.MotorIOInputs;
 
 public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
 
@@ -17,8 +17,8 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     private final MotorIO elevatorFollower;
 
     private final ScorerIOInputsAutoLogged scorerInputs;
-    private final MotorIOInputs elevatorLeadInputs;
-    private final MotorIOInputs elevatorFollowerInputs;
+    private final MotorIOInputsAutoLogged elevatorLeadInputs;
+    private final MotorIOInputsAutoLogged elevatorFollowerInputs;
 
     public static ScorerSubsystem getInstance() {
         if (instance == null) {
@@ -29,8 +29,8 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
 
     private ScorerSubsystem(){
         this.scorerInputs = new ScorerIOInputsAutoLogged();
-        this.elevatorLeadInputs = new MotorIOInputs();
-        this.elevatorFollowerInputs = new MotorIOInputs();
+        this.elevatorLeadInputs = new MotorIOInputsAutoLogged();
+        this.elevatorFollowerInputs = new MotorIOInputsAutoLogged();
 
         this.elevatorLead = new TalonFXMotor(0, "can_s0", GravityTypeValue.Elevator_Static, "Elevator Lead Motor");
         this.elevatorFollower = new TalonFXMotor(1, "can_s0", GravityTypeValue.Elevator_Static, "Elevator Follower Motor");
@@ -55,7 +55,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         scorerInputs.elevatorFollowerTargetVelocity = elevatorFollowerInputs.targetSpeed;
         scorerInputs.elevatorFollowerIsInverted = elevatorFollowerInputs.isInverted;
 
-        Logger.processInputs("Subsystems/Scorer", scorerInputs);
+        Logger.processInputs("Subsystems/Scorer/Elevator/", scorerInputs);
     }
 
     @Override
@@ -63,5 +63,8 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         this.updateScorerInputs(scorerInputs);
         this.elevatorLead.updateInputs(elevatorLeadInputs);
         this.elevatorFollower.updateInputs(elevatorFollowerInputs);
+
+        Logger.processInputs("Motors/ElevatorLead/", elevatorLeadInputs);
+        Logger.processInputs("Motors/ElevatorFollower/", elevatorFollowerInputs);
     }
 }
