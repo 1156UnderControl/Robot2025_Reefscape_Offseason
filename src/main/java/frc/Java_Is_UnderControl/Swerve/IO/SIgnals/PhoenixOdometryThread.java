@@ -13,6 +13,7 @@ import com.ctre.phoenix6.StatusSignal;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.RobotController;
 import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
+import frc.robot.subsystems.swerve.generated.TunerConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,7 @@ public class PhoenixOdometryThread extends Thread {
   private final List<Queue<Double>> timestampQueues = new ArrayList<>();
 
   private static boolean isCANFD =
-      new CANBus(SwerveConstants.CAN_BUS.getName()).isNetworkFD();
+      new CANBus(TunerConstants.DrivetrainConstants.CANBusName).isNetworkFD();
   private static PhoenixOdometryThread instance = null;
 
   public static PhoenixOdometryThread getInstance() {
@@ -56,7 +57,7 @@ public class PhoenixOdometryThread extends Thread {
   public Queue<Double> registerSignal(StatusSignal<Angle> signal) {
     Queue<Double> queue = new ArrayBlockingQueue<>(20);
     signalsLock.lock();
-    SwerveConstants.STOPPER_ODOMETRY_UPDATES_WHILE_READING_DATA.lock();
+    SwerveConstants.odometryUpdatesWhileReadingDataStopper.lock();
     try {
       BaseStatusSignal[] newSignals = new BaseStatusSignal[phoenixSignals.length + 1];
       System.arraycopy(phoenixSignals, 0, newSignals, 0, phoenixSignals.length);
@@ -65,7 +66,7 @@ public class PhoenixOdometryThread extends Thread {
       phoenixQueues.add(queue);
     } finally {
       signalsLock.unlock();
-      SwerveConstants.STOPPER_ODOMETRY_UPDATES_WHILE_READING_DATA.unlock();
+      SwerveConstants.odometryUpdatesWhileReadingDataStopper.unlock();
     }
     return queue;
   }
@@ -73,24 +74,24 @@ public class PhoenixOdometryThread extends Thread {
   public Queue<Double> registerSignal(DoubleSupplier signal) {
     Queue<Double> queue = new ArrayBlockingQueue<>(20);
     signalsLock.lock();
-    SwerveConstants.STOPPER_ODOMETRY_UPDATES_WHILE_READING_DATA.lock();
+    SwerveConstants.odometryUpdatesWhileReadingDataStopper.lock();
     try {
       genericSignals.add(signal);
       genericQueues.add(queue);
     } finally {
       signalsLock.unlock();
-      SwerveConstants.STOPPER_ODOMETRY_UPDATES_WHILE_READING_DATA.unlock();
+      SwerveConstants.odometryUpdatesWhileReadingDataStopper.unlock();
     }
     return queue;
   }
 
   public Queue<Double> makeTimestampQueue() {
     Queue<Double> queue = new ArrayBlockingQueue<>(20);
-    SwerveConstants.STOPPER_ODOMETRY_UPDATES_WHILE_READING_DATA.lock();
+    SwerveConstants.odometryUpdatesWhileReadingDataStopper.lock();
     try {
       timestampQueues.add(queue);
     } finally {
-      SwerveConstants.STOPPER_ODOMETRY_UPDATES_WHILE_READING_DATA.unlock();
+      SwerveConstants.odometryUpdatesWhileReadingDataStopper.unlock();
     }
     return queue;
   }
@@ -112,7 +113,7 @@ public class PhoenixOdometryThread extends Thread {
         signalsLock.unlock();
       }
 
-      SwerveConstants.STOPPER_ODOMETRY_UPDATES_WHILE_READING_DATA.lock();
+      SwerveConstants.odometryUpdatesWhileReadingDataStopper.lock();
       try {
         double timestamp = RobotController.getFPGATime() / 1e6;
         double totalLatency = 0.0;
@@ -133,7 +134,7 @@ public class PhoenixOdometryThread extends Thread {
           timestampQueues.get(i).offer(timestamp);
         }
       } finally {
-        SwerveConstants.STOPPER_ODOMETRY_UPDATES_WHILE_READING_DATA.unlock();
+        SwerveConstants.odometryUpdatesWhileReadingDataStopper.unlock();
       }
     }
   }

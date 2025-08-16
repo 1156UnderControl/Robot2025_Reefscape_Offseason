@@ -1,47 +1,11 @@
 {
     "Swerve": {
-      "canBus": "can_s4",
       "massKilograms": 0, 
       "momentOfInertia": 0,
-      "speedAt12Volts": 5.07,
-      "slipCurrent": 120,
-      "invertRightSide": true,
-      "invertLeftSide": false,
-
-      "coupleRatio": 3.5714285714285716,
-      "driveRatio": 6.746031746031747,
-      "steerRatio": 21.428571428571427,
-
-      "steerInertia": 0.004,
-      "driveInertia": 0.025,
-      
-      "steerFrictionVoltage": 0.2,
-      "driveFrictionVoltage": 0.2,
-
-      "wheelRadiusMeters": 0.04937,
-      "wheelCoeficient": 1.430,
-
-      "statorCurrentLimit": 60
-    },
-
-    "Gains": {
-      "Steer":{
-        "kP": 70,
-        "kI": 0,
-        "kD": 0,
-        "kS": 0.26,
-        "kV": 0,
-        "kA": 0
-      },
-
-      "Drive": {
-        "kP": 0.3,
-        "kI": 0,
-        "kD": 0,
-        "kS": 0.074247,
-        "kV": 0.12407,
-        "kA": 0
-      }
+      "maxSpeedMetersPerSecond": 0,
+      "wheelRadiusMeters": 0,
+      "gearboxReduction": 0,
+      "wheelCof": 0
     },
 
     "Modules": {
@@ -56,9 +20,8 @@
         "driveMotorId": 5,
         "steerMotorId": 6,
         "cancoderId": 1,
-        "offsetRadians": -0.046142578125,
-        "steerMotorInverted": true,
-        "encoderInverted": false
+        "slipCurrent": 0,
+        "offsetRadians": 0
       },
 
       "Front Right Module": {
@@ -69,9 +32,8 @@
         "driveMotorId": 7,
         "steerMotorId": 8,
         "cancoderId": 2,
-        "offsetRadians": 0.42626953125,
-        "steerMotorInverted": true,
-        "encoderInverted": false
+        "slipCurrent": 0,
+        "offsetRadians": 0
       },
 
       "Back Left Module": {
@@ -82,9 +44,8 @@
         "driveMotorId": 9,
         "steerMotorId": 10,
         "cancoderId": 3,
-        "offsetRadians": -0.02099609375,
-        "steerMotorInverted": false,
-        "encoderInverted": false
+        "slipCurrent": 0,
+        "offsetRadians": 0
       },
 
       "Back Right Module": {
@@ -95,9 +56,8 @@
         "driveMotorId": 11,
         "steerMotorId": 12,
         "cancoderId": 4,
-        "offsetRadians": -0.473876953125,
-        "steerMotorInverted": true,
-        "encoderInverted": false
+        "slipCurrent": 0,
+        "offsetRadians": 0
       }
     }
   }

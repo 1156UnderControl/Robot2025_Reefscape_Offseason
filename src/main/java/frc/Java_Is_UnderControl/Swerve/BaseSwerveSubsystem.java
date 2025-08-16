@@ -31,6 +31,7 @@ import frc.Java_Is_UnderControl.Swerve.Configs.BaseSwerveConfig;
 import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
 import frc.Java_Is_UnderControl.Swerve.IO.Gyro.GyroIOPigeon2;
 import frc.Java_Is_UnderControl.Util.CustomMath;
+import frc.robot.subsystems.swerve.generated.TunerConstants;
 import frc.robot.util.LocalADStarAK;
 
 import java.util.HashMap;
@@ -62,18 +63,15 @@ public class BaseSwerveSubsystem implements Subsystem {
   private static final RobotConfig PP_CONFIG =
       new RobotConfig(
           SwerveConstants.ROBOT_MASS,
-          SwerveConstants.ROBOT_MOMENT_OF_INERTIA,
+          SwerveConstants.ROBOT_MOI,
           new ModuleConfig(
               SwerveConstants.WHEEL_RADIUS_METERS,
-              SwerveConstants.ROBOT_SPEED_12_VOLTS,
-              SwerveConstants.WHEEL_COEFICIENT_OF_FRICTION,
-              DCMotor.getKrakenX60Foc(2).withReduction(SwerveConstants.DRIVE_GEARBOX_RATIO),
-              SwerveConstants.SLIP_CURRENT,
+              TunerConstants.kSpeedAt12Volts.in(MetersPerSecond),
+              SwerveConstants.WHEEL_COF,
+              DCMotor.getKrakenX60Foc(2).withReduction(SwerveConstants.GEARBOX_REDUCTION),
+              TunerConstants.FrontLeft.SlipCurrent,
               2),
-          new Translation2d[] {new Translation2d(SwerveConstants.FrontLeft.LocationX, SwerveConstants.FrontLeft.LocationY),
-              new Translation2d(SwerveConstants.FrontRight.LocationX, SwerveConstants.FrontRight.LocationY),
-              new Translation2d(SwerveConstants.BackLeft.LocationX, SwerveConstants.BackLeft.LocationY),
-              new Translation2d(SwerveConstants.BackRight.LocationX, SwerveConstants.BackRight.LocationY)});
+          SwerveConstants.MODULE_OFFSETS);
 
   private final HashMap<
           String,
@@ -103,7 +101,7 @@ public class BaseSwerveSubsystem implements Subsystem {
             this.config.headingPidConfig.kD,
             this.config.headingPidConfig.kF);
     configureAutoBuilder();
-    this.maxSpeed = SwerveConstants.ROBOT_SPEED_12_VOLTS;
+    this.maxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
 
     this.motorConstants = new HashMap<>();
     this.motorConstants.put(

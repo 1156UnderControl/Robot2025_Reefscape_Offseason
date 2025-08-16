@@ -4,7 +4,6 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -42,10 +41,8 @@ public class Drive {
 
   private final SwerveDriveKinematics kinematics =
     new SwerveDriveKinematics(
-      new Translation2d[] {new Translation2d(SwerveConstants.FrontLeft.LocationX, SwerveConstants.FrontLeft.LocationY),
-              new Translation2d(SwerveConstants.FrontRight.LocationX, SwerveConstants.FrontRight.LocationY),
-              new Translation2d(SwerveConstants.BackLeft.LocationX, SwerveConstants.BackLeft.LocationY),
-              new Translation2d(SwerveConstants.BackRight.LocationX, SwerveConstants.BackRight.LocationY)});
+      SwerveConstants.MODULE_OFFSETS
+    );
 
   public Drive(
       HashMap<

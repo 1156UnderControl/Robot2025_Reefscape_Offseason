@@ -11,6 +11,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
 import frc.Java_Is_UnderControl.Swerve.IO.SIgnals.PhoenixOdometryThread;
+import frc.robot.subsystems.swerve.generated.TunerConstants;
 
 import java.util.Queue;
 
@@ -26,8 +27,8 @@ public class GyroIOPigeon2 implements GyroIO {
   public GyroIOPigeon2() {
     this.pigeon =
         new Pigeon2(
-            SwerveConstants.DrivetrainConstants.Pigeon2Id,
-            SwerveConstants.CAN_BUS.getName());
+            TunerConstants.DrivetrainConstants.Pigeon2Id,
+            TunerConstants.DrivetrainConstants.CANBusName);
     this.configuration = new Pigeon2Configuration();
     this.pigeon.optimizeBusUtilization();
     // this will need to be fixed

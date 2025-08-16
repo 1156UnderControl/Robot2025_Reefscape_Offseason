@@ -14,6 +14,7 @@ import frc.Java_Is_UnderControl.Swerve.Configs.BaseSwerveConfig;
 import frc.Java_Is_UnderControl.Swerve.Configs.SwervePathPlannerConfig;
 import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
 import frc.robot.Joysticks.DriverController;
+import frc.robot.subsystems.swerve.generated.TunerConstants;
 
 import java.util.HashMap;
 
@@ -28,13 +29,13 @@ public class SwerveSubsystem extends SubsystemBase {
   public SwerveSubsystem() {
     this.moduleConstants = new HashMap<>();
 
-    this.moduleConstants.put(SwerveConstants.FRONT_LEFT_MODULE_NAME, SwerveConstants.FrontLeft);
+    this.moduleConstants.put(SwerveConstants.FRONT_LEFT_MODULE_NAME, TunerConstants.FrontLeft);
 
-    this.moduleConstants.put(SwerveConstants.FRONT_RIGHT_MODULE_NAME, SwerveConstants.FrontRight);
+    this.moduleConstants.put(SwerveConstants.FRONT_RIGHT_MODULE_NAME, TunerConstants.FrontRight);
 
-    this.moduleConstants.put(SwerveConstants.BACK_LEFT_MODULE_NAME, SwerveConstants.BackLeft);
+    this.moduleConstants.put(SwerveConstants.BACK_LEFT_MODULE_NAME, TunerConstants.BackLeft);
 
-    this.moduleConstants.put(SwerveConstants.BACK_RIGHT_MODULE_NAME, SwerveConstants.BackRight);
+    this.moduleConstants.put(SwerveConstants.BACK_RIGHT_MODULE_NAME, TunerConstants.BackRight);
 
     this.driverController = DriverController.getInstance();
 
