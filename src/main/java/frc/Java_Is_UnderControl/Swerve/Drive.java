@@ -32,7 +32,7 @@ public class Drive {
         private final ModuleIO frontRightModule;
         private final ModuleIO backLeftModule;
         private final ModuleIO backRightModule;
-        private final GyroIO gyro;
+        private final GyroIO pigeon;
 
         private final GyroIOInputsAutoLogged gyroInputs;
 

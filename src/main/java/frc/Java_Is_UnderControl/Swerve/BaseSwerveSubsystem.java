@@ -88,15 +88,6 @@ public class BaseSwerveSubsystem implements Subsystem {
         this.config.headingPidConfig.kI,
         this.config.headingPidConfig.kD,
         this.config.headingPidConfig.kF);
-    if (Utils.isSimulation()) {
-      startSimThread();
-    }
-    this.headingPidController =
-        new PIDController(
-            this.config.headingPidConfig.kP,
-            this.config.headingPidConfig.kI,
-            this.config.headingPidConfig.kD,
-            this.config.headingPidConfig.kF);
     configureAutoBuilder();
     this.maxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
 
@@ -255,9 +246,7 @@ public class BaseSwerveSubsystem implements Subsystem {
     return isAtHeading;
   }
 
-  <<<<<<<HEAD
-
-  public void updateSwerveLogs(){
+  public void updateSwerveLogs() {
     Logger.recordOutput("/Swerve/Subsystems/Robot Angle", this.robotAngle.getDegrees());
     Logger.recordOutput("/Swerve/Subsystems/Robot Speeds", this.robotSpeeds);
     Logger.recordOutput("/Swerve/Subsystems/Target Speeds", this.targetSpeeds);
