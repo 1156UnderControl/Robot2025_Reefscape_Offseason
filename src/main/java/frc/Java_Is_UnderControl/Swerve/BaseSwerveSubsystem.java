@@ -31,7 +31,7 @@ import frc.Java_Is_UnderControl.Swerve.Configs.BaseSwerveConfig;
 import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
 import frc.Java_Is_UnderControl.Swerve.IO.Gyro.GyroIOPigeon2;
 import frc.Java_Is_UnderControl.Util.CustomMath;
-import frc.robot.subsystems.generated.TunerConstants;
+import frc.robot.subsystems.swerve.generated.TunerConstants;
 import frc.robot.util.LocalADStarAK;
 
 import java.util.HashMap;
@@ -91,6 +91,12 @@ public class BaseSwerveSubsystem implements Subsystem {
     if (Utils.isSimulation()) {
       startSimThread();
     }
+    this.headingPidController =
+        new PIDController(
+            this.config.headingPidConfig.kP,
+            this.config.headingPidConfig.kI,
+            this.config.headingPidConfig.kD,
+            this.config.headingPidConfig.kF);
     configureAutoBuilder();
     this.maxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
 
@@ -196,8 +202,8 @@ public class BaseSwerveSubsystem implements Subsystem {
     this.drive.updateLogs();
     this.robotSpeeds = this.drive.getRobotSpeeds();
     this.robotAngle = this.drive.getRobotAngle();
-    Logger.recordOutput("Module States", this.drive.getRobotModuleStates());
-    Logger.recordOutput("Module Target States", this.drive.getRobotModuleTargetStates());
+
+    this.updateSwerveLogs();
   }
 
   public void driveFieldOrientedLockedAngle(ChassisSpeeds speeds, Rotation2d targetHeading) {
@@ -249,7 +255,13 @@ public class BaseSwerveSubsystem implements Subsystem {
     return isAtHeading;
   }
 
-  // o que é isso aqui mesmo? Apaguei pra parar de dar erro
-  private void startSimThread() {
+  <<<<<<<HEAD
+
+  public void updateSwerveLogs(){
+    Logger.recordOutput("/Swerve/Subsystems/Robot Angle", this.robotAngle.getDegrees());
+    Logger.recordOutput("/Swerve/Subsystems/Robot Speeds", this.robotSpeeds);
+    Logger.recordOutput("/Swerve/Subsystems/Target Speeds", this.targetSpeeds);
+    Logger.recordOutput("/Subsystems/Swerve/Module States", this.drive.getRobotModuleStates());
+    Logger.recordOutput("/Subsystems/Swerve/Module Target States", this.drive.getRobotModuleTargetStates());
   }
 }

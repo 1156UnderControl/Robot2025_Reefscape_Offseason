@@ -1,4 +1,4 @@
-package frc.robot.subsystems.generated;
+package frc.robot.subsystems.swerve.generated;
 
 import static edu.wpi.first.units.Units.*;
 
