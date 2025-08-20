@@ -8,10 +8,9 @@ import frc.Java_Is_UnderControl.Motors.MotorIO;
 import frc.Java_Is_UnderControl.Motors.MotorIOInputsAutoLogged;
 import frc.Java_Is_UnderControl.Motors.SparkMAXMotor;
 import frc.Java_Is_UnderControl.Motors.TalonFXMotor;
-import frc.robot.subsystems.scorer.ScorerIOInputsAutoLogged;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class ClimberSubsystem extends SubsystemBase{
+public class ClimberSubsystem extends SubsystemBase implements ClimberIO {
     private static ClimberSubsystem instance;
 
     private final ClimberIOInputsAutoLogged climberInputs;
@@ -39,17 +38,30 @@ public class ClimberSubsystem extends SubsystemBase{
 
     @Override
     public void periodic(){
-        
+        this.updateClimberInputs(climberInputs);
     }
 
     private void updateClimberInputs(ClimberIOInputsAutoLogged climberInputs) {
         climberInputs.pivotPosition = pivotMotor.getPosition();
-        climberInputs.pivotTargetPosition = pivotMotor.;
-        climberInputs.cageIntakeVelocity = pivotInputs.velocity;
-        climberInputs.cageIntakeTargetVelocity = pivotInputs.targetSpeed;
-        climberInputs.pivotIsInverted = pivotMotor.isInverted;
-        climberInputs.cageIntakeIsInverted = cageIntakeInputs.isInverted;
+        climberInputs.pivotTargetPosition = climberInputs.pivotTargetPosition;
+        climberInputs.cageIntakeVelocity = climberInputs.cageIntakeVelocity;
+        climberInputs.cageIntakeTargetVelocity = climberInputs.cageIntakeTargetVelocity;
+        climberInputs.pivotIsInverted = climberInputs.pivotIsInverted;
+        climberInputs.cageIntakeIsInverted = climberInputs.cageIntakeIsInverted;
+
+        this.pivotMotor.updateInputs(pivotInputs);
+        this.cageIntakeMotor.updateInputs(cageIntakeInputs);
 
         Logger.processInputs("Subsystems/Climber/", climberInputs);
+    }
+
+    @Override
+    public void setCageIntakeDutyCicle(double dutyCicle) {
+        cageIntakeMotor.set(dutyCicle);
+    }
+
+    @Override
+    public void setPivotDutyCicle(double dutyCycle) {
+        pivotMotor.set(dutyCycle);
     }
 }
