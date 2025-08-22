@@ -1,6 +1,7 @@
 package frc.Java_Is_UnderControl.Swerve.IO.Gyro;
 
 import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
@@ -28,7 +29,7 @@ public class GyroIOPigeon2 implements GyroIO {
     this.pigeon =
         new Pigeon2(
             TunerConstants.DrivetrainConstants.Pigeon2Id,
-            TunerConstants.DrivetrainConstants.CANBusName);
+            CANBus.systemCore(3));
     this.configuration = new Pigeon2Configuration();
     this.pigeon.optimizeBusUtilization();
     // this will need to be fixed

@@ -6,6 +6,7 @@ import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -115,9 +116,9 @@ public class TalonFXMotor implements IMotor {
     this.motorName = motorName;
   }
 
-  public TalonFXMotor(int id, GravityTypeValue gravityType, String motorName, String canivoreBus) {
+  public TalonFXMotor(int id, GravityTypeValue gravityType, String motorName, int canivoreBus) {
     this.gravityType = gravityType;
-    motor = new TalonFX(id, canivoreBus);
+    motor = new TalonFX(id, CANBus.systemCore(canivoreBus));
     talonConfigurator = motor.getConfigurator();
     this.clearStickyFaults();
     this.factoryDefault();
@@ -127,7 +128,7 @@ public class TalonFXMotor implements IMotor {
     this.motorName = motorName;
   }
 
-  public TalonFXMotor(int id, String motorName, String canivoreBus) {
+  public TalonFXMotor(int id, String motorName, int canivoreBus) {
     this(id, GravityTypeValue.Elevator_Static, motorName, canivoreBus);
   }
 
