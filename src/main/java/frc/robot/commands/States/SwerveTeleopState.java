@@ -10,6 +10,7 @@ public class SwerveTeleopState extends Command{
     @Override
     public void initialize(){
         this.swerve = new SwerveSubsystem();
+        this.addRequirements(this.swerve);
     }
 
     @Override
