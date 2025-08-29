@@ -4,6 +4,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.commands.States.PrepareToScoreCoralState;
 import frc.robot.commands.States.SwerveTeleopState;
 import frc.robot.constants.FieldConstants.ReefLevel;
 import frc.robot.joysticks.DriverController;
@@ -35,7 +36,7 @@ public class RobotContainer {
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
     this.swerve.setDefaultCommand(Commands.run(() -> new SwerveTeleopState(), this.swerve));
-    this.scorer.setDefaultCommand(Commands.run(() -> this.scorer.moveScorerToDefaultPosition(), this.scorer));
+    this.scorer.setDefaultCommand(new PrepareToScoreCoralState());
     this.configureButtonBindings();
   }
 
