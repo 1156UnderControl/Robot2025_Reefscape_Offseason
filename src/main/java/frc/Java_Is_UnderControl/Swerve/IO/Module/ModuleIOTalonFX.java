@@ -3,6 +3,7 @@ package frc.Java_Is_UnderControl.Swerve.IO.Module;
 import static frc.robot.util.PhoenixUtil.*;
 
 import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
@@ -83,11 +84,11 @@ public class ModuleIOTalonFX implements ModuleIO {
           constants) {;
     this.constants = constants;
     this.driveTalon =
-        new TalonFX(this.constants.DriveMotorId, TunerConstants.DrivetrainConstants.CANBusName);
+        new TalonFX(this.constants.DriveMotorId, CANBus.systemCore(3));
     this.steerTalon =
-        new TalonFX(this.constants.SteerMotorId, TunerConstants.DrivetrainConstants.CANBusName);
+        new TalonFX(this.constants.SteerMotorId, CANBus.systemCore(3));
     this.encoder =
-        new CANcoder(this.constants.EncoderId, TunerConstants.DrivetrainConstants.CANBusName);
+        new CANcoder(this.constants.EncoderId, CANBus.systemCore(3));
 
     this.configureDriveMotor(this.constants, this.driveTalon);
     this.configureSteerMotor(this.constants, this.steerTalon);

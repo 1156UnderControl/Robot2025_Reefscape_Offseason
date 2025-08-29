@@ -32,7 +32,7 @@ public class ClimberSubsystem extends SubsystemBase implements ClimberIO {
         this.pivotInputs = new MotorIOInputsAutoLogged();
         this.cageIntakeInputs = new MotorIOInputsAutoLogged();
 
-        this.pivotMotor = new TalonFXMotor(14, "can_s1", GravityTypeValue.Arm_Cosine, "Pivot Climber Motor");
+        this.pivotMotor = new TalonFXMotor(14, 1, GravityTypeValue.Arm_Cosine, "Pivot Climber Motor");
         this.cageIntakeMotor = new SparkMAXMotor(2, 1, "Cage Intake Motor");
     }
 

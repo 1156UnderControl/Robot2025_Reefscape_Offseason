@@ -12,8 +12,6 @@ public class ElevatorConstants {
   public static final double PASSIVE_HOMING_RANGE = 0;
 
   public class tunning_values_elevator {
-    public static final double KS = 0;
-    public static final double KV = 0;
     public static final double MAX_VELOCITY = 0;
     public static final double MAX_ACCELERATION = 0;
     public static final double POSITION_ERROR_ALLOWED = 0;

@@ -18,8 +18,6 @@ public class PivotConstants {
   public static final Pose2d BREAK_POINT_POSE_PIVOT = new Pose2d(0, 0.284508, new Rotation2d());
 
   public class tunning_values_pivot {
-    public static final double KS = 0;
-    public static final double KV = 0;
     public static final double MAX_VELOCITY = 0;
     public static final double MAX_VELOCITY_WITH_ALGAE = 0;
     public static final double MAX_ACCELERATION = 0;
