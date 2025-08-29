@@ -2,12 +2,23 @@ package frc.robot.subsystems.scorer;
 
 import org.littletonrobotics.junction.Logger;
 
-import com.ctre.phoenix6.signals.GravityTypeValue;
-
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.Java_Is_UnderControl.Motors.MotorIO;
 import frc.Java_Is_UnderControl.Motors.MotorIOInputsAutoLogged;
-import frc.Java_Is_UnderControl.Motors.TalonFXMotor;
+import frc.Java_Is_UnderControl.Motors.SparkFlexMotor;
+import frc.Java_Is_UnderControl.Sensors.InfraRed;
+import frc.Java_Is_UnderControl.Sensors.SensorIO;
+import frc.Java_Is_UnderControl.Sensors.SensorIOInputsAutoLogged;
+import frc.robot.constants.ElevatorConstants;
+import frc.robot.constants.EndEffectorConstants;
+import frc.robot.constants.IntakeConstants;
+import frc.robot.constants.FieldConstants.ReefLevel;
+import frc.robot.constants.FieldConstants.Algae.AlgaeHeightReef;
+import frc.robot.constants.SwerveConstants.TargetBranch;
+import frc.robot.constants.PivotConstants;
 
 public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
 
@@ -15,10 +26,44 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
 
     private final MotorIO elevatorLead;
     private final MotorIO elevatorFollower;
+    private final MotorIO pivotMotor;
+    private final MotorIO endEffectorMotor;
+    private final SensorIO pivotInfraRed;
 
     private final ScorerIOInputsAutoLogged scorerInputs;
     private final MotorIOInputsAutoLogged elevatorLeadInputs;
     private final MotorIOInputsAutoLogged elevatorFollowerInputs;
+    private final MotorIOInputsAutoLogged pivotInputs;
+    private final MotorIOInputsAutoLogged endEffectorInputs;
+    private final SensorIOInputsAutoLogged pivotInfraRedInputs;
+    
+    private boolean hasCoral;
+    private boolean hasAlgae;
+    private ReefLevel coralHeightReef;
+    private AlgaeHeightReef algaeHeightReef;
+    private TargetBranch autoAlgaeCollectBranch;
+
+    private String scorerState;
+
+    private double goalElevatorPosition;
+    private double goalPivotPosition;
+    private double goalEndEffectorVelocity;
+
+    private double pivotAbsolutePosition;
+
+    private boolean manualScoreCoral;
+    private boolean manualScoreAlgae;
+
+    private boolean pivotStoppedByElevatorLimit;
+
+    private boolean elevatorStoppedByPivotLimit;
+
+    private Pose2d pivotPose;
+    private Pose2d endEffectorLeftTargetPose;
+    private Pose2d endEffectorRightTargetPose;
+
+    private Pose2d armDirection;
+    private Pose2d armPerpendicularDirection;
 
     public static ScorerSubsystem getInstance() {
         if (instance == null) {
@@ -31,40 +76,298 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         this.scorerInputs = new ScorerIOInputsAutoLogged();
         this.elevatorLeadInputs = new MotorIOInputsAutoLogged();
         this.elevatorFollowerInputs = new MotorIOInputsAutoLogged();
+        this.pivotInputs = new MotorIOInputsAutoLogged();
+        this.endEffectorInputs = new MotorIOInputsAutoLogged();
+        this.pivotInfraRedInputs = new SensorIOInputsAutoLogged();
 
-        this.elevatorLead = new TalonFXMotor(0, "can_s0", GravityTypeValue.Elevator_Static, "Elevator Lead Motor");
-        this.elevatorFollower = new TalonFXMotor(1, "can_s0", GravityTypeValue.Elevator_Static, "Elevator Follower Motor");
-        this.elevatorFollower.setFollower(0, true);
+        this.elevatorLead = new SparkFlexMotor(ElevatorConstants.ID_elevatorLeaderMotor, ElevatorConstants.elevatorBusID, ElevatorConstants.elevatorLeaderMotorName);
+        this.elevatorFollower = new SparkFlexMotor(ElevatorConstants.ID_elevatorFollowerMotor, ElevatorConstants.elevatorBusID, ElevatorConstants.elevatorFollowerMotorName);
+        this.pivotMotor = new SparkFlexMotor(PivotConstants.ID_pivotMotor, PivotConstants.pivotBusID, PivotConstants.pivotMotorName);
+        this.endEffectorMotor = new SparkFlexMotor(EndEffectorConstants.ID_endEffectorMotor, EndEffectorConstants.endEffectorBusID, EndEffectorConstants.endEffectorMotorName);
+        this.pivotInfraRed = new InfraRed(EndEffectorConstants.Port_coralInfraRed, false);
+
+        this.setConfigsElevator();
+        this.setConfigsPivot();
+        this.setConfigsEndEffector();
+
+        this.hasCoral = DriverStation.isAutonomous();
+        this.hasAlgae = false;
+        this.coralHeightReef = ReefLevel.L1;
+        this.scorerState = "Idle";
+
+        this.goalElevatorPosition = 0;
+        this.goalPivotPosition = 0;
+        this.goalEndEffectorVelocity = 0;
+        this.manualScoreCoral = false;
     }
 
-    @Override
-    public void setElevatorDutyCicle(double dutyCicle){
-        elevatorLead.set(dutyCicle);
-    }
+    private void updateLogs(ScorerIOInputsAutoLogged scorerInputs) {
+        scorerInputs.hasCoral = this.hasCoral;
+        scorerInputs.hasAlgae = this.hasAlgae;
+        scorerInputs.scorerState = this.scorerState;
 
-    private void updateScorerInputs(ScorerIOInputsAutoLogged scorerInputs) {
-        scorerInputs.elevatorLeadPosition = elevatorLeadInputs.position;
-        scorerInputs.elevatorLeadTargetPosition = elevatorLeadInputs.targetPosition;
-        scorerInputs.elevatorLeadVelocity = elevatorLeadInputs.velocity;
-        scorerInputs.elevatorLeadTargetVelocity = elevatorLeadInputs.targetSpeed;
-        scorerInputs.elevatorLeadIsInverted = elevatorLeadInputs.isInverted;
+        this.elevatorLead.updateInputs(elevatorLeadInputs);
+        this.elevatorFollower.updateInputs(elevatorFollowerInputs);
+        this.pivotMotor.updateInputs(pivotInputs);
+        this.endEffectorMotor.updateInputs(endEffectorInputs);
+        this.pivotInfraRed.updateInputs(pivotInfraRedInputs);
 
-        scorerInputs.elevatorFollowerPosition = elevatorFollowerInputs.position;
-        scorerInputs.elevatorFollowerTargetPosition = elevatorFollowerInputs.targetPosition;
-        scorerInputs.elevatorFollowerVelocity = elevatorFollowerInputs.velocity;
-        scorerInputs.elevatorFollowerTargetVelocity = elevatorFollowerInputs.targetSpeed;
-        scorerInputs.elevatorFollowerIsInverted = elevatorFollowerInputs.isInverted;
-
+        Logger.processInputs("Motors/Scorer/ElevatorLead/", elevatorLeadInputs);
+        Logger.processInputs("Motors/Scorer/ElevatorFollower/", elevatorFollowerInputs);
+        Logger.processInputs("Motors/Scorer/Pivot/", pivotInputs);
+        Logger.processInputs("Motors/Scorer/EndEffector/", endEffectorInputs);
         Logger.processInputs("Subsystems/Scorer/Elevator/", scorerInputs);
+        Logger.processInputs("Sensors/Scorer/EndEffectorInfraRed/", pivotInfraRedInputs);
     }
 
     @Override
     public void periodic() {
-        this.updateScorerInputs(scorerInputs);
-        this.elevatorLead.updateInputs(elevatorLeadInputs);
-        this.elevatorFollower.updateInputs(elevatorFollowerInputs);
+        this.updateLogs(scorerInputs);
+    }
 
-        Logger.processInputs("Motors/ElevatorLead/", elevatorLeadInputs);
-        Logger.processInputs("Motors/ElevatorFollower/", elevatorFollowerInputs);
+    @Override
+    public boolean hasCoral() {
+        return this.hasCoral;
+    }
+
+    @Override
+    public boolean hasAlgae() {
+        return this.hasAlgae;
+    }
+
+    @Override
+    public void collectCoralFromIndexer(){
+        if(!this.hasCoral){
+            this.setEndEffectorDutyCycle(EndEffectorConstants.tunning_values_endeffector.setpoints.DUTY_CYCLE_INTAKE_CORAL);
+        }
+    }
+
+    @Override
+    public boolean isElevatorAtTargetPosition() {
+        return this.elevatorLead.getPosition() <= this.goalElevatorPosition + ElevatorConstants.tunning_values_elevator.POSITION_ERROR_ALLOWED &&
+               this.elevatorLead.getPosition() >= this.goalElevatorPosition - ElevatorConstants.tunning_values_elevator.POSITION_ERROR_ALLOWED;
+    }
+
+    @Override
+    public boolean isPivotAtTargetPosition() {
+        return this.isPivotAtTargetPosition(this.goalPivotPosition);
+    }
+
+    public boolean isPivotAtTargetPosition(double pivotTargetPosition) {
+        return this.pivotAbsolutePosition <= pivotTargetPosition + PivotConstants.tunning_values_pivot.ANGLE_ERROR_ALLOWED &&
+               this.pivotAbsolutePosition >= pivotTargetPosition - PivotConstants.tunning_values_pivot.ANGLE_ERROR_ALLOWED;
+    }
+
+    @Override
+    public void placeCoral() {
+        if(this.hasCoral){
+            this.setEndEffectorDutyCycle(EndEffectorConstants.tunning_values_endeffector.setpoints.DUTY_CYCLE_EXPELL_CORAL);
+        }
+    }
+
+    @Override
+    public void placeAlgae() {
+        if(this.hasAlgae){
+            this.setEndEffectorDutyCycle(EndEffectorConstants.tunning_values_endeffector.setpoints.DUTY_CYCLE_EXPELL_ALGAE);
+        }
+    }
+
+    @Override
+    public void setTargetCoralLevel(ReefLevel coralHeightReef) {
+        this.coralHeightReef = coralHeightReef;
+    }
+
+    @Override
+    public void setTargetAlgaeLevel(AlgaeHeightReef algaeHeightReef) {
+        this.algaeHeightReef = algaeHeightReef;
+    }
+
+    @Override
+    public void setAutoAlgaeCollectBranch(TargetBranch autoAlgaeCollectBranch) {
+        this.autoAlgaeCollectBranch = autoAlgaeCollectBranch;
+    }
+
+    @Override
+    public void setManualScoreCoral(boolean manualScoreCoral){
+        this.manualScoreCoral = manualScoreCoral;
+    }
+
+    @Override
+    public void setManualScoreAlgae(boolean manualScoreAlgae){
+        this.manualScoreAlgae = manualScoreAlgae;
+    }
+
+    @Override
+    public void prepareToScoreAlgae(){
+        this.setScorerTargetAlgae();
+        this.setScorerStructureGoals(goalElevatorPosition, goalPivotPosition);
+    }
+
+    @Override
+    public void prepareToScoreCoral(){
+        this.setScorerTargetCoral();
+        this.setScorerStructureGoals(goalElevatorPosition, goalPivotPosition);
+    }
+
+    @Override
+    public void moveScorerToDefaultPosition(){
+        if(this.hasCoral){
+            this.goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.DEFAULT_POSITION_WITH_CORAL;
+            this.goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.DEFAULT_ANGLE_WITH_CORAL;
+        } else if (this.hasAlgae){
+            this.goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.DEFAULT_POSITION_WITH_ALGAE;
+            this.goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.DEFAULT_ANGLE_WITH_ALGAE;
+        } else {
+            this.goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.DEFAULT_POSITION;
+            this.goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.DEFAULT_ANGLE;
+        }
+
+        this.setScorerStructureGoals(this.goalElevatorPosition, this.goalPivotPosition);
+    }
+
+    private void setEndEffectorDutyCycle(double dutyCycle){
+        this.endEffectorMotor.set(dutyCycle);
+    }
+
+    @Override
+    public void overrideHasCoral() {
+      this.hasCoral = true;
+      this.hasAlgae = false;
+    }
+  
+    @Override
+    public void overrideHasAlgae() {
+      this.hasAlgae = true;
+      this.hasCoral = false;
+    }
+  
+    @Override
+    public void overrideNoObject() {
+      this.hasCoral = false;
+      this.hasAlgae = false;
+    }
+
+    private void setScorerTargetCoral(){
+        switch (this.coralHeightReef) {
+            case L1:
+                goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.L1_HEIGHT;
+                goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.L1_ANGLE;
+                break;
+            case L2:
+                goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.L2_HEIGHT;
+                goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.L2_ANGLE;
+                break;
+            case L3:
+                goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.L3_HEIGHT;
+                goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.L3_ANGLE;
+                break;
+            case L4:
+                goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.L4_HEIGHT;
+                goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.L4_ANGLE;
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void setScorerTargetAlgae(){
+        switch (this.algaeHeightReef) {
+            case LOW:
+                goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.L1_HEIGHT;
+                goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.L1_ANGLE;
+                break;
+            case MID:
+                goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.L2_HEIGHT;
+                goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.L2_ANGLE;
+                break;
+            case GROUND:
+                goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.L3_HEIGHT;
+                goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.L3_ANGLE;
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void setConfigsElevator() {
+        this.elevatorLead.setMotorBrake(true);
+        this.elevatorFollower.setMotorBrake(true);
+        this.elevatorFollower.setFollower(ElevatorConstants.ID_elevatorLeaderMotor, true);
+        this.elevatorLead.setPositionFactor(ElevatorConstants.POSITION_FACTOR_MOTOR_ROTATION_TO_MECHANISM_METERS);
+        this.elevatorLead.setVelocityFactor(ElevatorConstants.VELOCITY_FACTOR_MOTOR_RPM_TO_METERS_PER_SECOND);
+        this.elevatorLead.configurePIDF(
+            ElevatorConstants.tunning_values_elevator.PID.P,
+            ElevatorConstants.tunning_values_elevator.PID.I,
+            ElevatorConstants.tunning_values_elevator.PID.D,
+            0,
+            ElevatorConstants.tunning_values_elevator.PID.IZone);
+        this.elevatorFollower.burnFlash();
+        this.elevatorLead.burnFlash();
+        this.elevatorLead.setPosition(ElevatorConstants.ZERO_POSITION_IN_METERS_FROM_GROUND);
+      }
+    
+    private void setConfigsPivot() {
+        pivotMotor.setInverted(false);
+        pivotMotor.configExternalEncoder();
+        pivotMotor.setInvertedEncoder(true);
+        pivotMotor.setMotorBrake(true);
+        pivotMotor.setPositionFactor(PivotConstants.ANGLE_FACTOR_ROTOR_ROTATION_TO_MECHANISM_DEGREES);
+        pivotMotor.setPositionFactorExternalEncoder(PivotConstants.ANGLE_FACTOR_MECHANISM_ROTATION_TO_MECHANISM_DEGREES);
+        pivotMotor.setVelocityFactorExternalEncoder(PivotConstants.VELOCITY_FACTOR_MOTOR_RPM_TO_MECHANISM_DEG_PER_SECOND);
+        pivotMotor.setAbsoluteEncoderZeroOffset(PivotConstants.ZERO_OFFSET_ABSOLUTE_ENCODER);
+        pivotMotor.configureTrapezoid(PivotConstants.tunning_values_pivot.MAX_ACCELERATION,
+            PivotConstants.tunning_values_pivot.MAX_VELOCITY);
+        pivotMotor.configurePIDF(
+            PivotConstants.tunning_values_pivot.PID.P,
+            PivotConstants.tunning_values_pivot.PID.I,
+            PivotConstants.tunning_values_pivot.PID.D,
+            0,
+            ElevatorConstants.tunning_values_elevator.PID.IZone);
+        pivotMotor.setPosition(pivotMotor.getPositionExternalAbsoluteEncoder());
+        pivotMotor.burnFlash();
+    }
+    
+    private void setConfigsEndEffector() {
+        endEffectorMotor.setMotorBrake(true);
+        endEffectorMotor.setInverted(false);
+        endEffectorMotor.setVelocityFactor(EndEffectorConstants.VELOCITY_FACTOR_MOTOR_RPM_TO_MECHANISM_RPM);
+        endEffectorMotor.burnFlash();
+    }
+
+    private void setScorerStructureGoals(double targetElevatorPosition, double targetPivotPosition){ 
+        this.pivotPose = new Pose2d(0, this.elevatorLead.getPosition(), new Rotation2d());
+        this.armDirection = new Pose2d(Math.sin(this.pivotAbsolutePosition), -Math.cos(this.pivotAbsolutePosition), new Rotation2d());
+        this.armPerpendicularDirection = new Pose2d(Math.cos(this.pivotAbsolutePosition), Math.sin(this.pivotAbsolutePosition), new Rotation2d());
+
+        this.endEffectorLeftTargetPose = new Pose2d(this.pivotPose.getX() + PivotConstants.ARM_LENGH * this.armDirection.getX() + 
+        (PivotConstants.ARM_WIDHT/2) * this.armPerpendicularDirection.getX(), this.pivotPose.getY() + PivotConstants.ARM_LENGH * this.armDirection.getY() + 
+        (PivotConstants.ARM_WIDHT/2) * this.armPerpendicularDirection.getY(), new Rotation2d());
+
+        this.endEffectorRightTargetPose = new Pose2d(this.pivotPose.getX() + PivotConstants.ARM_LENGH * this.armDirection.getX() - 
+        (PivotConstants.ARM_WIDHT/2) * this.armPerpendicularDirection.getX(), this.pivotPose.getY() + PivotConstants.ARM_LENGH * this.armDirection.getY() - 
+        (PivotConstants.ARM_WIDHT/2) * this.armPerpendicularDirection.getY(), new Rotation2d());
+
+        double securedTargetElevatorPosition;
+        if(targetElevatorPosition > ElevatorConstants.tunning_values_elevator.setpoints.MAX_HEIGHT){
+            securedTargetElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.MAX_HEIGHT;
+        } else if (targetElevatorPosition < ElevatorConstants.tunning_values_elevator.setpoints.MIN_HEIGHT) {
+            securedTargetElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.MIN_HEIGHT;
+        } else {
+            securedTargetElevatorPosition = targetElevatorPosition;
+        }
+
+        if((this.endEffectorLeftTargetPose.minus(PivotConstants.BREAK_POINT_POSE_PIVOT).getY() >= 0.1 && this.endEffectorLeftTargetPose.minus(IntakeConstants.BREAK_POINT_POSE_PIVOT).getY() >= 0.1) && (this.endEffectorRightTargetPose.minus(PivotConstants.BREAK_POINT_POSE_PIVOT).getY() >= 0.1 && this.endEffectorRightTargetPose.minus(IntakeConstants.BREAK_POINT_POSE_PIVOT).getY() >= 0.1)){
+            if(this.isPivotAtTargetPosition(targetPivotPosition)){
+                this.elevatorLead.setPosition(securedTargetElevatorPosition);
+            } else {
+                this.pivotMotor.setPositionExternalEncoder(targetPivotPosition);
+            }
+        } else {
+            double minimumHeightElevator = securedTargetElevatorPosition;
+            for(double i = 0.0; (this.endEffectorLeftTargetPose.minus(PivotConstants.BREAK_POINT_POSE_PIVOT).getY() >= 0.1 && this.endEffectorLeftTargetPose.minus(IntakeConstants.BREAK_POINT_POSE_PIVOT).getY() >= 0.1) && (this.endEffectorRightTargetPose.minus(PivotConstants.BREAK_POINT_POSE_PIVOT).getY() >= 0.1 && this.endEffectorRightTargetPose.minus(IntakeConstants.BREAK_POINT_POSE_PIVOT).getY() >= 0.1); i += 0.01){
+                minimumHeightElevator = securedTargetElevatorPosition + i;
+            }
+            this.elevatorLead.setPosition(minimumHeightElevator);
+        }
     }
 }

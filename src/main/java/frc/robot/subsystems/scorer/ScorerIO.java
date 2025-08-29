@@ -2,22 +2,53 @@ package frc.robot.subsystems.scorer;
 
 import org.littletonrobotics.junction.AutoLog;
 
+import frc.robot.constants.FieldConstants.Algae.AlgaeHeightReef;
+import frc.robot.constants.FieldConstants.ReefLevel;
+import frc.robot.constants.SwerveConstants.TargetBranch;
+
 public interface ScorerIO {
 
     @AutoLog
     public static class ScorerIOInputs{
-        public double elevatorLeadPosition = 0.0;
-        public double elevatorLeadTargetPosition = 0.0;
-        public double elevatorLeadVelocity = 0.0;
-        public double elevatorLeadTargetVelocity = 0.0;
-        public boolean elevatorLeadIsInverted = false;
-
-        public double elevatorFollowerPosition = 0.0;
-        public double elevatorFollowerTargetPosition = 0.0;
-        public double elevatorFollowerVelocity = 0.0;
-        public double elevatorFollowerTargetVelocity = 0.0;
-        public boolean elevatorFollowerIsInverted = false;
+        public boolean hasCoral = false;
+        public boolean hasAlgae = false;
+        public ReefLevel targetLevel = ReefLevel.L1;
+        public String scorerState = "Idle";
     }
 
-    void setElevatorDutyCicle(double dutyCycle);
+    boolean hasCoral();
+
+    boolean hasAlgae();
+
+    void collectCoralFromIndexer();
+
+    void placeCoral();
+
+    void placeAlgae();
+
+    void setTargetCoralLevel(ReefLevel coralHeightReef);
+
+    void setTargetAlgaeLevel(AlgaeHeightReef algaeHeightReef);
+
+    void setAutoAlgaeCollectBranch(TargetBranch autoAlgaeCollectBranch);
+
+    void setManualScoreCoral(boolean manualScoreCoral);
+    
+    void setManualScoreAlgae(boolean manualScoreAlgae);
+
+    void prepareToScoreAlgae();
+
+    void prepareToScoreCoral();
+
+    void moveScorerToDefaultPosition();
+
+    void overrideHasCoral();
+
+    void overrideHasAlgae();
+
+    void overrideNoObject();
+
+    boolean isElevatorAtTargetPosition();
+
+    boolean isPivotAtTargetPosition();
 }
