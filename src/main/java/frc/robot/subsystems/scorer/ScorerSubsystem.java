@@ -356,7 +356,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
             securedTargetElevatorPosition = targetElevatorPosition;
         }
 
-        if((this.endEffectorLeftTargetPose.minus(PivotConstants.BREAK_POINT_POSE_PIVOT).getY() >= 0.1 && this.endEffectorLeftTargetPose.minus(IntakeConstants.BREAK_POINT_POSE_PIVOT).getY() >= 0.1) && (this.endEffectorRightTargetPose.minus(PivotConstants.BREAK_POINT_POSE_PIVOT).getY() >= 0.1 && this.endEffectorRightTargetPose.minus(IntakeConstants.BREAK_POINT_POSE_PIVOT).getY() >= 0.1)){
+        if((this.endEffectorLeftTargetPose.minus(PivotConstants.BREAK_POINT_POSE_PIVOT).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS && this.endEffectorLeftTargetPose.minus(IntakeConstants.BREAK_POINT_POSE_PIVOT_CLOSED).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS) && (this.endEffectorRightTargetPose.minus(PivotConstants.BREAK_POINT_POSE_PIVOT).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS && this.endEffectorRightTargetPose.minus(IntakeConstants.BREAK_POINT_POSE_PIVOT_CLOSED).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS)){
             if(this.isPivotAtTargetPosition(targetPivotPosition)){
                 this.elevatorLead.setPosition(securedTargetElevatorPosition);
             } else {
@@ -364,7 +364,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
             }
         } else {
             double minimumHeightElevator = securedTargetElevatorPosition;
-            for(double i = 0.0; (this.endEffectorLeftTargetPose.minus(PivotConstants.BREAK_POINT_POSE_PIVOT).getY() >= 0.1 && this.endEffectorLeftTargetPose.minus(IntakeConstants.BREAK_POINT_POSE_PIVOT).getY() >= 0.1) && (this.endEffectorRightTargetPose.minus(PivotConstants.BREAK_POINT_POSE_PIVOT).getY() >= 0.1 && this.endEffectorRightTargetPose.minus(IntakeConstants.BREAK_POINT_POSE_PIVOT).getY() >= 0.1); i += 0.01){
+            for(double i = 0.0; (this.endEffectorLeftTargetPose.minus(PivotConstants.BREAK_POINT_POSE_PIVOT).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS && this.endEffectorLeftTargetPose.minus(IntakeConstants.BREAK_POINT_POSE_PIVOT_CLOSED).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS) && (this.endEffectorRightTargetPose.minus(PivotConstants.BREAK_POINT_POSE_PIVOT).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS && this.endEffectorRightTargetPose.minus(IntakeConstants.BREAK_POINT_POSE_PIVOT_CLOSED).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS); i += 0.01){
                 minimumHeightElevator = securedTargetElevatorPosition + i;
             }
             this.elevatorLead.setPosition(minimumHeightElevator);

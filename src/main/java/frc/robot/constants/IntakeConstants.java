@@ -6,7 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 public class IntakeConstants {
   public static final int ID_intakeMotor = 5;
   public static final int port_IR = 0;
-  public static final Pose2d BREAK_POINT_POSE_PIVOT = new Pose2d(0.1, 0.1, new Rotation2d());
+  public static final Pose2d BREAK_POINT_POSE_PIVOT_CLOSED = new Pose2d(0.517806, 0.330912, new Rotation2d());
 
   public class tunning_values_intake {
     public class setpoints {

@@ -14,7 +14,8 @@ public class PivotConstants {
   public static final double ARM_LENGH = 0;
   public static final double ARM_WIDHT = 0;
   public static final double ARM_ANGLE = 0;
-  public static final Pose2d BREAK_POINT_POSE_PIVOT = new Pose2d(0, 0.1, new Rotation2d());
+  public static final double MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS = 0.1;
+  public static final Pose2d BREAK_POINT_POSE_PIVOT = new Pose2d(0, 0.284508, new Rotation2d());
 
   public class tunning_values_pivot {
     public static final double KS = 0;
