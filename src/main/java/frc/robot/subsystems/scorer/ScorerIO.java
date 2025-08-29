@@ -12,7 +12,11 @@ public interface ScorerIO {
     public static class ScorerIOInputs{
         public boolean hasCoral = false;
         public boolean hasAlgae = false;
-        public ReefLevel targetLevel = ReefLevel.L1;
+        public ReefLevel targetCoralLevel = ReefLevel.L1;
+        public AlgaeHeightReef targetAlgaeLevel = AlgaeHeightReef.MID;
+        public boolean manualScoreCoral = false;
+        public boolean manualScoreAlgae = false;
+        public boolean pivotSafeMeasuresEnabled = false;
         public String scorerState = "Idle";
     }
 

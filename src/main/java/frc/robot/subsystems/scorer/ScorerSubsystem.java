@@ -54,16 +54,14 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     private boolean manualScoreCoral;
     private boolean manualScoreAlgae;
 
-    private boolean pivotStoppedByElevatorLimit;
-
-    private boolean elevatorStoppedByPivotLimit;
-
     private Pose2d pivotPose;
     private Pose2d endEffectorLeftTargetPose;
     private Pose2d endEffectorRightTargetPose;
 
     private Pose2d armDirection;
     private Pose2d armPerpendicularDirection;
+
+    private boolean pivotSafeMeasuresEnabled;
 
     public static ScorerSubsystem getInstance() {
         if (instance == null) {
@@ -99,11 +97,18 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         this.goalPivotPosition = 0;
         this.goalEndEffectorVelocity = 0;
         this.manualScoreCoral = false;
+        this.manualScoreAlgae = false;
+        this.pivotSafeMeasuresEnabled = false;
     }
 
     private void updateLogs(ScorerIOInputsAutoLogged scorerInputs) {
         scorerInputs.hasCoral = this.hasCoral;
         scorerInputs.hasAlgae = this.hasAlgae;
+        scorerInputs.targetCoralLevel = this.coralHeightReef;
+        scorerInputs.targetAlgaeLevel = this.algaeHeightReef;
+        scorerInputs.manualScoreCoral = this.manualScoreCoral;
+        scorerInputs.manualScoreAlgae = this.manualScoreAlgae;
+        scorerInputs.pivotSafeMeasuresEnabled = this.pivotSafeMeasuresEnabled;
         scorerInputs.scorerState = this.scorerState;
 
         this.elevatorLead.updateInputs(elevatorLeadInputs);
@@ -364,6 +369,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
                     this.pivotMotor.setPositionExternalEncoder(targetPivotPosition);
                 }
             } else {
+                this.pivotSafeMeasuresEnabled = true;
                 double minimumHeightElevator = securedTargetElevatorPosition;
                 for(double i = 0.0; (this.endEffectorLeftTargetPose.minus(IntakeConstants.BREAK_POINT_POSE_PIVOT_CLOSED).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS) && this.endEffectorRightTargetPose.minus(IntakeConstants.BREAK_POINT_POSE_PIVOT_CLOSED).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS; i += 0.01){
                     minimumHeightElevator = securedTargetElevatorPosition + i;
@@ -378,6 +384,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
                     this.pivotMotor.setPositionExternalEncoder(targetPivotPosition);
                 }
             } else {
+                this.pivotSafeMeasuresEnabled = true;
                 double minimumHeightElevator = securedTargetElevatorPosition;
                 for(double i = 0.0; (this.endEffectorLeftTargetPose.minus(PivotConstants.BREAK_POINT_POSE_PIVOT).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS && this.endEffectorLeftTargetPose.minus(IntakeConstants.BREAK_POINT_POSE_PIVOT_CLOSED).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS) && (this.endEffectorRightTargetPose.minus(PivotConstants.BREAK_POINT_POSE_PIVOT).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS && this.endEffectorRightTargetPose.minus(IntakeConstants.BREAK_POINT_POSE_PIVOT_CLOSED).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS); i += 0.01){
                     minimumHeightElevator = securedTargetElevatorPosition + i;
