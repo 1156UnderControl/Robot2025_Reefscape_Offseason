@@ -355,19 +355,35 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         } else {
             securedTargetElevatorPosition = targetElevatorPosition;
         }
-
-        if((this.endEffectorLeftTargetPose.minus(PivotConstants.BREAK_POINT_POSE_PIVOT).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS && this.endEffectorLeftTargetPose.minus(IntakeConstants.BREAK_POINT_POSE_PIVOT_CLOSED).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS) && (this.endEffectorRightTargetPose.minus(PivotConstants.BREAK_POINT_POSE_PIVOT).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS && this.endEffectorRightTargetPose.minus(IntakeConstants.BREAK_POINT_POSE_PIVOT_CLOSED).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS)){
-            if(this.isPivotAtTargetPosition(targetPivotPosition)){
-                this.elevatorLead.setPosition(securedTargetElevatorPosition);
+        
+        if(targetElevatorPosition == PivotConstants.tunning_values_pivot.setpoints.DEFAULT_ANGLE || targetElevatorPosition == PivotConstants.tunning_values_pivot.setpoints.DEFAULT_ANGLE_WITH_CORAL){
+            if((this.endEffectorLeftTargetPose.minus(IntakeConstants.BREAK_POINT_POSE_PIVOT_CLOSED).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS) && this.endEffectorRightTargetPose.minus(IntakeConstants.BREAK_POINT_POSE_PIVOT_CLOSED).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS){
+                if(this.isPivotAtTargetPosition(targetPivotPosition)){
+                    this.elevatorLead.setPosition(securedTargetElevatorPosition);
+                } else {
+                    this.pivotMotor.setPositionExternalEncoder(targetPivotPosition);
+                }
             } else {
-                this.pivotMotor.setPositionExternalEncoder(targetPivotPosition);
+                double minimumHeightElevator = securedTargetElevatorPosition;
+                for(double i = 0.0; (this.endEffectorLeftTargetPose.minus(IntakeConstants.BREAK_POINT_POSE_PIVOT_CLOSED).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS) && this.endEffectorRightTargetPose.minus(IntakeConstants.BREAK_POINT_POSE_PIVOT_CLOSED).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS; i += 0.01){
+                    minimumHeightElevator = securedTargetElevatorPosition + i;
+                }
+                this.elevatorLead.setPosition(minimumHeightElevator);
             }
         } else {
-            double minimumHeightElevator = securedTargetElevatorPosition;
-            for(double i = 0.0; (this.endEffectorLeftTargetPose.minus(PivotConstants.BREAK_POINT_POSE_PIVOT).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS && this.endEffectorLeftTargetPose.minus(IntakeConstants.BREAK_POINT_POSE_PIVOT_CLOSED).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS) && (this.endEffectorRightTargetPose.minus(PivotConstants.BREAK_POINT_POSE_PIVOT).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS && this.endEffectorRightTargetPose.minus(IntakeConstants.BREAK_POINT_POSE_PIVOT_CLOSED).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS); i += 0.01){
-                minimumHeightElevator = securedTargetElevatorPosition + i;
+            if((this.endEffectorLeftTargetPose.minus(PivotConstants.BREAK_POINT_POSE_PIVOT).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS && this.endEffectorLeftTargetPose.minus(IntakeConstants.BREAK_POINT_POSE_PIVOT_CLOSED).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS) && (this.endEffectorRightTargetPose.minus(PivotConstants.BREAK_POINT_POSE_PIVOT).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS && this.endEffectorRightTargetPose.minus(IntakeConstants.BREAK_POINT_POSE_PIVOT_CLOSED).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS)){
+                if(this.isPivotAtTargetPosition(targetPivotPosition)){
+                    this.elevatorLead.setPosition(securedTargetElevatorPosition);
+                } else {
+                    this.pivotMotor.setPositionExternalEncoder(targetPivotPosition);
+                }
+            } else {
+                double minimumHeightElevator = securedTargetElevatorPosition;
+                for(double i = 0.0; (this.endEffectorLeftTargetPose.minus(PivotConstants.BREAK_POINT_POSE_PIVOT).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS && this.endEffectorLeftTargetPose.minus(IntakeConstants.BREAK_POINT_POSE_PIVOT_CLOSED).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS) && (this.endEffectorRightTargetPose.minus(PivotConstants.BREAK_POINT_POSE_PIVOT).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS && this.endEffectorRightTargetPose.minus(IntakeConstants.BREAK_POINT_POSE_PIVOT_CLOSED).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS); i += 0.01){
+                    minimumHeightElevator = securedTargetElevatorPosition + i;
+                }
+                this.elevatorLead.setPosition(minimumHeightElevator);
             }
-            this.elevatorLead.setPosition(minimumHeightElevator);
         }
     }
 }
