@@ -3,8 +3,8 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.Joysticks.DriverController;
 import frc.robot.commands.States.SwerveTeleopState;
+import frc.robot.joysticks.DriverController;
 import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.scorer.ScorerSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
@@ -30,19 +30,7 @@ public class RobotContainer {
     this.configureButtonBindings();
   }
 
-  private void configureButtonBindings() {
-    this.driverController.a().onTrue(Commands.run(() -> climber.setPivotDutyCicle(1)))
-        .onFalse(Commands.run(() -> climber.setPivotDutyCicle(0)));
-
-    this.driverController.y().onTrue(Commands.run(() -> climber.setPivotDutyCicle(-1)))
-        .onFalse(Commands.run(() -> climber.setPivotDutyCicle(0)));
-
-    this.driverController.b().onTrue(Commands.run(() -> climber.setCageIntakeDutyCicle(1)))
-        .onFalse(Commands.run(() -> climber.setCageIntakeDutyCicle(0)));
-
-    this.driverController.y().onTrue(Commands.run(() -> climber.setCageIntakeDutyCicle(-1)))
-        .onFalse(Commands.run(() -> climber.setCageIntakeDutyCicle(0)));
-  }
+  private void configureButtonBindings() {}
 
   public Command getAutonomousCommand() {
     return autoChooser.get();
