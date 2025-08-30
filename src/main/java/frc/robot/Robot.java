@@ -16,13 +16,23 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.Java_Is_UnderControl.Motors.SparkFlexMotor;
+import frc.robot.joysticks.DriverController;
 
 public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
 
   private final RobotContainer m_robotContainer;
+  private final DriverController driverController;
+
+  private final SparkFlexMotor intakeMotor;
+  private final SparkFlexMotor indexerMotor;
+
 
   public Robot() {
+    this.driverController = DriverController.getInstance();
+    this.intakeMotor = new SparkFlexMotor(20, 0, "Intake Motor");
+    this.indexerMotor = new SparkFlexMotor(21, 0, "Indexer Motor");
     m_robotContainer = new RobotContainer();
     Logger.recordMetadata("Robot/ProjectName", BuildConstants.MAVEN_NAME);
     Logger.recordMetadata("Robot/BuildDate", BuildConstants.BUILD_DATE);
@@ -100,7 +110,10 @@ public class Robot extends LoggedRobot {
   }
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    this.intakeMotor.set(0.75);
+    this.indexerMotor.set(0.5);
+  }
 
   @Override
   public void teleopExit() {}

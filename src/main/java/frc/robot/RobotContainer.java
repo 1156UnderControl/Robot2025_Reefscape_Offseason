@@ -22,13 +22,9 @@ public class RobotContainer {
   private final DriverController driverController;
 
   private final SwerveSubsystem swerve;
-  private final ScorerSubsystem scorer;
-  private final ClimberSubsystem climber;
 
   public RobotContainer() {
     this.swerve = new SwerveSubsystem();
-    this.scorer = ScorerSubsystem.getInstance();
-    this.climber = ClimberSubsystem.getInstance();
 
     this.driverController = DriverController.getInstance();
     this.operatorController = OperatorController.getInstance();
@@ -36,37 +32,10 @@ public class RobotContainer {
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
     this.swerve.setDefaultCommand(Commands.run(() -> new SwerveTeleopState(), this.swerve));
-    this.scorer.setDefaultCommand(new PrepareToScoreCoralState());
     this.configureButtonBindings();
   }
 
   private void configureButtonBindings() {
-    this.operatorController.reefL1()
-      .onTrue(new InstantCommand(() -> { 
-        this.scorer.setTargetCoralLevel(ReefLevel.L1);
-        this.scorer.setManualScoreCoral(true);
-      }));
-    
-    this.operatorController.reefL2()
-      .onTrue(new InstantCommand(() -> { 
-        this.scorer.setTargetCoralLevel(ReefLevel.L2);
-        this.scorer.setManualScoreCoral(true);
-      }));
-
-    this.operatorController.reefL3()
-      .onTrue(new InstantCommand(() -> { 
-        this.scorer.setTargetCoralLevel(ReefLevel.L3);
-        this.scorer.setManualScoreCoral(true);
-      }));
-
-    this.operatorController.reefL4()
-      .onTrue(new InstantCommand(() -> { 
-        this.scorer.setTargetCoralLevel(ReefLevel.L4);
-        this.scorer.setManualScoreCoral(true);
-      }));
-
-    this.operatorController.prepareToScore()
-      .onTrue(Commands.run(() -> this.scorer.prepareToScoreCoral(), scorer));
   }
 
   public Command getAutonomousCommand() {
