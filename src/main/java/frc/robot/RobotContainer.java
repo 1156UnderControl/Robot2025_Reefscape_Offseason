@@ -9,6 +9,7 @@ import frc.robot.commands.States.SwerveTeleopState;
 import frc.robot.constants.FieldConstants.ReefLevel;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.OperatorController;
+import frc.robot.subsystems.Intake.IntakeSubsystem;
 import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.scorer.ScorerSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
@@ -24,6 +25,7 @@ public class RobotContainer {
   private final SwerveSubsystem swerve;
   private final ScorerSubsystem scorer;
   private final ClimberSubsystem climber;
+  private final IntakeSubsystem intake;
 
   public RobotContainer() {
     this.swerve = new SwerveSubsystem();
@@ -41,10 +43,10 @@ public class RobotContainer {
   }
 
   private void configureButtonBindings() {
-    this.operatorController.reefL1()
+    
+    this.operatorController.goToReefA()
       .onTrue(new InstantCommand(() -> { 
-        this.scorer.setTargetCoralLevel(ReefLevel.L1);
-        this.scorer.setManualScoreCoral(true);
+        this.intake.goToIntakePosition();
       }));
     
     this.operatorController.reefL2()
