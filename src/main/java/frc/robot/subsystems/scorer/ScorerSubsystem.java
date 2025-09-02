@@ -8,13 +8,15 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.Java_Is_UnderControl.Motors.MotorIO;
 import frc.Java_Is_UnderControl.Motors.MotorIOInputsAutoLogged;
+import frc.Java_Is_UnderControl.Motors.NoMotor;
 import frc.Java_Is_UnderControl.Motors.SparkFlexMotor;
 import frc.Java_Is_UnderControl.Sensors.InfraRed;
 import frc.Java_Is_UnderControl.Sensors.SensorIO;
 import frc.Java_Is_UnderControl.Sensors.SensorIOInputsAutoLogged;
+import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.EndEffectorConstants;
-import frc.robot.constants.IntakeConstants;
+import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.FieldConstants.ReefLevel;
 import frc.robot.constants.FieldConstants.Algae.AlgaeHeightReef;
 import frc.robot.constants.SwerveConstants.TargetBranch;
@@ -80,7 +82,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
 
         this.elevatorLead = new SparkFlexMotor(ElevatorConstants.ID_elevatorLeaderMotor, ElevatorConstants.elevatorBusID, ElevatorConstants.elevatorLeaderMotorName);
         this.elevatorFollower = new SparkFlexMotor(ElevatorConstants.ID_elevatorFollowerMotor, ElevatorConstants.elevatorBusID, ElevatorConstants.elevatorFollowerMotorName);
-        this.pivotMotor = new SparkFlexMotor(PivotConstants.ID_pivotMotor, PivotConstants.pivotBusID, PivotConstants.pivotMotorName);
+        this.pivotMotor = new NoMotor();
         this.endEffectorMotor = new SparkFlexMotor(EndEffectorConstants.ID_endEffectorMotor, EndEffectorConstants.endEffectorBusID, EndEffectorConstants.endEffectorMotorName);
         this.pivotInfraRed = new InfraRed(EndEffectorConstants.Port_coralInfraRed, false);
 
@@ -210,8 +212,8 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
 
     @Override
     public void prepareToScoreCoral(){
-        this.setScorerTargetCoral();
-        this.setScorerStructureGoals(goalElevatorPosition, goalPivotPosition);
+        this.goalElevatorPosition = 1.3;
+        this.elevatorLead.setPositionReference(goalElevatorPosition);
     }
 
     @Override
@@ -295,16 +297,17 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     }
 
     private void setConfigsElevator() {
+        this.elevatorLead.setInverted(true);
         this.elevatorLead.setMotorBrake(true);
         this.elevatorFollower.setMotorBrake(true);
         this.elevatorFollower.setFollower(ElevatorConstants.ID_elevatorLeaderMotor, true);
-        this.elevatorLead.setPositionFactor(ElevatorConstants.POSITION_FACTOR_MOTOR_ROTATION_TO_MECHANISM_METERS);
-        this.elevatorLead.setVelocityFactor(ElevatorConstants.VELOCITY_FACTOR_MOTOR_RPM_TO_METERS_PER_SECOND);
+        this.elevatorLead.setPositionFactor(ElevatorConstants.tunning_values_elevator.POSITION_FACTOR_MOTOR_ROTATION_TO_MECHANISM_METERS);
+        this.elevatorLead.setVelocityFactor(ElevatorConstants.tunning_values_elevator.VELOCITY_FACTOR_MOTOR_RPM_TO_METERS_PER_SECOND);
         this.elevatorLead.configurePIDF(
             ElevatorConstants.tunning_values_elevator.PID.P,
             ElevatorConstants.tunning_values_elevator.PID.I,
             ElevatorConstants.tunning_values_elevator.PID.D,
-            0,
+            ElevatorConstants.tunning_values_elevator.PID.arbFF,
             ElevatorConstants.tunning_values_elevator.PID.IZone);
         this.elevatorFollower.burnFlash();
         this.elevatorLead.burnFlash();
@@ -316,10 +319,10 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         pivotMotor.configExternalEncoder();
         pivotMotor.setInvertedEncoder(true);
         pivotMotor.setMotorBrake(true);
-        pivotMotor.setPositionFactor(PivotConstants.ANGLE_FACTOR_ROTOR_ROTATION_TO_MECHANISM_DEGREES);
-        pivotMotor.setPositionFactorExternalEncoder(PivotConstants.ANGLE_FACTOR_MECHANISM_ROTATION_TO_MECHANISM_DEGREES);
-        pivotMotor.setVelocityFactorExternalEncoder(PivotConstants.VELOCITY_FACTOR_MOTOR_RPM_TO_MECHANISM_DEG_PER_SECOND);
-        pivotMotor.setAbsoluteEncoderZeroOffset(PivotConstants.ZERO_OFFSET_ABSOLUTE_ENCODER);
+        pivotMotor.setPositionFactor(PivotConstants.tunning_values_pivot.ANGLE_FACTOR_ROTOR_ROTATION_TO_MECHANISM_DEGREES);
+        pivotMotor.setPositionFactorExternalEncoder(PivotConstants.tunning_values_pivot.ANGLE_FACTOR_MECHANISM_ROTATION_TO_MECHANISM_DEGREES);
+        pivotMotor.setVelocityFactorExternalEncoder(PivotConstants.tunning_values_pivot.VELOCITY_FACTOR_MOTOR_RPM_TO_MECHANISM_DEG_PER_SECOND);
+        pivotMotor.setAbsoluteEncoderZeroOffset(PivotConstants.tunning_values_pivot.ZERO_OFFSET_ABSOLUTE_ENCODER);
         pivotMotor.configureTrapezoid(PivotConstants.tunning_values_pivot.MAX_ACCELERATION,
             PivotConstants.tunning_values_pivot.MAX_VELOCITY);
         pivotMotor.configurePIDF(
@@ -340,57 +343,41 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     }
 
     private void setScorerStructureGoals(double targetElevatorPosition, double targetPivotPosition){ 
-        this.pivotPose = new Pose2d(0, this.elevatorLead.getPosition(), new Rotation2d());
-        this.armDirection = new Pose2d(Math.sin(this.pivotAbsolutePosition), -Math.cos(this.pivotAbsolutePosition), new Rotation2d());
-        this.armPerpendicularDirection = new Pose2d(Math.cos(this.pivotAbsolutePosition), Math.sin(this.pivotAbsolutePosition), new Rotation2d());
-
-        this.endEffectorLeftTargetPose = new Pose2d(this.pivotPose.getX() + PivotConstants.ARM_LENGH * this.armDirection.getX() + 
-        (PivotConstants.ARM_WIDHT/2) * this.armPerpendicularDirection.getX(), this.pivotPose.getY() + PivotConstants.ARM_LENGH * this.armDirection.getY() + 
-        (PivotConstants.ARM_WIDHT/2) * this.armPerpendicularDirection.getY(), new Rotation2d());
-
-        this.endEffectorRightTargetPose = new Pose2d(this.pivotPose.getX() + PivotConstants.ARM_LENGH * this.armDirection.getX() - 
-        (PivotConstants.ARM_WIDHT/2) * this.armPerpendicularDirection.getX(), this.pivotPose.getY() + PivotConstants.ARM_LENGH * this.armDirection.getY() - 
-        (PivotConstants.ARM_WIDHT/2) * this.armPerpendicularDirection.getY(), new Rotation2d());
-
+        double securedMinimumTargetElevatorPosition;
         double securedTargetElevatorPosition;
-        if(targetElevatorPosition > ElevatorConstants.tunning_values_elevator.setpoints.MAX_HEIGHT){
-            securedTargetElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.MAX_HEIGHT;
-        } else if (targetElevatorPosition < ElevatorConstants.tunning_values_elevator.setpoints.MIN_HEIGHT) {
-            securedTargetElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.MIN_HEIGHT;
-        } else {
-            securedTargetElevatorPosition = targetElevatorPosition;
-        }
-        
-        if(targetElevatorPosition == PivotConstants.tunning_values_pivot.setpoints.DEFAULT_ANGLE || targetElevatorPosition == PivotConstants.tunning_values_pivot.setpoints.DEFAULT_ANGLE_WITH_CORAL){
-            if((this.endEffectorLeftTargetPose.minus(IntakeConstants.BREAK_POINT_POSE_PIVOT_CLOSED).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS) && this.endEffectorRightTargetPose.minus(IntakeConstants.BREAK_POINT_POSE_PIVOT_CLOSED).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS){
+
+        securedTargetElevatorPosition = Math.clamp(targetElevatorPosition, ElevatorConstants.tunning_values_elevator.setpoints.MIN_HEIGHT, ElevatorConstants.tunning_values_elevator.setpoints.MAX_HEIGHT);
+
+        if((this.pivotAbsolutePosition <= 270 && targetPivotPosition <= 270) || (this.pivotAbsolutePosition > 270 && targetPivotPosition > 270)){
+            securedMinimumTargetElevatorPosition = this.minimumHeightElevator(Math.abs(((targetPivotPosition % 360) - 270) - ElevatorConstants.tunning_values_elevator.stable_transition.ARM_ANGLE_POINT));
+            if(this.elevatorLead.getPosition() >= securedMinimumTargetElevatorPosition){
                 if(this.isPivotAtTargetPosition(targetPivotPosition)){
-                    this.elevatorLead.setPosition(securedTargetElevatorPosition);
+                    this.elevatorLead.setPositionReference(securedTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);
                 } else {
-                    this.pivotMotor.setPositionExternalEncoder(targetPivotPosition);
+                    this.pivotMotor.setPositionReference(targetPivotPosition);
                 }
             } else {
-                this.pivotSafeMeasuresEnabled = true;
-                double minimumHeightElevator = securedTargetElevatorPosition;
-                for(double i = 0.0; (this.endEffectorLeftTargetPose.minus(IntakeConstants.BREAK_POINT_POSE_PIVOT_CLOSED).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS) && this.endEffectorRightTargetPose.minus(IntakeConstants.BREAK_POINT_POSE_PIVOT_CLOSED).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS; i += 0.01){
-                    minimumHeightElevator = securedTargetElevatorPosition + i;
-                }
-                this.elevatorLead.setPosition(minimumHeightElevator);
+                this.elevatorLead.setPositionReference(securedMinimumTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);
             }
+
         } else {
-            if((this.endEffectorLeftTargetPose.minus(PivotConstants.BREAK_POINT_POSE_PIVOT).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS && this.endEffectorLeftTargetPose.minus(IntakeConstants.BREAK_POINT_POSE_PIVOT_CLOSED).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS) && (this.endEffectorRightTargetPose.minus(PivotConstants.BREAK_POINT_POSE_PIVOT).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS && this.endEffectorRightTargetPose.minus(IntakeConstants.BREAK_POINT_POSE_PIVOT_CLOSED).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS)){
+            securedMinimumTargetElevatorPosition = this.minimumHeightElevator(270);
+            if(this.elevatorLead.getPosition() >= securedMinimumTargetElevatorPosition){
                 if(this.isPivotAtTargetPosition(targetPivotPosition)){
-                    this.elevatorLead.setPosition(securedTargetElevatorPosition);
+                    this.elevatorLead.setPositionReference(securedTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);
                 } else {
-                    this.pivotMotor.setPositionExternalEncoder(targetPivotPosition);
+                    this.pivotMotor.setPositionReference(targetPivotPosition);
                 }
             } else {
-                this.pivotSafeMeasuresEnabled = true;
-                double minimumHeightElevator = securedTargetElevatorPosition;
-                for(double i = 0.0; (this.endEffectorLeftTargetPose.minus(PivotConstants.BREAK_POINT_POSE_PIVOT).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS && this.endEffectorLeftTargetPose.minus(IntakeConstants.BREAK_POINT_POSE_PIVOT_CLOSED).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS) && (this.endEffectorRightTargetPose.minus(PivotConstants.BREAK_POINT_POSE_PIVOT).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS && this.endEffectorRightTargetPose.minus(IntakeConstants.BREAK_POINT_POSE_PIVOT_CLOSED).getY() >= PivotConstants.MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS); i += 0.01){
-                    minimumHeightElevator = securedTargetElevatorPosition + i;
-                }
-                this.elevatorLead.setPosition(minimumHeightElevator);
+                this.elevatorLead.setPositionReference(securedMinimumTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);
             }
         }
+    }
+
+    private double minimumHeightElevator(double alphaPivotAngle){
+        if(Math.sin(alphaPivotAngle) * ElevatorConstants.tunning_values_elevator.stable_transition.ARM_HYPOTENUSE <= SwerveConstants.ROBOT_SIZE/2){
+            return (Math.cos(alphaPivotAngle) * ElevatorConstants.tunning_values_elevator.stable_transition.ARM_HYPOTENUSE) + (ElevatorConstants.tunning_values_elevator.stable_transition.ELEVATOR_HEIGHT_OFFSET_FROM_GROUND  + ElevatorConstants.tunning_values_elevator.stable_transition.ELEVATOR_SAFETY_MARGIN);
+        }
+        return ((SwerveConstants.ROBOT_SIZE/2)/Math.tan(alphaPivotAngle)) + (ElevatorConstants.tunning_values_elevator.stable_transition.ELEVATOR_HEIGHT_OFFSET_FROM_GROUND + ElevatorConstants.tunning_values_elevator.stable_transition.ELEVATOR_SAFETY_MARGIN);
     }
 }

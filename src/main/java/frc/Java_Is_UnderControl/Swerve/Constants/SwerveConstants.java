@@ -27,6 +27,7 @@ public class SwerveConstants {
   public static final double ROBOT_MOI = 4.957;
   public static final double WHEEL_COF = 1.430;
   public static final double GEARBOX_REDUCTION = 1.430;
+  public static final double ROBOT_SIZE = 0;
 
   public static final Translation2d[] MODULE_OFFSETS = {
     new Translation2d(10.375, 10.375),

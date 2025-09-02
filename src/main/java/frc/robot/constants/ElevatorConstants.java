@@ -1,27 +1,24 @@
 package frc.robot.constants;
 
 public class ElevatorConstants {
-  public static final int elevatorBusID = 0;
-  public static final int ID_elevatorLeaderMotor = 0;
+  public static final int elevatorBusID = 1;
+  public static final int ID_elevatorLeaderMotor = 13;
   public static final String elevatorLeaderMotorName = "Elevator Leader Motor";
-  public static final int ID_elevatorFollowerMotor = 1;
+  public static final int ID_elevatorFollowerMotor = 14;
   public static final String elevatorFollowerMotorName = "Elevator Follower Motor";
-  public static final double POSITION_FACTOR_MOTOR_ROTATION_TO_MECHANISM_METERS = 0;
-  public static final double VELOCITY_FACTOR_MOTOR_RPM_TO_METERS_PER_SECOND = 0;
-  public static final double ZERO_POSITION_IN_METERS_FROM_GROUND = 0;
-  public static final double PASSIVE_HOMING_RANGE = 0;
+  public static final double ZERO_POSITION_IN_METERS_FROM_GROUND = 0.4;
 
   public class tunning_values_elevator {
-    public static final double MAX_VELOCITY = 0;
-    public static final double MAX_ACCELERATION = 0;
+    public static final double POSITION_FACTOR_MOTOR_ROTATION_TO_MECHANISM_METERS = 0.0412436;
+    public static final double VELOCITY_FACTOR_MOTOR_RPM_TO_METERS_PER_SECOND = 1;
     public static final double POSITION_ERROR_ALLOWED = 0;
 
     public class PID {
-      public static final double P = 0;
-      public static final double I = 0;
+      public static final double P = 2.45;
+      public static final double I = 0.014;
       public static final double D = 0;
-      public static final double arbFF = 0;
-      public static final double IZone = 0;
+      public static final double arbFF = 0.035;
+      public static final double IZone = 0.01;
     }
 
     public class setpoints {
@@ -39,13 +36,13 @@ public class ElevatorConstants {
       public static final double DEFAULT_POSITION = 0;
       public static final double DEFAULT_POSITION_WITH_CORAL = 0;
       public static final double DEFAULT_POSITION_WITH_ALGAE = 0;
-      public static final double PIVOT_SAFE_FOR_ELEVATOR = 0;
     }
 
     public class stable_transition {
-      public static final double DISTANCE_FOR_FULL_DEPLOYMENT = 0;
-      public static final double DISTANCE_FOR_DEPLOYMENT_START = 0;
-      public static final double SAFE_CRUISE_HEIGHT = 0;
+      public static final double ELEVATOR_HEIGHT_OFFSET_FROM_GROUND = 0.330912;
+      public static final double ARM_ANGLE_POINT = 7.520704;
+      public static final double ARM_HYPOTENUSE = 0.630709;
+      public static final double ELEVATOR_SAFETY_MARGIN = 0.05;
     }
   }
 }

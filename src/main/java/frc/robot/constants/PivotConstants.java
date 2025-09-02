@@ -1,29 +1,18 @@
 package frc.robot.constants;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-
 public class PivotConstants {
-  public static final int pivotBusID = 1;
-  public static final int ID_pivotMotor = 2;
+  public static final int pivotBusID = 4;
+  public static final int ID_pivotMotor = 15;
   public static final String pivotMotorName = "Pivot Motor";
-  public static final double ANGLE_FACTOR_MECHANISM_ROTATION_TO_MECHANISM_DEGREES = 0;
-  public static final double ANGLE_FACTOR_ROTOR_ROTATION_TO_MECHANISM_DEGREES = 0;
-  public static final double VELOCITY_FACTOR_MOTOR_RPM_TO_MECHANISM_DEG_PER_SECOND = 0;
-  public static final double ZERO_OFFSET_ABSOLUTE_ENCODER = 0;
-  public static final double ARM_LENGH = 0;
-  public static final double ARM_WIDHT = 0;
-  public static final double ARM_ANGLE = 0;
-  public static final double MINIMUM_ANGLE_DISTANCE_FROM_MECHANISMS = 0.1;
-  public static final Pose2d BREAK_POINT_POSE_PIVOT = new Pose2d(0, 0.284508, new Rotation2d());
 
   public class tunning_values_pivot {
     public static final double MAX_VELOCITY = 0;
-    public static final double MAX_VELOCITY_WITH_ALGAE = 0;
     public static final double MAX_ACCELERATION = 0;
+    public static final double ANGLE_FACTOR_ROTOR_ROTATION_TO_MECHANISM_DEGREES = 1;
+    public static final double ANGLE_FACTOR_MECHANISM_ROTATION_TO_MECHANISM_DEGREES = 1;
+    public static final double VELOCITY_FACTOR_MOTOR_RPM_TO_MECHANISM_DEG_PER_SECOND = 1;
+    public static final double ZERO_OFFSET_ABSOLUTE_ENCODER = 0;
     public static final double ANGLE_ERROR_ALLOWED = 0;
-    public static final double MIN_DEAD_BAND_FOR_MOTOR_STOP = 0;
-    public static final double MAX_DEAD_BAND_FOR_MOTOR_STOP = 0;
 
     public class PID {
       public static final double P = 0;

@@ -30,15 +30,12 @@ public class RobotContainer {
   public RobotContainer() {
     this.swerve = new SwerveSubsystem();
     this.scorer = ScorerSubsystem.getInstance();
-    this.climber = ClimberSubsystem.getInstance();
 
     this.driverController = DriverController.getInstance();
     this.operatorController = OperatorController.getInstance();
 
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
-    this.swerve.setDefaultCommand(Commands.run(() -> new SwerveTeleopState(), this.swerve));
-    this.scorer.setDefaultCommand(new PrepareToScoreCoralState());
     this.configureButtonBindings();
   }
 
@@ -69,6 +66,8 @@ public class RobotContainer {
 
     this.operatorController.prepareToScore()
       .onTrue(Commands.run(() -> this.scorer.prepareToScoreCoral(), scorer));
+
+    this.driverController.a().onTrue(Commands.run(() -> this.scorer.prepareToScoreCoral(), this.scorer));
   }
 
   public Command getAutonomousCommand() {

@@ -1,8 +1,5 @@
 package frc.robot.constants;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-
 public class IntakeConstants {
   public static final int ID_intakeRollersMotor = 0;
   public static final int ID_intakePivotMotor = 0;
