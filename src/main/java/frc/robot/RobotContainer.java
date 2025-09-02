@@ -23,7 +23,6 @@ public class RobotContainer {
 
   private final SwerveSubsystem swerve;
   private final ScorerSubsystem scorer;
-  private final ClimberSubsystem climber;
 
   public RobotContainer() {
     this.swerve = new SwerveSubsystem();
