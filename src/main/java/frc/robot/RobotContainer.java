@@ -29,6 +29,7 @@ public class RobotContainer {
   public RobotContainer() {
     this.swerve = new SwerveSubsystem();
     this.scorer = ScorerSubsystem.getInstance();
+    this.intake = IntakeSubsystem.getInstance();
 
     this.driverController = DriverController.getInstance();
     this.operatorController = OperatorController.getInstance();
@@ -39,6 +40,11 @@ public class RobotContainer {
   }
 
   private void configureButtonBindings() {
+
+    this.driverController.b()
+    .onTrue(new InstantCommand(() -> { 
+      this.intake.goToIntakePosition();
+    }));
     
     this.operatorController.goToReefA()
       .onTrue(new InstantCommand(() -> { 
