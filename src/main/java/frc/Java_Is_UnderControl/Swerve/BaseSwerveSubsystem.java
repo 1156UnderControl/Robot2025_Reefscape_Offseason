@@ -88,9 +88,6 @@ public class BaseSwerveSubsystem implements Subsystem {
         this.config.headingPidConfig.kI,
         this.config.headingPidConfig.kD,
         this.config.headingPidConfig.kF);
-    if (Utils.isSimulation()) {
-      startSimThread();
-    }
     configureAutoBuilder();
     this.maxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
 
@@ -247,9 +244,5 @@ public class BaseSwerveSubsystem implements Subsystem {
     double headingDifferenceDegrees = Math.abs(targetHeading.minus(currentHeading).getDegrees());
     boolean isAtHeading = headingDifferenceDegrees <= toleranceDegrees;
     return isAtHeading;
-  }
-
-  // o que é isso aqui mesmo? Apaguei pra parar de dar erro
-  private void startSimThread() {
   }
 }
