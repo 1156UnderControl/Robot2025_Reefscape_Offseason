@@ -31,7 +31,6 @@ import frc.Java_Is_UnderControl.Swerve.Configs.BaseSwerveConfig;
 import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
 import frc.Java_Is_UnderControl.Swerve.IO.Gyro.GyroIOPigeon2;
 import frc.Java_Is_UnderControl.Util.CustomMath;
-import frc.robot.subsystems.swerve.generated.TunerConstants;
 import frc.robot.util.LocalADStarAK;
 
 import java.util.HashMap;
@@ -66,10 +65,10 @@ public class BaseSwerveSubsystem implements Subsystem {
           SwerveConstants.ROBOT_MOI,
           new ModuleConfig(
               SwerveConstants.WHEEL_RADIUS_METERS,
-              TunerConstants.kSpeedAt12Volts.in(MetersPerSecond),
+              SwerveConstants.kSpeedAt12Volts.in(MetersPerSecond),
               SwerveConstants.WHEEL_COF,
               DCMotor.getKrakenX60Foc(2).withReduction(SwerveConstants.GEARBOX_REDUCTION),
-              TunerConstants.FrontLeft.SlipCurrent,
+              SwerveConstants.FrontLeft.SlipCurrent,
               2),
           SwerveConstants.MODULE_OFFSETS);
 
@@ -101,7 +100,7 @@ public class BaseSwerveSubsystem implements Subsystem {
             this.config.headingPidConfig.kD,
             this.config.headingPidConfig.kF);
     configureAutoBuilder();
-    this.maxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+    this.maxSpeed = SwerveConstants.kSpeedAt12Volts.in(MetersPerSecond);
 
     this.motorConstants = new HashMap<>();
     this.motorConstants.put(

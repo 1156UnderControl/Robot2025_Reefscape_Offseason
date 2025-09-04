@@ -32,7 +32,6 @@ import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
 import frc.Java_Is_UnderControl.Swerve.IO.SIgnals.PhoenixOdometryThread;
-import frc.robot.subsystems.swerve.generated.TunerConstants;
 
 import java.util.Queue;
 
@@ -84,11 +83,11 @@ public class ModuleIOTalonFX implements ModuleIO {
           constants) {;
     this.constants = constants;
     this.driveTalon =
-        new TalonFX(this.constants.DriveMotorId, CANBus.systemCore(3));
+        new TalonFX(this.constants.DriveMotorId, SwerveConstants.kCANBus);
     this.steerTalon =
-        new TalonFX(this.constants.SteerMotorId, CANBus.systemCore(3));
+        new TalonFX(this.constants.SteerMotorId, SwerveConstants.kCANBus);
     this.encoder =
-        new CANcoder(this.constants.EncoderId, CANBus.systemCore(3));
+        new CANcoder(this.constants.EncoderId, SwerveConstants.kCANBus);
 
     this.configureDriveMotor(this.constants, this.driveTalon);
     this.configureSteerMotor(this.constants, this.steerTalon);

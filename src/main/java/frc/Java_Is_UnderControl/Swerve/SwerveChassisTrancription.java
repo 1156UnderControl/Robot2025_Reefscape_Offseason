@@ -5,7 +5,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
-import frc.robot.subsystems.swerve.generated.TunerConstants;
 
 import java.util.HashMap;
 import java.util.Optional;
@@ -19,17 +18,17 @@ public class SwerveChassisTrancription {
     this.kinematics =
         new SwerveDriveKinematics(
             new Translation2d(
-                TunerConstants.getModuleConstants()[0].LocationX,
-                TunerConstants.getModuleConstants()[0].LocationY),
+                SwerveConstants.getModuleConstants()[0].LocationX,
+                SwerveConstants.getModuleConstants()[0].LocationY),
             new Translation2d(
-                TunerConstants.getModuleConstants()[1].LocationX,
-                TunerConstants.getModuleConstants()[1].LocationY),
+                SwerveConstants.getModuleConstants()[1].LocationX,
+                SwerveConstants.getModuleConstants()[1].LocationY),
             new Translation2d(
-                TunerConstants.getModuleConstants()[2].LocationX,
-                TunerConstants.getModuleConstants()[2].LocationY),
+                SwerveConstants.getModuleConstants()[2].LocationX,
+                SwerveConstants.getModuleConstants()[2].LocationY),
             new Translation2d(
-                TunerConstants.getModuleConstants()[3].LocationX,
-                TunerConstants.getModuleConstants()[3].LocationY));
+                SwerveConstants.getModuleConstants()[3].LocationX,
+                SwerveConstants.getModuleConstants()[3].LocationY));
   }
 
   public void setChassisSpeeds(ChassisSpeeds chassisSpeeds) {
