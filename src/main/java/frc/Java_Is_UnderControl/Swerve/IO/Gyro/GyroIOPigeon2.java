@@ -51,19 +51,12 @@ public class GyroIOPigeon2 implements GyroIO {
     this.inputs.yawPosition = Rotation2d.fromDegrees(yaw.getValueAsDouble());
     this.inputs.yawVelocityRadPerSec = Units.degreesToRadians(yawVelocity.getValueAsDouble());
 
-    this.inputs.odometryYawTimestamps =
-        this.yawTimestampQueue.stream().mapToDouble((Double value) -> value).toArray();
-    this.inputs.odometryYawPositions =
-        this.yawPositionQueue.stream()
-            .map((Double value) -> Rotation2d.fromDegrees(value))
-            .toArray(Rotation2d[]::new);
+    this.inputs.odometryYawTimestamps = this.yawTimestampQueue.stream().mapToDouble((Double value) -> value).toArray();
+    this.inputs.odometryYawPositions = this.yawPositionQueue.stream()
+        .map((Double value) -> Rotation2d.fromDegrees(value))
+        .toArray(Rotation2d[]::new);
     this.yawTimestampQueue.clear();
     this.yawPositionQueue.clear();
-  }
-
-  @Override
-  public GyroIOInputs getInputs() {
-    return this.inputs;
   }
 
   @Override
