@@ -1,14 +1,16 @@
 package frc.robot.subsystems.Intake;
 
-import org.littletonrobotics.junction.AutoLog;
-
 public interface IntakeIO {
 
     void collectCoral();
 
+    void stopIntaking();
+
+    void expellCoral();
+
     void goToDefaultPosition();
 
-    boolean indexerHasCoral();
+    void goToIntakePosition();
 
-    
+    boolean indexerHasCoral();
 }

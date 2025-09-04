@@ -71,7 +71,7 @@ public class SwerveConstants {
   };
 
   private static final Slot0Configs steerGains = new Slot0Configs()
-    .withKP(70).withKI(0).withKD(0)
+    .withKP(80).withKI(0).withKD(0)
     .withKS(0.26).withKV(0).withKA(0)
     .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
 

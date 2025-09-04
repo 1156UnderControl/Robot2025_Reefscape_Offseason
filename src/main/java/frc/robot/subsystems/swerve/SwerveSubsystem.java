@@ -5,6 +5,8 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.path.PathConstraints;
+
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -25,6 +27,8 @@ public class SwerveSubsystem extends SubsystemBase {
       moduleConstants;
   private final DriverController driverController;
 
+  private Rotation2d targetRotation;
+
   public SwerveSubsystem() {
     this.moduleConstants = new HashMap<>();
 
@@ -41,13 +45,15 @@ public class SwerveSubsystem extends SubsystemBase {
     this.swerve =
         new BaseSwerveSubsystem(
             new BaseSwerveConfig(
-                0.75,
+                1,
                 new SwervePathPlannerConfig(
                     new PIDConstants(5, 0.1, 0.1),
                     new PIDConstants(5, 0.1, 0.1),
                     new PathConstraints(3.0, 4.0, Units.degreesToRadians(540), Units.degreesToRadians(720))),
-                new PIDConfig(0.01, 0, 0, 0.1)),
+                new PIDConfig(0.5, 0, 0)),
             this.moduleConstants);
+
+    this.targetRotation = new Rotation2d(0);
   }
 
   public void driveFieldOrientedLockedJoystickAngle() {
@@ -55,7 +61,24 @@ public class SwerveSubsystem extends SubsystemBase {
         swerve.inputsToChassisSpeeds(
             driverController.getXtranslation(), driverController.getYtranslation());
     this.swerve.driveFieldOrientedLockedJoystickAngle(
-        joystickSpeeds, driverController.getCOS_Joystick(), driverController.getSIN_Joystick());
+        joystickSpeeds, this.getRobotTargetAngle());
+  }
+
+  private Rotation2d getRobotTargetAngle(){
+    if((this.driverController.getCOS_Joystick() != this.applyJoystickDeadBand(this.driverController.getCOS_Joystick())) || (this.driverController.getSIN_Joystick() != this.applyJoystickDeadBand(this.driverController.getSIN_Joystick()))){
+      return this.targetRotation;
+    } else {
+      this.targetRotation = new Rotation2d(this.applyJoystickDeadBand(this.driverController.getCOS_Joystick()), this.applyJoystickDeadBand(this.driverController.getSIN_Joystick()));;
+      return targetRotation;
+    }
+  }
+
+  private double applyJoystickDeadBand(double joystickValue){
+    if(joystickValue < 0.25 && joystickValue > -0.25){
+      return 0;
+    } else {
+      return joystickValue;
+    }
   }
 
   @Override

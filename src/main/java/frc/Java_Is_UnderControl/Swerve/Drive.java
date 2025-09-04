@@ -190,7 +190,7 @@ public class Drive {
     Logger.processInputs("Subsystems/Swerve/Pigeon", this.gyroInputs);
   }
 
-  public Rotation2d getRobotAngle(){
-    return this.pigeon.getInputs().yawPosition;
+  public double getRobotAngle(){
+    return this.pigeon.getYaw();
   }
 }

@@ -93,12 +93,7 @@ public class BaseSwerveSubsystem implements Subsystem {
             .in(RadiansPerSecond); // fraction of a rotation per second
     this.chassisTrancription = new SwerveChassisTrancription();
     this.config = config;
-    this.headingPidController =
-        new PIDController(
-            this.config.headingPidConfig.kP,
-            this.config.headingPidConfig.kI,
-            this.config.headingPidConfig.kD,
-            this.config.headingPidConfig.kF);
+    this.headingPidController = new PIDController(config.headingPidConfig.kP, config.headingPidConfig.kI, config.headingPidConfig.kD);
     configureAutoBuilder();
     this.maxSpeed = SwerveConstants.kSpeedAt12Volts.in(MetersPerSecond);
 
@@ -198,7 +193,7 @@ public class BaseSwerveSubsystem implements Subsystem {
     this.drive.updateModuleTargetStates(this.chassisTrancription.getModuleInputs());
     this.drive.updateLogs();
     this.robotSpeeds = this.drive.getRobotSpeeds();
-    this.robotAngle = this.drive.getRobotAngle();
+    this.robotAngle = Rotation2d.fromDegrees(this.drive.getRobotAngle());
 
     this.updateSwerveLogs();
   }
@@ -214,8 +209,7 @@ public class BaseSwerveSubsystem implements Subsystem {
   }
 
   public void driveFieldOrientedLockedJoystickAngle(
-      ChassisSpeeds speeds, double xHeading, double yHeading) {
-    Rotation2d targetHeading = new Rotation2d(xHeading, yHeading);
+      ChassisSpeeds speeds, Rotation2d targetHeading) {
 
     double error = targetHeading.minus(this.robotAngle).getRadians();
     double angularVelocity = this.headingPidController.calculate(error);
@@ -242,7 +236,7 @@ public class BaseSwerveSubsystem implements Subsystem {
   }
 
   public ChassisSpeeds inputsToChassisSpeeds(double xInput, double yInput) {
-    return new ChassisSpeeds(xInput * this.maxSpeed, yInput * this.maxSpeed, 0);
+    return new ChassisSpeeds(xInput * this.maxSpeed, yInput * this.maxSpeed, 3);
   }
 
   public boolean isAtTargetHeading(double toleranceDegrees) {
