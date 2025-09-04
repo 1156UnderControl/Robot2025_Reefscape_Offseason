@@ -82,7 +82,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
 
         this.elevatorLead = new SparkFlexMotor(ElevatorConstants.ID_elevatorLeaderMotor, ElevatorConstants.elevatorBusID, ElevatorConstants.elevatorLeaderMotorName);
         this.elevatorFollower = new SparkFlexMotor(ElevatorConstants.ID_elevatorFollowerMotor, ElevatorConstants.elevatorBusID, ElevatorConstants.elevatorFollowerMotorName);
-        this.pivotMotor = new NoMotor();
+        this.pivotMotor = new SparkFlexMotor(PivotConstants.ID_pivotMotor, PivotConstants.pivotBusID, PivotConstants.pivotMotorName);
         this.endEffectorMotor = new SparkFlexMotor(EndEffectorConstants.ID_endEffectorMotor, EndEffectorConstants.endEffectorBusID, EndEffectorConstants.endEffectorMotorName);
         this.pivotInfraRed = new InfraRed(EndEffectorConstants.Port_coralInfraRed, false);
 
@@ -212,8 +212,8 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
 
     @Override
     public void prepareToScoreCoral(){
-        this.goalElevatorPosition = 1.3;
-        this.elevatorLead.setPositionReference(goalElevatorPosition);
+        this.goalPivotPosition = 180;
+        this.pivotMotor.setPositionReference(this.goalPivotPosition);
     }
 
     @Override
@@ -315,7 +315,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
       }
     
     private void setConfigsPivot() {
-        pivotMotor.setInverted(false);
+        pivotMotor.setInverted(true);
         pivotMotor.configExternalEncoder();
         pivotMotor.setInvertedEncoder(true);
         pivotMotor.setMotorBrake(true);
@@ -323,14 +323,12 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         pivotMotor.setPositionFactorExternalEncoder(PivotConstants.tunning_values_pivot.ANGLE_FACTOR_MECHANISM_ROTATION_TO_MECHANISM_DEGREES);
         pivotMotor.setVelocityFactorExternalEncoder(PivotConstants.tunning_values_pivot.VELOCITY_FACTOR_MOTOR_RPM_TO_MECHANISM_DEG_PER_SECOND);
         pivotMotor.setAbsoluteEncoderZeroOffset(PivotConstants.tunning_values_pivot.ZERO_OFFSET_ABSOLUTE_ENCODER);
-        pivotMotor.configureTrapezoid(PivotConstants.tunning_values_pivot.MAX_ACCELERATION,
-            PivotConstants.tunning_values_pivot.MAX_VELOCITY);
         pivotMotor.configurePIDF(
             PivotConstants.tunning_values_pivot.PID.P,
             PivotConstants.tunning_values_pivot.PID.I,
             PivotConstants.tunning_values_pivot.PID.D,
-            0,
-            ElevatorConstants.tunning_values_elevator.PID.IZone);
+            PivotConstants.tunning_values_pivot.PID.arbFF,
+            PivotConstants.tunning_values_pivot.PID.IZone);
         pivotMotor.setPosition(pivotMotor.getPositionExternalAbsoluteEncoder());
         pivotMotor.burnFlash();
     }
