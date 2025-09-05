@@ -32,11 +32,11 @@ public class DriverController implements IDriverController {
     if (turboActivate().getAsBoolean()) {
       return -MathUtil.applyDeadband(
               performAllianceInputDirectionCorrection(driverController.getLeftX()), this.deadBand)
-          * 0.5;
+          * 1;
     }
     return -MathUtil.applyDeadband(
             performAllianceInputDirectionCorrection(driverController.getLeftX()), this.deadBand)
-        * 0.3;
+        * 0.7;
   }
 
   @Override
