@@ -3,8 +3,6 @@ package frc.Java_Is_UnderControl.Swerve;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
-
-import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
@@ -40,7 +38,7 @@ import org.littletonrobotics.junction.Logger;
 public class BaseSwerveSubsystem implements Subsystem {
 
   private ChassisSpeeds robotSpeeds = new ChassisSpeeds();
-  private Rotation2d robotAngle = new Rotation2d();
+  private Rotation2d robotAngle;
   private Pose2d robotPose = new Pose2d();
 
   private ChassisSpeeds targetSpeeds = new ChassisSpeeds();
@@ -96,7 +94,6 @@ public class BaseSwerveSubsystem implements Subsystem {
     this.headingPidController = new PIDController(config.headingPidConfig.kP, config.headingPidConfig.kI, config.headingPidConfig.kD);
     configureAutoBuilder();
     this.maxSpeed = SwerveConstants.kSpeedAt12Volts.in(MetersPerSecond);
-
     this.motorConstants = new HashMap<>();
     this.motorConstants.put(
         SwerveConstants.FRONT_LEFT_MODULE_NAME,
@@ -112,6 +109,7 @@ public class BaseSwerveSubsystem implements Subsystem {
         Optional.of(moduleConstants.get(SwerveConstants.BACK_RIGHT_MODULE_NAME)));
     this.pigeon = new GyroIOPigeon2();
     this.drive = new Drive(this.motorConstants, pigeon);
+    this.robotAngle = Rotation2d.fromDegrees(this.pigeon.getYaw());
   }
 
   // Tem na documentação do advantagekit de como fazer
@@ -199,20 +197,10 @@ public class BaseSwerveSubsystem implements Subsystem {
   }
 
   public void driveFieldOrientedLockedAngle(ChassisSpeeds speeds, Rotation2d targetHeading) {
-    double error = targetHeading.minus(this.robotAngle).getRadians();
-    double angularVelocity = this.headingPidController.calculate(error);
-
-    ChassisSpeeds finalSpeed = new ChassisSpeeds(speeds.vx, speeds.vy, angularVelocity);
-
-    this.targetSpeeds =
-        finalSpeed.toFieldRelative(this.robotAngle);
-  }
-
-  public void driveFieldOrientedLockedJoystickAngle(
-      ChassisSpeeds speeds, Rotation2d targetHeading) {
-
-    double error = targetHeading.minus(this.robotAngle).getRadians();
-    double angularVelocity = this.headingPidController.calculate(error);
+    double angularVelocity = this.headingPidController.calculate(
+      this.robotAngle.getRadians(),
+      targetHeading.getRadians()
+    );
 
     ChassisSpeeds finalSpeed = new ChassisSpeeds(speeds.vx, speeds.vy, angularVelocity);
 

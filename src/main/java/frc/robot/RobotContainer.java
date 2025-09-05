@@ -30,19 +30,18 @@ public class RobotContainer {
     this.operatorController = OperatorController.getInstance();
 
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
-    this.swerve.setDefaultCommand(Commands.run(() -> this.swerve.driveFieldOrientedLockedJoystickAngle(), this.swerve).onlyIf(() -> DriverStation.isTeleopEnabled()));
     this.configureButtonBindings();
   }
 
   private void configureButtonBindings() {
     this.driverController.a()
     .onTrue(
-        Commands.run(() -> this.intake.collectCoral(), this.intake)
+        Commands.run(() -> this.intake.goToIntakePosition(), this.intake)
     );
     
     this.driverController.b()
     .onTrue(
-        Commands.run(() -> this.intake.stopIntaking(), this.intake)
+        Commands.run(() -> this.intake.goToDefaultPosition(), this.intake)
     );
   }
   public Command getAutonomousCommand() {

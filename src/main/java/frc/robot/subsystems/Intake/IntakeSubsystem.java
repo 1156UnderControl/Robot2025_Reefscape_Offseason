@@ -53,9 +53,9 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
 
     private void setConfigsIntakePivot() {
         this.intakePivot.setMotorBrake(true);
-        this.intakePivot.setInverted(true);
+        this.intakePivot.setInverted(false);
         this.intakePivot.setPositionFactor(IntakeConstants.tunning_values_intake.setpoints.POSITION_FACTOR_MOTOR_ROTATION_TO_MECHANISM_ANGLE);
-        this.intakePivot.setVelocityFactor(IntakeConstants.tunning_values_intake.setpoints.VELOCITY_FACTOR_MOTOR_RPM_TO_ANGLE_PER_SECOND);
+        this.intakePivot.setVelocityFactor(IntakeConstants.tunning_values_intake.setpoints.VELOCITY_FACTOR_MOTOR_RPM_TO_MECHANISM_ANGLE_PER_SECOND);
         this.intakePivot.configurePIDF(
             IntakeConstants.tunning_values_intake.PID.P,
             IntakeConstants.tunning_values_intake.PID.I,
@@ -63,7 +63,7 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
             IntakeConstants.tunning_values_intake.PID.arbFF,
             IntakeConstants.tunning_values_intake.PID.IZone);
         this.intakePivot.burnFlash();
-        this.intakePivot.setPosition(IntakeConstants.tunning_values_intake.setpoints.ZERO_POSITION_IN_METERS_FROM_GROUND);
+        this.intakePivot.setPosition(IntakeConstants.tunning_values_intake.setpoints.ZERO_POSITION_IN_ANGLE);
     }
     
     @Override
@@ -80,13 +80,13 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
 
     @Override
     public void goToDefaultPosition(){
-        this.goToTargetPosition(IntakeConstants.tunning_values_intake.setpoints.INTAKE_ANGLE_HOMED);
+        this.intakePivot.setPositionReference(IntakeConstants.tunning_values_intake.setpoints.INTAKE_ANGLE_HOMED);   
     }
 
     @Override
     public void goToIntakePosition(){
-        this.goToTargetPosition(IntakeConstants.tunning_values_intake.setpoints.INTAKE_ANGLE_COLLECTING);   
-    }
+        this.intakePivot.setPositionReference(IntakeConstants.tunning_values_intake.setpoints.INTAKE_ANGLE_COLLECTING);   
+    }      
 
     @Override
     public void expellCoral(){

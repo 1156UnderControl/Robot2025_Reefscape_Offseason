@@ -60,7 +60,7 @@ public class SwerveSubsystem extends SubsystemBase {
     ChassisSpeeds joystickSpeeds =
         swerve.inputsToChassisSpeeds(
             driverController.getXtranslation(), driverController.getYtranslation());
-    this.swerve.driveFieldOrientedLockedJoystickAngle(
+    this.swerve.driveFieldOrientedLockedAngle(
         joystickSpeeds, this.getRobotTargetAngle());
   }
 
