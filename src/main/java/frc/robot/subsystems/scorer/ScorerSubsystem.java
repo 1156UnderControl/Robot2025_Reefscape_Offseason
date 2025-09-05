@@ -229,7 +229,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
             this.goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.DEFAULT_ANGLE;
         }
 
-        this.setScorerStructureGoals(this.goalElevatorPosition, this.goalPivotPosition);
+        this.pivotMotor.setPositionReference(this.goalPivotPosition);
     }
 
     private void setEndEffectorDutyCycle(double dutyCycle){
@@ -316,7 +316,6 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     
     private void setConfigsPivot() {
         pivotMotor.setInverted(true);
-        pivotMotor.configExternalEncoder();
         pivotMotor.setInvertedEncoder(true);
         pivotMotor.setMotorBrake(true);
         pivotMotor.setPositionFactor(PivotConstants.tunning_values_pivot.ANGLE_FACTOR_ROTOR_ROTATION_TO_MECHANISM_DEGREES);
