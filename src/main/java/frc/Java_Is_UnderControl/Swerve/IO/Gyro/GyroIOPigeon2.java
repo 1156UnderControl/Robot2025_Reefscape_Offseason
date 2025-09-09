@@ -31,7 +31,7 @@ public class GyroIOPigeon2 implements GyroIO {
     this.configuration = new Pigeon2Configuration();
     this.pigeon.optimizeBusUtilization();
     // this will need to be fixed
-    this.setYaw(90);
+    this.setYaw(0);
     this.yaw = pigeon.getYaw();
     this.yaw.setUpdateFrequency(SwerveConstants.ODOMETRY_FREQUENCY);
 
