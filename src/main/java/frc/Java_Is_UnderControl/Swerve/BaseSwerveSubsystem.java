@@ -20,6 +20,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -196,10 +197,10 @@ public class BaseSwerveSubsystem implements Subsystem {
     this.updateSwerveLogs();
   }
 
-  public void driveFieldOrientedLockedAngle(ChassisSpeeds speeds, Rotation2d targetHeading) {
+  public void driveFieldOrientedLockedAngle(ChassisSpeeds speeds, double xHeading, double yHeading) {
     double angularVelocity = this.headingPidController.calculate(
-      this.robotAngle.getRadians(),
-      targetHeading.getRadians()
+      Units.radiansToDegrees(this.robotAngle.getRadians()),
+      Units.radiansToDegrees(Math.atan2(yHeading, xHeading))
     );
 
     ChassisSpeeds finalSpeed = new ChassisSpeeds(speeds.vx, speeds.vy, angularVelocity);

@@ -27,7 +27,8 @@ public class SwerveSubsystem extends SubsystemBase {
       moduleConstants;
   private final DriverController driverController;
 
-  private Rotation2d targetRotation;
+  private double targetCOSRotation;
+  private double targetSINRotation;
 
   public SwerveSubsystem() {
     this.moduleConstants = new HashMap<>();
@@ -53,7 +54,8 @@ public class SwerveSubsystem extends SubsystemBase {
                 new PIDConfig(0.5, 0, 0)),
             this.moduleConstants);
 
-    this.targetRotation = new Rotation2d(0);
+    this.targetCOSRotation = 0;
+    this.targetSINRotation = 0;
   }
 
   public void driveFieldOrientedLockedJoystickAngle() {
@@ -61,15 +63,24 @@ public class SwerveSubsystem extends SubsystemBase {
         swerve.inputsToChassisSpeeds(
             driverController.getXtranslation(), driverController.getYtranslation());
     this.swerve.driveFieldOrientedLockedAngle(
-        joystickSpeeds, this.getRobotTargetAngle());
+        joystickSpeeds, this.getJoystickCOSTargetRotation(), this.getJoystickSINTargetRotation());
   }
 
-  private Rotation2d getRobotTargetAngle(){
-    if((this.driverController.getCOS_Joystick() != this.applyJoystickDeadBand(this.driverController.getCOS_Joystick())) || (this.driverController.getSIN_Joystick() != this.applyJoystickDeadBand(this.driverController.getSIN_Joystick()))){
-      return this.targetRotation;
+  private double getJoystickCOSTargetRotation(){
+    if((this.driverController.getCOS_Joystick() != this.applyJoystickDeadBand(this.driverController.getCOS_Joystick()))){
+      return this.targetCOSRotation;
     } else {
-      this.targetRotation = new Rotation2d(this.applyJoystickDeadBand(this.driverController.getCOS_Joystick()), this.applyJoystickDeadBand(this.driverController.getSIN_Joystick()));;
-      return targetRotation;
+      this.targetCOSRotation = this.driverController.getCOS_Joystick();
+      return this.targetCOSRotation;
+    }
+  }
+
+  private double getJoystickSINTargetRotation(){
+    if((this.driverController.getSIN_Joystick() != this.applyJoystickDeadBand(this.driverController.getSIN_Joystick()))){
+      return this.targetSINRotation;
+    } else {
+      this.targetSINRotation = this.driverController.getSIN_Joystick();
+      return this.targetSINRotation;
     }
   }
 
