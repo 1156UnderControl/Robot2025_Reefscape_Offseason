@@ -26,20 +26,21 @@ public class ElevatorConstants {
       public static final double MIN_HEIGHT = 0;
       public static final double NET_HEIGHT = 0;
       public static final double PROCESSOR_HEIGHT = 0;
-      public static final double L1_HEIGHT = 0;
-      public static final double L2_HEIGHT = 0;
-      public static final double L3_HEIGHT = 0;
-      public static final double L4_HEIGHT = 0;
+      public static final double L1_HEIGHT = 0.85;
+      public static final double L2_HEIGHT = 0.61;
+      public static final double L3_HEIGHT = 0.98;
+      public static final double L4_HEIGHT = 1.68;
       public static final double ALGAE_COLLECT_MID = 0;
       public static final double ALGAE_COLLECT_LOW = 0;
       public static final double ALGAE_COLLECT_GROUND = 0;
-      public static final double DEFAULT_POSITION = 0;
-      public static final double DEFAULT_POSITION_WITH_CORAL = 0;
-      public static final double DEFAULT_POSITION_WITH_ALGAE = 0;
+      public static final double DEFAULT_POSITION = 0.922;
+      public static final double DEFAULT_POSITION_WITH_CORAL = 1;
+      public static final double DEFAULT_POSITION_WITH_ALGAE = 0.636;
+      public static final double COLLECT_CORAL = 0.820;
     }
 
     public class stable_transition {
-      public static final double ELEVATOR_HEIGHT_OFFSET_FROM_GROUND = 0.330912;
+      public static final double ELEVATOR_HEIGHT_OFFSET_FROM_GROUND = 0.39624;
       public static final double ARM_ANGLE_POINT = 7.520704;
       public static final double ARM_HYPOTENUSE = 0.630709;
       public static final double ELEVATOR_SAFETY_MARGIN = 0.05;
