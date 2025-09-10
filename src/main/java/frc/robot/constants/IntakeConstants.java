@@ -21,11 +21,13 @@ public class IntakeConstants {
       public static final double INDEXER_SPEED = 0.6;
       
       public class PID {
-        public static final double P = 0.0001;
-        public static final double I = 0;
+        public static final double P = 0.045;
+        public static final double I = 0.0002;
         public static final double D = 0;
-        public static final double arbFF = 0.006;
-        public static final double IZone = 0;
+        public static final double arbFF = 0;
+        public static final double IZone = 1;
+        public static final double MAX_ACCELERATION = 2500;
+        public static final double MAX_VELOCITY = 400;
       }
   
       public class setpoints {
@@ -34,7 +36,7 @@ public class IntakeConstants {
         public static final double ZERO_POSITION_IN_ANGLE = 0;
         public static final double MAX_ANGLE = 0;
         public static final double MIN_ANGLE = 0;
-        public static final double INTAKE_ANGLE_HOMED = 30;
+        public static final double INTAKE_ANGLE_HOMED = 45;
         public static final double INTAKE_ANGLE_COLLECTING = 5;
   
         //27.3 position intake homed
