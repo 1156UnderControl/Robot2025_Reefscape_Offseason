@@ -21,33 +21,34 @@ public class RobotContainer {
   private final DriverController driverController;
 
   private final SwerveSubsystem swerve;
-  private final IntakeSubsystem intake;
+  //private final IntakeSubsystem intake;
   private final ScorerSubsystem scorer;
 
 
   public RobotContainer() {
     this.swerve = new SwerveSubsystem();
-    this.intake = IntakeSubsystem.getInstance();
+    //this.intake = IntakeSubsystem.getInstance();
     this.scorer = ScorerSubsystem.getInstance();
    
     this.driverController = DriverController.getInstance();
     this.operatorController = OperatorController.getInstance();
 
-    this.swerve.setDefaultCommand(Commands.run(() -> swerve.driveFieldOrientedLockedJoystickAngle(), this.swerve));
+    //this.swerve.setDefaultCommand(Commands.run(() -> swerve.driveFieldOrientedLockedJoystickAngle(), this.swerve));
+    this.scorer.setDefaultCommand(Commands.run(() -> this.scorer.moveScorerToDefaultPosition(), this.scorer));
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
     this.configureButtonBindings();
   }
 
   private void configureButtonBindings() {
-    this.driverController.a()
-    .onTrue(
-        Commands.run(() -> this.scorer.moveScorerToDefaultPosition(), this.intake)
-    );
+    //this.driverController.a()
+    //.onTrue(
+        //Commands.run(() -> this.scorer.moveScorerToDefaultPosition(), this.intake)
+    //);
     
-    this.driverController.b()
-    .onTrue(
-        Commands.run(() -> this.scorer.prepareToScoreCoral(), this.intake)
-    );
+    //this.driverController.b()
+    //.onTrue(
+    //    Commands.run(() -> this.scorer.prepareToScoreCoral(), this.intake)
+    //);
   }
   public Command getAutonomousCommand() {
     return autoChooser.get();
