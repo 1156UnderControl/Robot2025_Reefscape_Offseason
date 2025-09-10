@@ -143,4 +143,6 @@ public interface MotorIO {
     Command sysIdQuasistatic(SysIdRoutine.Direction direction);
 
     Command sysIdDynamic(SysIdRoutine.Direction direction);
+
+    boolean getLimitSwitch(boolean isForward);
 }   

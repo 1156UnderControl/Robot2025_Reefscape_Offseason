@@ -531,4 +531,9 @@ public class SparkMAXMotor implements MotorIO {
   public void setAbsoluteEncoderZeroOffset(double zeroOffset) {
     this.config.absoluteEncoder.zeroOffset(zeroOffset);
   }
+
+  @Override
+  public boolean getLimitSwitch(boolean isForward) {
+    return isForward ? this.motor.getForwardLimitSwitch().isPressed() : this.motor.getReverseLimitSwitch().isPressed();
+  }
 }
