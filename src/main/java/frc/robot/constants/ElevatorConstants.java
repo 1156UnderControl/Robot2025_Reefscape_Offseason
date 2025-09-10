@@ -6,7 +6,7 @@ public class ElevatorConstants {
   public static final String elevatorLeaderMotorName = "Elevator Leader Motor";
   public static final int ID_elevatorFollowerMotor = 14;
   public static final String elevatorFollowerMotorName = "Elevator Follower Motor";
-  public static final double ZERO_POSITION_IN_METERS_FROM_GROUND = 0.4;
+  public static final double ELEVATOR_HEIGHT_OFFSET_FROM_GROUND = 0.39624;
 
   public class tunning_values_elevator {
     public static final double POSITION_FACTOR_MOTOR_ROTATION_TO_MECHANISM_METERS = 0.0412436;
@@ -40,7 +40,6 @@ public class ElevatorConstants {
     }
 
     public class stable_transition {
-      public static final double ELEVATOR_HEIGHT_OFFSET_FROM_GROUND = 0.39624;
       public static final double ARM_ANGLE_POINT = 7.520704;
       public static final double ARM_HYPOTENUSE = 0.630709;
       public static final double ELEVATOR_SAFETY_MARGIN = 0.05;
