@@ -13,8 +13,7 @@ import frc.Java_Is_UnderControl.Swerve.BaseSwerveSubsystem;
 import frc.Java_Is_UnderControl.Swerve.Configs.BaseSwerveConfig;
 import frc.Java_Is_UnderControl.Swerve.Configs.SwervePathPlannerConfig;
 import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
-import frc.robot.Joysticks.DriverController;
-import frc.robot.subsystems.generated.TunerConstants;
+import frc.robot.joysticks.DriverController;
 
 import java.util.HashMap;
 
@@ -29,13 +28,13 @@ public class SwerveSubsystem extends SubsystemBase {
   public SwerveSubsystem() {
     this.moduleConstants = new HashMap<>();
 
-    this.moduleConstants.put(SwerveConstants.FRONT_LEFT_MODULE_NAME, TunerConstants.FrontLeft);
+    this.moduleConstants.put(SwerveConstants.FRONT_LEFT_MODULE_NAME, SwerveConstants.FrontLeft);
 
-    this.moduleConstants.put(SwerveConstants.FRONT_RIGHT_MODULE_NAME, TunerConstants.FrontRight);
+    this.moduleConstants.put(SwerveConstants.FRONT_RIGHT_MODULE_NAME, SwerveConstants.FrontRight);
 
-    this.moduleConstants.put(SwerveConstants.BACK_LEFT_MODULE_NAME, TunerConstants.BackLeft);
+    this.moduleConstants.put(SwerveConstants.BACK_LEFT_MODULE_NAME, SwerveConstants.BackLeft);
 
-    this.moduleConstants.put(SwerveConstants.BACK_RIGHT_MODULE_NAME, TunerConstants.BackRight);
+    this.moduleConstants.put(SwerveConstants.BACK_RIGHT_MODULE_NAME, SwerveConstants.BackRight);
 
     this.driverController = DriverController.getInstance();
 
@@ -55,7 +54,7 @@ public class SwerveSubsystem extends SubsystemBase {
     ChassisSpeeds joystickSpeeds =
         swerve.inputsToChassisSpeeds(
             driverController.getXtranslation(), driverController.getYtranslation());
-    this.swerve.driveFieldOrientedLockedJoystickAngle(
+    this.swerve.driveFieldOrientedLockedAngle(
         joystickSpeeds, driverController.getCOS_Joystick(), driverController.getSIN_Joystick());
   }
 
