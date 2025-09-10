@@ -254,45 +254,11 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     }
 
     private void setScorerTargetCoral(){
-        switch (this.coralHeightReef) {
-            case L1:
-                goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.L1_HEIGHT;
-                goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.L1_ANGLE;
-                break;
-            case L2:
-                goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.L2_HEIGHT;
-                goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.L2_ANGLE;
-                break;
-            case L3:
-                goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.L3_HEIGHT;
-                goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.L3_ANGLE;
-                break;
-            case L4:
-                goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.L4_HEIGHT;
-                goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.L4_ANGLE;
-                break;
-            default:
-                break;
-        }
+        
     }
 
     private void setScorerTargetAlgae(){
-        switch (this.algaeHeightReef) {
-            case LOW:
-                goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.ALGAE_COLLECT_LOW;
-                goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.ALGAE_COLLECT_LOW;
-                break;
-            case MID:
-                goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.ALGAE_COLLECT_MID;
-                goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.ALGAE_COLLECT_MID;
-                break;
-            case GROUND:
-                goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.ALGAE_COLLECT_GROUND;
-                goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.ALGAE_COLLECT_GROUND;
-                break;
-            default:
-                break;
-        }
+        
     }
 
     private void setConfigsElevator() {
@@ -310,7 +276,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
             ElevatorConstants.tunning_values_elevator.PID.IZone);
         this.elevatorFollower.burnFlash();
         this.elevatorLead.burnFlash();
-        this.elevatorLead.setPosition(ElevatorConstants.ZERO_POSITION_IN_METERS_FROM_GROUND);
+        this.elevatorLead.setPosition(ElevatorConstants.ELEVATOR_HEIGHT_OFFSET_FROM_GROUND);
       }
     
     private void setConfigsPivot() {
@@ -345,30 +311,46 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         securedTargetElevatorPosition = Math.clamp(targetElevatorPosition, ElevatorConstants.tunning_values_elevator.setpoints.MIN_HEIGHT, ElevatorConstants.tunning_values_elevator.setpoints.MAX_HEIGHT);
         if((this.pivotMotor.getPosition() <= 270 && targetPivotPosition <= 270) || (this.pivotMotor.getPosition() > 270 && targetPivotPosition > 270)){
             securedMinimumTargetElevatorPosition = this.minimumHeightElevator(Math.abs(((targetPivotPosition % 360) - 270) - ElevatorConstants.tunning_values_elevator.stable_transition.ARM_ANGLE_POINT));
-            if(this.elevatorLead.getPosition() >= securedMinimumTargetElevatorPosition){
+            if(this.elevatorLead.getPosition() > securedMinimumTargetElevatorPosition || this.isElevatorAtTargetPosition(securedMinimumTargetElevatorPosition)){
                 this.pivotSafeMeasuresEnabled = false;
-                //if(this.isPivotAtTargetPosition(targetPivotPosition)){
-                //    this.elevatorLead.setPositionReference(securedTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);
-                //} else {
-                //    this.pivotMotor.setPositionReference(targetPivotPosition);
-                //}
+                if(this.isPivotAtTargetPosition(targetPivotPosition)){
+                    if(securedTargetElevatorPosition < this.minimumHeightElevator(this.pivotMotor.getPosition())){
+                        this.elevatorLead.setPositionReference(securedMinimumTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);
+                    } else {
+                        this.elevatorLead.setPositionReference(securedTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);
+                    }
+                } else {
+                    this.pivotMotor.setPositionReference(targetPivotPosition);
+                }
             } else {
                 this.pivotSafeMeasuresEnabled = true;
-                //this.elevatorLead.setPositionReference(securedMinimumTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);
+                if(securedTargetElevatorPosition < this.minimumHeightElevator(this.pivotMotor.getPosition())){
+                    this.elevatorLead.setPositionReference(securedMinimumTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);
+                } else {
+                    this.elevatorLead.setPositionReference(securedTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);
+                }
             }
 
         } else {
             securedMinimumTargetElevatorPosition = this.minimumHeightElevator(270);
-            if(this.elevatorLead.getPosition() >= securedMinimumTargetElevatorPosition){
+            if(this.elevatorLead.getPosition() > securedMinimumTargetElevatorPosition || this.isElevatorAtTargetPosition(securedMinimumTargetElevatorPosition)){
                 this.pivotSafeMeasuresEnabled = false;
-                //if(this.isPivotAtTargetPosition(targetPivotPosition)){
-                //    this.elevatorLead.setPositionReference(securedTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);
-                //} else {
-                //    this.pivotMotor.setPositionReference(targetPivotPosition);
-                //}
+                if(this.isPivotAtTargetPosition(targetPivotPosition)){
+                    if(securedTargetElevatorPosition < this.minimumHeightElevator(this.pivotMotor.getPosition())){
+                        this.elevatorLead.setPositionReference(securedMinimumTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);
+                    } else {
+                        this.elevatorLead.setPositionReference(securedTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);
+                    }
+                } else {
+                    this.pivotMotor.setPositionReference(targetPivotPosition);
+                }
             } else {
                 this.pivotSafeMeasuresEnabled = true;
-                //this.elevatorLead.setPositionReference(securedMinimumTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);
+                if(securedTargetElevatorPosition < this.minimumHeightElevator(this.pivotMotor.getPosition())){
+                    this.elevatorLead.setPositionReference(securedMinimumTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);
+                } else {
+                    this.elevatorLead.setPositionReference(securedTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);
+                }
             }
         }
     }
@@ -388,12 +370,12 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         if (Math.sin(angleRad) * ElevatorConstants.tunning_values_elevator.stable_transition.ARM_HYPOTENUSE 
                 <= SwerveConstants.ROBOT_SIZE / 2) {
             return Math.cos(angleRad) * ElevatorConstants.tunning_values_elevator.stable_transition.ARM_HYPOTENUSE
-                   + (ElevatorConstants.ZERO_POSITION_IN_METERS_FROM_GROUND
+                   + (ElevatorConstants.ELEVATOR_HEIGHT_OFFSET_FROM_GROUND
                       + ElevatorConstants.tunning_values_elevator.stable_transition.ELEVATOR_SAFETY_MARGIN);
         }
     
         return ( (SwerveConstants.ROBOT_SIZE / 2) / Math.tan(angleRad) ) 
-               + (ElevatorConstants.ZERO_POSITION_IN_METERS_FROM_GROUND
+               + (ElevatorConstants.ELEVATOR_HEIGHT_OFFSET_FROM_GROUND
                   + ElevatorConstants.tunning_values_elevator.stable_transition.ELEVATOR_SAFETY_MARGIN);
     }
 }

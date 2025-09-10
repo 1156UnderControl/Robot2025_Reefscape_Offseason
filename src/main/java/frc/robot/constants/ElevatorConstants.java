@@ -36,7 +36,7 @@ public class ElevatorConstants {
       public static final double DEFAULT_POSITION = 0.922;
       public static final double DEFAULT_POSITION_WITH_CORAL = 1;
       public static final double DEFAULT_POSITION_WITH_ALGAE = 0.636;
-      public static final double COLLECT_CORAL = 0.820;
+      public static final double CORAL_COLLECT_INDEXER = 0.820;
     }
 
     public class stable_transition {
