@@ -521,4 +521,9 @@ public class SparkFlexMotor implements MotorIO {
   public double getVelocityExternalEncoder() {
     return this.motor.getExternalEncoder().getVelocity();
   }
+
+  @Override
+  public boolean getLimitSwitch(boolean isForward) {
+    return isForward ? this.motor.getForwardLimitSwitch().isPressed() : this.motor.getReverseLimitSwitch().isPressed();
+  }
 }

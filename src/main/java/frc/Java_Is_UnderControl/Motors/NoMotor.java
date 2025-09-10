@@ -287,4 +287,9 @@ public class NoMotor implements MotorIO {
   public void setAbsoluteEncoderZeroOffset(double zeroOffset) {
     return;
   }
+
+  @Override
+  public boolean getLimitSwitch(boolean isForward) {
+    return false;
+  }
 }

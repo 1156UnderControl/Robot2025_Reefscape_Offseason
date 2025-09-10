@@ -6,7 +6,7 @@ public class ElevatorConstants {
   public static final String elevatorLeaderMotorName = "Elevator Leader Motor";
   public static final int ID_elevatorFollowerMotor = 14;
   public static final String elevatorFollowerMotorName = "Elevator Follower Motor";
-  public static final double ZERO_POSITION_IN_METERS_FROM_GROUND = 0.4;
+  public static final double ELEVATOR_HEIGHT_OFFSET_FROM_GROUND = 0.39624;
 
   public class tunning_values_elevator {
     public static final double POSITION_FACTOR_MOTOR_ROTATION_TO_MECHANISM_METERS = 0.0412436;
@@ -26,20 +26,20 @@ public class ElevatorConstants {
       public static final double MIN_HEIGHT = 0;
       public static final double NET_HEIGHT = 0;
       public static final double PROCESSOR_HEIGHT = 0;
-      public static final double L1_HEIGHT = 0;
-      public static final double L2_HEIGHT = 0;
-      public static final double L3_HEIGHT = 0;
-      public static final double L4_HEIGHT = 0;
+      public static final double L1_HEIGHT = 0.85;
+      public static final double L2_HEIGHT = 0.61;
+      public static final double L3_HEIGHT = 0.98;
+      public static final double L4_HEIGHT = 1.68;
       public static final double ALGAE_COLLECT_MID = 0;
       public static final double ALGAE_COLLECT_LOW = 0;
       public static final double ALGAE_COLLECT_GROUND = 0;
-      public static final double DEFAULT_POSITION = 0;
-      public static final double DEFAULT_POSITION_WITH_CORAL = 0;
-      public static final double DEFAULT_POSITION_WITH_ALGAE = 0;
+      public static final double DEFAULT_POSITION = 0.922;
+      public static final double DEFAULT_POSITION_WITH_CORAL = 1;
+      public static final double DEFAULT_POSITION_WITH_ALGAE = 0.636;
+      public static final double COLLECT_CORAL = 0.820;
     }
 
     public class stable_transition {
-      public static final double ELEVATOR_HEIGHT_OFFSET_FROM_GROUND = 0.330912;
       public static final double ARM_ANGLE_POINT = 7.520704;
       public static final double ARM_HYPOTENUSE = 0.630709;
       public static final double ELEVATOR_SAFETY_MARGIN = 0.05;

@@ -27,16 +27,19 @@ public class PivotConstants {
       public static final double MIN_ANGLE = 0;
       public static final double NET_ANGLE = 0;
       public static final double PROCESSOR_ANGLE = 0;
-      public static final double L1_ANGLE = 0;
-      public static final double L2_ANGLE = 0;
-      public static final double L3_ANGLE = 0;
-      public static final double L4_ANGLE = 0;
+      public static final double L1_ANGLE = 196.5;
+      public static final double L2_ANGLE_SCORING = 164.4;
+      public static final double L2_ANGLE_PREPARED = 132.3;
+      public static final double L3_ANGLE_SCORING = 173.5;
+      public static final double L3_ANGLE_PREPARED = 134.2;
+      public static final double L4_ANGLE = 174.3;
+      public static final double L4_ANGLE_PREPARED = 140.6;
       public static final double ALGAE_COLLECT_MID = 0;
       public static final double ALGAE_COLLECT_LOW = 0;
       public static final double ALGAE_COLLECT_GROUND = 0;
-      public static final double DEFAULT_ANGLE = 270;
+      public static final double DEFAULT_ANGLE = 267.5;
       public static final double DEFAULT_ANGLE_WITH_CORAL = 270;
-      public static final double DEFAULT_ANGLE_WITH_ALGAE = 0;
+      public static final double DEFAULT_ANGLE_WITH_ALGAE = 90;
     }
   }
 }
