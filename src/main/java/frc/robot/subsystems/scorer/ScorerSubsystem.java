@@ -313,14 +313,15 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
             securedMinimumTargetElevatorPosition = this.minimumHeightElevator(Math.abs(((targetPivotPosition % 360) - 270) - ElevatorConstants.tunning_values_elevator.stable_transition.ARM_ANGLE_POINT));
             if(this.elevatorLead.getPosition() > securedMinimumTargetElevatorPosition || this.isElevatorAtTargetPosition(securedMinimumTargetElevatorPosition)){
                 this.pivotSafeMeasuresEnabled = false;
-                if(this.isPivotAtTargetPosition(targetPivotPosition)){
-                    if(securedTargetElevatorPosition < this.minimumHeightElevator(this.pivotMotor.getPosition())){
+                if(securedTargetElevatorPosition >= this.minimumHeightElevator(this.pivotMotor.getPosition())){
+                    this.elevatorLead.setPositionReference(securedTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);
+                    this.pivotMotor.setPositionReference(targetPivotPosition);
+                } else {
+                    if(this.isPivotAtTargetPosition(targetPivotPosition)){
                         this.elevatorLead.setPositionReference(securedMinimumTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);
                     } else {
-                        this.elevatorLead.setPositionReference(securedTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);
+                        this.pivotMotor.setPositionReference(targetPivotPosition);
                     }
-                } else {
-                    this.pivotMotor.setPositionReference(targetPivotPosition);
                 }
             } else {
                 this.pivotSafeMeasuresEnabled = true;
