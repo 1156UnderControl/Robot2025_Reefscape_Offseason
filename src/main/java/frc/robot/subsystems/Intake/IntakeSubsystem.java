@@ -10,7 +10,6 @@ import frc.Java_Is_UnderControl.Motors.MotorIOInputsAutoLogged;
 import frc.Java_Is_UnderControl.Motors.SparkFlexMotor;
 import frc.Java_Is_UnderControl.Sensors.InfraRed;
 import frc.Java_Is_UnderControl.Sensors.SensorIO;
-import frc.Java_Is_UnderControl.Sensors.SensorIOInputsAutoLogged;
 import frc.robot.constants.IntakeConstants;
 
 public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
@@ -19,8 +18,9 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
     private final MotorIO intakeWheels;
     private final MotorIO intakePivot;
     private final MotorIO indexer;
-    private final InfraRed indexerSensor;
 
+    private final SensorIO indexerSensor;
+    
     private final MotorIOInputsAutoLogged intakeWheelsInputs;
     private final MotorIOInputsAutoLogged intakePivotInputs;
     private final MotorIOInputsAutoLogged indexerInputs;
@@ -40,8 +40,8 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
         this.intakeWheels = new SparkFlexMotor(IntakeConstants.ID_intakeWheelsMotor, IntakeConstants.intakeBusID, IntakeConstants.intakeWheelsMotorName);
         this.intakePivot = new SparkFlexMotor(IntakeConstants.ID_intakePivotMotor, IntakeConstants.intakeBusID, IntakeConstants.intakePivotMotorName);
         this.indexer = new SparkFlexMotor(IntakeConstants.ID_indexerMotor, IntakeConstants.intakeBusID, IntakeConstants.indexerMotorName);
+
         this.indexerSensor = new InfraRed(0, false);
-            
 
         this.intakeWheelsInputs = new MotorIOInputsAutoLogged();
         this.intakePivotInputs = new MotorIOInputsAutoLogged();
@@ -106,7 +106,7 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
 
     @Override
     public boolean indexerHasCoral(){
-        return indexerSensor.getBoolean();
+        return this.indexerSensor.getBoolean();
     }
 
     @Override
