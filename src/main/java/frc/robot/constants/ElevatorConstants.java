@@ -11,7 +11,7 @@ public class ElevatorConstants {
   public class tunning_values_elevator {
     public static final double POSITION_FACTOR_MOTOR_ROTATION_TO_MECHANISM_METERS = 0.0412436;
     public static final double VELOCITY_FACTOR_MOTOR_RPM_TO_METERS_PER_SECOND = 1;
-    public static final double POSITION_ERROR_ALLOWED = 0;
+    public static final double POSITION_ERROR_ALLOWED = 0.01;
 
     public class PID {
       public static final double P = 2.45;

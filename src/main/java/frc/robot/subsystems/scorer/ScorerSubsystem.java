@@ -313,7 +313,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
             securedMinimumTargetElevatorPosition = this.minimumHeightElevator(Math.abs(((targetPivotPosition % 360) - 270) - ElevatorConstants.tunning_values_elevator.stable_transition.ARM_ANGLE_POINT));
             if(this.elevatorLead.getPosition() > securedMinimumTargetElevatorPosition || this.isElevatorAtTargetPosition(securedMinimumTargetElevatorPosition)){
                 this.pivotSafeMeasuresEnabled = false;
-                if(securedTargetElevatorPosition >= this.minimumHeightElevator(this.pivotMotor.getPosition())){
+                if(securedTargetElevatorPosition >= securedMinimumTargetElevatorPosition){
                     this.elevatorLead.setPositionReference(securedTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);
                     this.pivotMotor.setPositionReference(targetPivotPosition);
                 } else {
