@@ -111,7 +111,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         Logger.processInputs("Motors/Scorer/ElevatorFollower/", elevatorFollowerInputs);
         Logger.processInputs("Motors/Scorer/Pivot/", pivotInputs);
         Logger.processInputs("Motors/Scorer/EndEffector/", endEffectorInputs);
-        Logger.processInputs("Subsystems/Scorer/Elevator/", scorerInputs);
+        Logger.processInputs("Subsystems/Scorer/", scorerInputs);
         Logger.processInputs("Sensors/Scorer/EndEffectorInfraRed/", pivotInfraRedInputs);
     }
 
@@ -212,6 +212,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     @Override
     public void prepareToScoreCoral(){
         this.goalPivotPosition = 180;
+        this.setScorerTargetCoral();
         this.pivotMotor.setPositionReference(this.goalPivotPosition);
     }
 
@@ -254,7 +255,26 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     }
 
     private void setScorerTargetCoral(){
-        
+        switch (this.coralHeightReef) {
+            case L1:
+                goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.L1_HEIGHT;
+                goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.L1_ANGLE;
+                break;
+            case L2:
+                goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.L2_HEIGHT;
+                goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.L2_ANGLE_PREPARED;
+                break;
+            case L3:
+                goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.L3_HEIGHT;
+                goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.L3_ANGLE_PREPARED;
+                break;
+            case L4:
+                goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.L4_HEIGHT;
+                goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.L4_ANGLE_PREPARED;
+                break;
+            default:
+                break;
+        }
     }
 
     private void setScorerTargetAlgae(){
@@ -309,6 +329,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         double securedTargetElevatorPosition;
 
         securedTargetElevatorPosition = Math.clamp(targetElevatorPosition, ElevatorConstants.tunning_values_elevator.setpoints.MIN_HEIGHT, ElevatorConstants.tunning_values_elevator.setpoints.MAX_HEIGHT);
+
         if((this.pivotMotor.getPosition() <= 270 && targetPivotPosition <= 270) || (this.pivotMotor.getPosition() > 270 && targetPivotPosition > 270)){
             securedMinimumTargetElevatorPosition = this.minimumHeightElevator(Math.abs(((targetPivotPosition % 360) - 270) - ElevatorConstants.tunning_values_elevator.stable_transition.ARM_ANGLE_POINT));
             if(this.elevatorLead.getPosition() > securedMinimumTargetElevatorPosition || this.isElevatorAtTargetPosition(securedMinimumTargetElevatorPosition)){
@@ -325,7 +346,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
                 }
             } else {
                 this.pivotSafeMeasuresEnabled = true;
-                if(securedTargetElevatorPosition < this.minimumHeightElevator(this.pivotMotor.getPosition())){
+                if(securedTargetElevatorPosition < securedMinimumTargetElevatorPosition){
                     this.elevatorLead.setPositionReference(securedMinimumTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);
                 } else {
                     this.elevatorLead.setPositionReference(securedTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);
@@ -364,19 +385,16 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
             return ElevatorConstants.tunning_values_elevator.setpoints.MIN_HEIGHT;
         }
         if (angleDeg == 270) {
-            return ElevatorConstants.tunning_values_elevator.setpoints.DEFAULT_POSITION 
-                   + ElevatorConstants.tunning_values_elevator.stable_transition.ELEVATOR_SAFETY_MARGIN;
+            return ElevatorConstants.tunning_values_elevator.setpoints.DEFAULT_POSITION;
         }
     
         if (Math.sin(angleRad) * ElevatorConstants.tunning_values_elevator.stable_transition.ARM_HYPOTENUSE 
                 <= SwerveConstants.ROBOT_SIZE / 2) {
             return Math.cos(angleRad) * ElevatorConstants.tunning_values_elevator.stable_transition.ARM_HYPOTENUSE
-                   + (ElevatorConstants.ELEVATOR_HEIGHT_OFFSET_FROM_GROUND
-                      + ElevatorConstants.tunning_values_elevator.stable_transition.ELEVATOR_SAFETY_MARGIN);
+                   + (ElevatorConstants.ELEVATOR_HEIGHT_OFFSET_FROM_GROUND);
         }
     
         return ( (SwerveConstants.ROBOT_SIZE / 2) / Math.tan(angleRad) ) 
-               + (ElevatorConstants.ELEVATOR_HEIGHT_OFFSET_FROM_GROUND
-                  + ElevatorConstants.tunning_values_elevator.stable_transition.ELEVATOR_SAFETY_MARGIN);
+               + (ElevatorConstants.ELEVATOR_HEIGHT_OFFSET_FROM_GROUND);
     }
 }
