@@ -22,8 +22,8 @@ public class ElevatorConstants {
     }
 
     public class setpoints {
-      public static final double MAX_HEIGHT = 0;
-      public static final double MIN_HEIGHT = 0;
+      public static final double MAX_HEIGHT = 1.8;
+      public static final double MIN_HEIGHT = 0.39624;
       public static final double NET_HEIGHT = 0;
       public static final double PROCESSOR_HEIGHT = 0;
       public static final double L1_HEIGHT = 0.85;
