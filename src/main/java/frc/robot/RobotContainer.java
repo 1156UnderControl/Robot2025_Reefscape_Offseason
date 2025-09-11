@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.OperatorController;
 import frc.robot.subsystems.Intake.IntakeSubsystem;
+import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.scorer.ScorerSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 
@@ -20,15 +21,17 @@ public class RobotContainer {
   private final OperatorController operatorController;
   private final DriverController driverController;
 
-  private final SwerveSubsystem swerve;
-  //private final IntakeSubsystem intake;
+
+  private final IntakeSubsystem intake;
   private final ScorerSubsystem scorer;
+  private final ClimberSubsystem climber;
 
 
   public RobotContainer() {
-    this.swerve = new SwerveSubsystem();
-    //this.intake = IntakeSubsystem.getInstance();
+    
+    this.intake = IntakeSubsystem.getInstance();
     this.scorer = ScorerSubsystem.getInstance();
+    this.climber = ClimberSubsystem.getInstance();
    
     this.driverController = DriverController.getInstance();
     this.operatorController = OperatorController.getInstance();
@@ -49,6 +52,10 @@ public class RobotContainer {
     //.onTrue(
     //    Commands.run(() -> this.scorer.prepareToScoreCoral(), this.intake)
     //);
+
+    this.driverController.x()
+    .onTrue(
+      Commands.run(() -> this.climber.climb(), this.climber));
   }
   public Command getAutonomousCommand() {
     return autoChooser.get();
