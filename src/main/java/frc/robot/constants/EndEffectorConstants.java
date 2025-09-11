@@ -14,7 +14,7 @@ public class EndEffectorConstants {
     public static final double SLOW_VELOCITY_FOR_INTAKE_ALGAE_DETECTION_IN_AUTO = 0;
 
     public class setpoints {
-      public static final double DUTY_CYCLE_INTAKE_CORAL = 0;
+      public static final double DUTY_CYCLE_INTAKE_CORAL = 1;
       public static final double DUTY_CYCLE_INTAKE_ALGAE = 0;
       public static final double DUTY_CYCLE_EXPELL_CORAL = 0;
       public static final double DUTY_CYCLE_EXPELL_ALGAE = 0;
