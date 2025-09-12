@@ -1,4 +1,4 @@
-package frc.Java_Is_UnderControl.Swerve.Constants;
+package frc.Java_Is_UnderControl.Swerve.constants;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Translation2d;

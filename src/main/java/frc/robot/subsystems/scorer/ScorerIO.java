@@ -1,5 +1,7 @@
 package frc.robot.subsystems.scorer;
 
+import java.util.function.Supplier;
+
 import org.littletonrobotics.junction.AutoLog;
 
 import frc.robot.constants.FieldConstants.Algae.AlgaeHeightReef;
@@ -55,4 +57,10 @@ public interface ScorerIO {
     boolean isElevatorAtTargetPosition();
 
     boolean isPivotAtTargetPosition();
+
+    Supplier<Boolean> getReefScoringModeSupplier();
+
+    Supplier<ReefLevel> getTargetCoralReefLevelSupplier();
+
+    Supplier<AlgaeHeightReef> getTargetAlgaeReefLevelSupplier();
 }
