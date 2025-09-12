@@ -34,7 +34,6 @@ public class RobotContainer {
     this.operatorController = OperatorController.getInstance();
 
     this.swerve.setDefaultCommand(Commands.run(() -> swerve.driveFieldOrientedLockedJoystickAngle(), this.swerve));
-    this.scorer.setDefaultCommand(Commands.run(() -> this.scorer.moveScorerToDefaultPosition(), this.scorer));
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
     this.configureButtonBindings();
   }

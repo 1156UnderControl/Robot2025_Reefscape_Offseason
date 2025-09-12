@@ -12,7 +12,7 @@ import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusSignal;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.RobotController;
-import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
+import frc.Java_Is_UnderControl.Swerve.constants.SwerveConstants;
 
 import java.util.ArrayList;
 import java.util.List;

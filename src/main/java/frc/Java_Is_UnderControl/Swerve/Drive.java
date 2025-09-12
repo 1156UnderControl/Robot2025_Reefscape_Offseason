@@ -7,7 +7,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
+import frc.Java_Is_UnderControl.Swerve.constants.SwerveConstants;
 import frc.Java_Is_UnderControl.Swerve.IO.Gyro.GyroIO;
 import frc.Java_Is_UnderControl.Swerve.IO.Gyro.GyroIOInputsAutoLogged;
 import frc.Java_Is_UnderControl.Swerve.IO.Gyro.GyroIOPigeon2;

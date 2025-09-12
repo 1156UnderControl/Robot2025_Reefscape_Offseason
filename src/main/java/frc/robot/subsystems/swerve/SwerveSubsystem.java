@@ -6,7 +6,6 @@ import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.path.PathConstraints;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -14,7 +13,7 @@ import frc.Java_Is_UnderControl.Control.PIDConfig;
 import frc.Java_Is_UnderControl.Swerve.BaseSwerveSubsystem;
 import frc.Java_Is_UnderControl.Swerve.Configs.BaseSwerveConfig;
 import frc.Java_Is_UnderControl.Swerve.Configs.SwervePathPlannerConfig;
-import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
+import frc.Java_Is_UnderControl.Swerve.constants.SwerveConstants;
 import frc.robot.joysticks.DriverController;
 
 import java.util.HashMap;
