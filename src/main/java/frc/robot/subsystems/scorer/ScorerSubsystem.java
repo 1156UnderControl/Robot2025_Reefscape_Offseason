@@ -416,11 +416,12 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         double angleRad = Math.toRadians(alphaPivotAngle);
         double angleDeg = (alphaPivotAngle % 360 + 360) % 360;
 
-        if (angleDeg == 0 || angleDeg == 90 || angleDeg == 180 || angleDeg == 360 || angleDeg == 450 || angleDeg == 540) {
-            return ElevatorConstants.tunning_values_elevator.setpoints.MIN_HEIGHT;
-        }
         if (angleDeg == 270) {
             return ElevatorConstants.tunning_values_elevator.setpoints.DEFAULT_POSITION;
+        }
+
+        if (angleDeg % 90 == 0) {
+            return ElevatorConstants.tunning_values_elevator.setpoints.MIN_HEIGHT;
         }
     
         if (Math.sin(angleRad) * ElevatorConstants.tunning_values_elevator.stable_transition.ARM_HYPOTENUSE 
