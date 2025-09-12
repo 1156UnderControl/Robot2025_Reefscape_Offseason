@@ -154,10 +154,14 @@ public class SparkFlexMotor implements MotorIO {
   }
 
   @Override
-  public void setMaxMotorOutput(double maxOutput) {}
+  public void setMaxMotorOutput(double maxOutput) {
+    this.config.closedLoop.maxOutput(maxOutput);
+  }
 
   @Override
-  public void setMinMotorOutput(double minOutput) {}
+  public void setMinMotorOutput(double minOutput) {
+    this.config.closedLoop.minOutput(minOutput);
+  }
 
   @Override
   public void configurePIDF(double P, double I, double D, double F, double Izone) {
