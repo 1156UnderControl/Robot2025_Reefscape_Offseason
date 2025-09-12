@@ -54,6 +54,8 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
 
     private boolean pivotSafeMeasuresEnabled;
 
+    private boolean goingToIndexerPosition;
+
     public static ScorerSubsystem getInstance() {
         if (instance == null) {
           instance = new ScorerSubsystem();
@@ -89,6 +91,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         this.manualScoreCoral = false;
         this.manualScoreAlgae = false;
         this.pivotSafeMeasuresEnabled = false;
+        this.goingToIndexerPosition = false;
     }
 
     private void updateLogs(ScorerIOInputsAutoLogged scorerInputs) {
@@ -133,6 +136,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     @Override
     public void collectCoralFromIndexer(){
         if(!this.hasCoral && !hasAlgae){
+            this.scorerState = "Collecting_Coral_From_Indexer";
             if(this.isElevatorAtTargetPosition(ElevatorConstants.tunning_values_elevator.setpoints.CORAL_COLLECT_INDEXER) && this.isPivotAtTargetPosition(PivotConstants.tunning_values_pivot.setpoints.CORAL_COLLECT_INDEXER)){
                 this.setEndEffectorDutyCycle(EndEffectorConstants.tunning_values_endeffector.setpoints.DUTY_CYCLE_INTAKE_CORAL);
                 if(this.endEffectorMotor.getLimitSwitch(true)){
@@ -227,6 +231,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         } else {
             this.goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.DEFAULT_POSITION;
             this.goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.DEFAULT_ANGLE;
+            this.scorerState = "Default_Position_Without_Objects";
         }
 
         this.setScorerStructureGoals(goalElevatorPosition, goalPivotPosition);
@@ -313,6 +318,8 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
             PivotConstants.tunning_values_pivot.PID.D,
             PivotConstants.tunning_values_pivot.PID.arbFF,
             PivotConstants.tunning_values_pivot.PID.IZone);
+        pivotMotor.setMinMotorOutput(-0.8);
+        pivotMotor.setMaxMotorOutput(0.8);
         pivotMotor.setPosition(pivotMotor.getPositionExternalAbsoluteEncoder());
         pivotMotor.burnFlash();
     }
@@ -332,6 +339,21 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
 
         if((this.pivotMotor.getPosition() <= 270 && targetPivotPosition <= 270) || (this.pivotMotor.getPosition() > 270 && targetPivotPosition > 270)){
             securedMinimumTargetElevatorPosition = this.minimumHeightElevator(Math.abs(((targetPivotPosition % 360) - 270) - ElevatorConstants.tunning_values_elevator.stable_transition.ARM_ANGLE_POINT));
+            if(securedTargetElevatorPosition == ElevatorConstants.tunning_values_elevator.setpoints.CORAL_COLLECT_INDEXER){
+                if((this.elevatorLead.getPosition() > securedMinimumTargetElevatorPosition || this.isElevatorAtTargetPosition(securedMinimumTargetElevatorPosition)) || this.goingToIndexerPosition){
+                    this.pivotSafeMeasuresEnabled = false;
+                    if(this.isPivotAtTargetPosition(targetPivotPosition)){
+                        this.goingToIndexerPosition = true;
+                        this.elevatorLead.setPositionReference(securedTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);
+                    } else {
+                        this.pivotMotor.setPositionReference(targetPivotPosition);
+                    }
+                } else {
+                    this.pivotSafeMeasuresEnabled = true;
+                    this.elevatorLead.setPositionReference(securedMinimumTargetElevatorPosition);
+                }
+                return;
+            }
             if(this.elevatorLead.getPosition() > securedMinimumTargetElevatorPosition || this.isElevatorAtTargetPosition(securedMinimumTargetElevatorPosition)){
                 this.pivotSafeMeasuresEnabled = false;
                 if(securedTargetElevatorPosition >= securedMinimumTargetElevatorPosition){
@@ -355,6 +377,19 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
 
         } else {
             securedMinimumTargetElevatorPosition = this.minimumHeightElevator(270);
+            if(securedTargetElevatorPosition == ElevatorConstants.tunning_values_elevator.setpoints.CORAL_COLLECT_INDEXER){
+                if(this.elevatorLead.getPosition() > securedMinimumTargetElevatorPosition || this.isElevatorAtTargetPosition(securedMinimumTargetElevatorPosition)){
+                    this.pivotSafeMeasuresEnabled = false;
+                    if(this.isPivotAtTargetPosition(targetPivotPosition)){
+                        this.elevatorLead.setPositionReference(securedTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);
+                    } else {
+                        this.pivotMotor.setPositionReference(targetPivotPosition);
+                    }
+                } else {
+                    this.pivotSafeMeasuresEnabled = true;
+                    this.elevatorLead.setPositionReference(securedMinimumTargetElevatorPosition);
+                }
+            }
             if(this.elevatorLead.getPosition() > securedMinimumTargetElevatorPosition || this.isElevatorAtTargetPosition(securedMinimumTargetElevatorPosition)){
                 this.pivotSafeMeasuresEnabled = false;
                 if(this.isPivotAtTargetPosition(targetPivotPosition)){
