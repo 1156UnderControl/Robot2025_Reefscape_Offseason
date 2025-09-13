@@ -6,6 +6,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
+import frc.robot.constants.FieldConstants.Algae.AlgaeHeightReef;
+import frc.robot.constants.FieldConstants.ReefLevel;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.OperatorController;
 import frc.robot.subsystems.Intake.IntakeSubsystem;
@@ -41,7 +43,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     this.driverController.a()
     .onTrue(
-      Commands.run(() -> this.scorer.collectCoralFromIndexer(), this.scorer)
+    Commands.run(() -> this.scorer.collectCoralFromIndexer(), this.scorer)
     );
     
     this.driverController.b()
