@@ -30,7 +30,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
-import frc.Java_Is_UnderControl.Swerve.constants.SwerveConstants;
+import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
 import frc.Java_Is_UnderControl.Swerve.IO.SIgnals.PhoenixOdometryThread;
 
 import java.util.Queue;

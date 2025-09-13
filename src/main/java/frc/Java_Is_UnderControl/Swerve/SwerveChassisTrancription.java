@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import frc.Java_Is_UnderControl.Swerve.constants.SwerveConstants;
+import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
 
 import java.util.HashMap;
 import java.util.Optional;
