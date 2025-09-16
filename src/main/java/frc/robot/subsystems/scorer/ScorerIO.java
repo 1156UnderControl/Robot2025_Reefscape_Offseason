@@ -44,6 +44,8 @@ public interface ScorerIO {
 
     void prepareToScoreCoral();
 
+    void scoreCoral();
+
     void moveScorerToDefaultPosition();
 
     void overrideHasCoral();
@@ -55,4 +57,8 @@ public interface ScorerIO {
     boolean isElevatorAtTargetPosition();
 
     boolean isPivotAtTargetPosition();
+
+    boolean isElevatorAtTargetPosition(double elevatorTargetPosition);
+
+    boolean isPivotAtTargetPosition(double pivotTargetPosition);
 }

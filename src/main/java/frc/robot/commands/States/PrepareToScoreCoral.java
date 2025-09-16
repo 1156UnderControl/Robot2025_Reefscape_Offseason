@@ -3,7 +3,7 @@ package frc.robot.commands.States;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.scorer.ScorerSubsystem;
 
-public class PrepareToScoreCoralState extends Command{
+public class PrepareToScoreCoral extends Command{
     private ScorerSubsystem scorer;
 
     @Override
