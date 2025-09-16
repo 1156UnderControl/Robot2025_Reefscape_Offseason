@@ -1,5 +1,7 @@
 package frc.robot.subsystems.scorer;
 
+import java.util.function.Supplier;
+
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -13,7 +15,7 @@ import frc.Java_Is_UnderControl.Motors.SparkFlexMotor;
 import frc.Java_Is_UnderControl.Sensors.InfraRed;
 import frc.Java_Is_UnderControl.Sensors.SensorIO;
 import frc.Java_Is_UnderControl.Sensors.SensorIOInputsAutoLogged;
-import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
+import frc.Java_Is_UnderControl.Swerve.constants.SwerveConstants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.EndEffectorConstants;
 import frc.robot.constants.FieldConstants.ReefLevel;
@@ -270,6 +272,21 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     public void overrideNoObject() {
       this.hasCoral = false;
       this.hasAlgae = false;
+    }
+
+    @Override
+    public Supplier<Boolean> getReefScoringModeSupplier() {
+        return () -> this.elevatorLead.getPosition() > ElevatorConstants.tunning_values_elevator.setpoints.L3_HEIGHT;
+    }
+
+    @Override
+    public Supplier<ReefLevel> getTargetCoralReefLevelSupplier() {
+        return () -> this.coralHeightReef;
+    }
+
+    @Override
+    public Supplier<AlgaeHeightReef> getTargetAlgaeReefLevelSupplier() {
+        return () -> this.algaeHeightReef;
     }
 
     private void assignmentReefLevelGoalsForPreparing(){

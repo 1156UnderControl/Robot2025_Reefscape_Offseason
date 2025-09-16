@@ -1,4 +1,4 @@
-package frc.Java_Is_UnderControl.Swerve.Configs;
+package frc.Java_Is_UnderControl.Swerve;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -6,6 +6,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import frc.Java_Is_UnderControl.Control.PIDConfig;
 
 public class MoveToPosePIDConfig {
+
   public PIDConfig pidTranslation;
 
   public Constraints constraintsTranslation;
@@ -18,8 +19,7 @@ public class MoveToPosePIDConfig {
 
   public Constraints constraintsY;
 
-  public MoveToPosePIDConfig(
-      PIDConfig pidX, Constraints constraintsX, PIDConfig pidY, Constraints constraintsY) {
+  public MoveToPosePIDConfig(PIDConfig pidX, Constraints constraintsX, PIDConfig pidY, Constraints constraintsY) {
     this.pidX = pidX;
     this.constraintsX = constraintsX;
     this.pidY = pidY;
@@ -33,8 +33,7 @@ public class MoveToPosePIDConfig {
   }
 
   public PIDController getPidTranslation() {
-    PIDController pidTranslationController =
-        new PIDController(pidTranslation.kP, pidTranslation.kI, pidTranslation.kD);
+    PIDController pidTranslationController = new PIDController(pidTranslation.kP, pidTranslation.kI, pidTranslation.kD);
     pidTranslationController.setIZone(this.pidTranslation.iZone);
     return pidTranslationController;
   }
@@ -54,4 +53,5 @@ public class MoveToPosePIDConfig {
   public ProfiledPIDController getProfiledPIDY() {
     return new ProfiledPIDController(pidY.kP, pidY.kI, pidY.kD, constraintsY);
   }
+
 }
