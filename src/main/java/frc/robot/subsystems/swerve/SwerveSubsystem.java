@@ -155,11 +155,8 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
 
   private static PoseEstimator configureMulticameraPoseEstimation() {
     List<PoseEstimator> listOfEstimators = new ArrayList<PoseEstimator>();
-    PoseEstimator limelightLeft = new LimelightPoseEstimator("limelight-left", false, false, 2);
-    PoseEstimator limelightRight = new LimelightPoseEstimator("limelight-right",
-        false, false, 2);
+    PoseEstimator limelightLeft = new LimelightPoseEstimator("limelight-front", false, false, 2);
     listOfEstimators.add(limelightLeft);
-    listOfEstimators.add(limelightRight);
     PoseEstimator estimatorMultiCamera = new MultiCameraPoseEstimator(listOfEstimators, "Teleop Multi Pose Estimator");
     return estimatorMultiCamera;
   }
