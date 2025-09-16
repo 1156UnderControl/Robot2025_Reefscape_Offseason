@@ -11,7 +11,7 @@ public class PivotConstants {
     public static final double ANGLE_FACTOR_ROTOR_ROTATION_TO_MECHANISM_DEGREES = 5.17755415218;
     public static final double ANGLE_FACTOR_MECHANISM_ROTATION_TO_MECHANISM_DEGREES = 540;
     public static final double VELOCITY_FACTOR_MOTOR_RPM_TO_MECHANISM_DEG_PER_SECOND = 9;
-    public static final double ZERO_OFFSET_ABSOLUTE_ENCODER = 0.9648748;
+    public static final double ZERO_OFFSET_ABSOLUTE_ENCODER = 0.6311826;
     public static final double ANGLE_ERROR_ALLOWED = 1;
 
     public class PID {

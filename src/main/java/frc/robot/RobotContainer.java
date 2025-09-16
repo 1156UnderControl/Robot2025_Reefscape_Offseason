@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import frc.robot.constants.FieldConstants.Algae.AlgaeHeightReef;
 import frc.robot.constants.FieldConstants.ReefLevel;
+import frc.robot.commands.Scorer.CollectCoralFromIndexer;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.OperatorController;
 import frc.robot.subsystems.Intake.IntakeSubsystem;
@@ -35,7 +36,7 @@ public class RobotContainer {
     this.driverController = DriverController.getInstance();
     this.operatorController = OperatorController.getInstance();
 
-    this.swerve.setDefaultCommand(Commands.run(() -> swerve.driveFieldOrientedLockedJoystickAngle(), this.swerve));
+    this.scorer.setDefaultCommand(Commands.run(() -> this.scorer.moveScorerToDefaultPosition(), this.scorer));
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
     this.configureButtonBindings();
   }
@@ -43,7 +44,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     this.driverController.a()
     .onTrue(
-    Commands.run(() -> this.scorer.collectCoralFromIndexer(), this.scorer)
+      new CollectCoralFromIndexer()
     );
     
     this.driverController.b()

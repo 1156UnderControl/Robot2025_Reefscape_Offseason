@@ -137,13 +137,10 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     public void collectCoralFromIndexer(){
         if(!this.hasCoral && !hasAlgae){
             this.scorerState = "Collecting_Coral_From_Indexer";
-            if(this.isElevatorAtTargetPosition(ElevatorConstants.tunning_values_elevator.setpoints.CORAL_COLLECT_INDEXER) && this.isPivotAtTargetPosition(PivotConstants.tunning_values_pivot.setpoints.CORAL_COLLECT_INDEXER)){
-                this.setEndEffectorDutyCycle(EndEffectorConstants.tunning_values_endeffector.setpoints.DUTY_CYCLE_INTAKE_CORAL);
-                if(this.endEffectorMotor.getLimitSwitch(true)){
-                    this.hasCoral = true;
-                }
-            } else {
+            if(this.isEndEffectorAtTargetVelocity(EndEffectorConstants.tunning_values_endeffector.setpoints.DUTY_CYCLE_INTAKE_CORAL)){
                 this.setScorerStructureGoals(ElevatorConstants.tunning_values_elevator.setpoints.CORAL_COLLECT_INDEXER, PivotConstants.tunning_values_pivot.setpoints.CORAL_COLLECT_INDEXER);
+            } else {
+                this.setEndEffectorDutyCycle(EndEffectorConstants.tunning_values_endeffector.setpoints.DUTY_CYCLE_INTAKE_CORAL);
             }
         }
     }
@@ -166,6 +163,11 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     private boolean isPivotAtTargetPosition(double pivotTargetPosition) {
         return this.pivotMotor.getPosition() <= pivotTargetPosition + PivotConstants.tunning_values_pivot.ANGLE_ERROR_ALLOWED &&
         this.pivotMotor.getPosition() >= pivotTargetPosition - PivotConstants.tunning_values_pivot.ANGLE_ERROR_ALLOWED;
+    }
+
+    private boolean isEndEffectorAtTargetVelocity(double targetAppliedOutput){
+        return this.endEffectorMotor.getAppliedOutput() <= targetAppliedOutput + EndEffectorConstants.tunning_values_endeffector.APPLIED_OUTPUT_ERROR_ALLOWED &&
+        this.pivotMotor.getPosition() >= targetAppliedOutput - EndEffectorConstants.tunning_values_endeffector.APPLIED_OUTPUT_ERROR_ALLOWED;
     }
 
     @Override
@@ -354,7 +356,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     }
     
     private void setConfigsEndEffector() {
-        endEffectorMotor.setMotorBrake(true);
+        endEffectorMotor.setMotorBrake(false);
         endEffectorMotor.setInverted(false);
         endEffectorMotor.setVelocityFactor(EndEffectorConstants.VELOCITY_FACTOR_MOTOR_RPM_TO_MECHANISM_RPM);
         endEffectorMotor.burnFlash();
