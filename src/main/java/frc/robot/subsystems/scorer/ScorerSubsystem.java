@@ -31,14 +31,14 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     private final MotorIO elevatorFollower;
     private final MotorIO pivotMotor;
     private final MotorIO endEffectorMotor;
-    private final SensorIO pivotInfraRed;
+    private final SensorIO EndEffectorInfraRed;
 
     private final ScorerIOInputsAutoLogged scorerInputs;
     private final MotorIOInputsAutoLogged elevatorLeadInputs;
     private final MotorIOInputsAutoLogged elevatorFollowerInputs;
     private final MotorIOInputsAutoLogged pivotInputs;
     private final MotorIOInputsAutoLogged endEffectorInputs;
-    private final SensorIOInputsAutoLogged pivotInfraRedInputs;
+    private final SensorIOInputsAutoLogged EndEffectorInfraRedInputs;
     
     private boolean hasCoral;
     private boolean hasAlgae;
@@ -71,13 +71,13 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         this.elevatorFollowerInputs = new MotorIOInputsAutoLogged();
         this.pivotInputs = new MotorIOInputsAutoLogged();
         this.endEffectorInputs = new MotorIOInputsAutoLogged();
-        this.pivotInfraRedInputs = new SensorIOInputsAutoLogged();
+        this.EndEffectorInfraRedInputs = new SensorIOInputsAutoLogged();
 
         this.elevatorLead = new SparkFlexMotor(ElevatorConstants.ID_elevatorLeaderMotor, ElevatorConstants.elevatorBusID, ElevatorConstants.elevatorLeaderMotorName);
         this.elevatorFollower = new SparkFlexMotor(ElevatorConstants.ID_elevatorFollowerMotor, ElevatorConstants.elevatorBusID, ElevatorConstants.elevatorFollowerMotorName);
         this.pivotMotor = new SparkFlexMotor(PivotConstants.ID_pivotMotor, PivotConstants.pivotBusID, PivotConstants.pivotMotorName);
         this.endEffectorMotor = new SparkFlexMotor(EndEffectorConstants.ID_endEffectorMotor, EndEffectorConstants.endEffectorBusID, EndEffectorConstants.endEffectorMotorName);
-        this.pivotInfraRed = new InfraRed(EndEffectorConstants.Port_coralInfraRed, false);
+        this.EndEffectorInfraRed = new InfraRed(EndEffectorConstants.Port_coralInfraRed, false);
 
         this.setConfigsElevator();
         this.setConfigsPivot();
@@ -110,14 +110,14 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         this.elevatorFollower.updateInputs(elevatorFollowerInputs);
         this.pivotMotor.updateInputs(pivotInputs);
         this.endEffectorMotor.updateInputs(endEffectorInputs);
-        this.pivotInfraRed.updateInputs(pivotInfraRedInputs);
+        this.EndEffectorInfraRed.updateInputs(EndEffectorInfraRedInputs);
 
         Logger.processInputs("Motors/Scorer/ElevatorLead/", elevatorLeadInputs);
         Logger.processInputs("Motors/Scorer/ElevatorFollower/", elevatorFollowerInputs);
         Logger.processInputs("Motors/Scorer/Pivot/", pivotInputs);
         Logger.processInputs("Motors/Scorer/EndEffector/", endEffectorInputs);
         Logger.processInputs("Subsystems/Scorer/", scorerInputs);
-        Logger.processInputs("Sensors/Scorer/EndEffectorInfraRed/", pivotInfraRedInputs);
+        Logger.processInputs("Sensors/Scorer/EndEffectorInfraRed/", EndEffectorInfraRedInputs);
     }
 
     @Override
@@ -127,7 +127,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
 
     @Override
     public boolean hasCoral() {
-        return this.hasCoral;
+        return EndEffectorInfraRed.getBoolean();
     }
 
     @Override
@@ -139,13 +139,10 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     public void collectCoralFromIndexer(){
         if(!this.hasCoral && !hasAlgae){
             this.scorerState = "Collecting_Coral_From_Indexer";
-            if(this.isElevatorAtTargetPosition(ElevatorConstants.tunning_values_elevator.setpoints.CORAL_COLLECT_INDEXER) && this.isPivotAtTargetPosition(PivotConstants.tunning_values_pivot.setpoints.CORAL_COLLECT_INDEXER)){
-                this.setEndEffectorDutyCycle(EndEffectorConstants.tunning_values_endeffector.setpoints.DUTY_CYCLE_INTAKE_CORAL);
-                if(this.endEffectorMotor.getLimitSwitch(true)){
-                    this.hasCoral = true;
-                }
-            } else {
+            if(this.isEndEffectorAtTargetVelocity(EndEffectorConstants.tunning_values_endeffector.setpoints.DUTY_CYCLE_INTAKE_CORAL)){
                 this.setScorerStructureGoals(ElevatorConstants.tunning_values_elevator.setpoints.CORAL_COLLECT_INDEXER, PivotConstants.tunning_values_pivot.setpoints.CORAL_COLLECT_INDEXER);
+            } else {
+                this.setEndEffectorDutyCycle(EndEffectorConstants.tunning_values_endeffector.setpoints.DUTY_CYCLE_INTAKE_CORAL);
             }
         }
     }
@@ -160,20 +157,31 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         return this.isPivotAtTargetPosition(this.goalPivotPosition);
     }
 
-    private boolean isElevatorAtTargetPosition(double elevatorTargetPosition) {
+    @Override
+    public boolean isElevatorAtTargetPosition(double elevatorTargetPosition) {
         return this.elevatorLead.getPosition() <= elevatorTargetPosition + ElevatorConstants.tunning_values_elevator.POSITION_ERROR_ALLOWED &&
         this.elevatorLead.getPosition() >= elevatorTargetPosition - ElevatorConstants.tunning_values_elevator.POSITION_ERROR_ALLOWED;
     }
 
-    private boolean isPivotAtTargetPosition(double pivotTargetPosition) {
+    @Override
+    public boolean isPivotAtTargetPosition(double pivotTargetPosition) {
         return this.pivotMotor.getPosition() <= pivotTargetPosition + PivotConstants.tunning_values_pivot.ANGLE_ERROR_ALLOWED &&
         this.pivotMotor.getPosition() >= pivotTargetPosition - PivotConstants.tunning_values_pivot.ANGLE_ERROR_ALLOWED;
+    }
+
+    private boolean isEndEffectorAtTargetVelocity(double targetAppliedOutput){
+        return this.endEffectorMotor.getAppliedOutput() <= targetAppliedOutput + EndEffectorConstants.tunning_values_endeffector.APPLIED_OUTPUT_ERROR_ALLOWED &&
+        this.pivotMotor.getPosition() >= targetAppliedOutput - EndEffectorConstants.tunning_values_endeffector.APPLIED_OUTPUT_ERROR_ALLOWED;
     }
 
     @Override
     public void placeCoral() {
         if(this.hasCoral){
-            this.setEndEffectorDutyCycle(EndEffectorConstants.tunning_values_endeffector.setpoints.DUTY_CYCLE_EXPELL_CORAL);
+            if(this.isEndEffectorAtTargetVelocity(EndEffectorConstants.tunning_values_endeffector.setpoints.DUTY_CYCLE_EXPELL_CORAL)){
+
+            } else {
+                this.setEndEffectorDutyCycle(EndEffectorConstants.tunning_values_endeffector.setpoints.DUTY_CYCLE_EXPELL_CORAL);
+            }
         }
     }
 
@@ -217,9 +225,14 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
 
     @Override
     public void prepareToScoreCoral(){
-        this.goalPivotPosition = 180;
-        this.setScorerTargetCoral();
-        this.pivotMotor.setPositionReference(this.goalPivotPosition);
+        this.assignmentReefLevelGoalsForPreparing();
+        this.setScorerStructureGoals(this.goalElevatorPosition, this.goalPivotPosition);
+    }
+
+    @Override
+    public void scoreCoral(){
+        this.assignmentReefLevelGoalsForScoring();
+        this.setScorerStructureGoals(this.goalElevatorPosition, this.goalPivotPosition);
     }
 
     @Override
@@ -276,7 +289,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         return () -> this.algaeHeightReef;
     }
 
-    private void setScorerTargetCoral(){
+    private void assignmentReefLevelGoalsForPreparing(){
         switch (this.coralHeightReef) {
             case L1:
                 goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.L1_HEIGHT;
@@ -293,6 +306,29 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
             case L4:
                 goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.L4_HEIGHT;
                 goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.L4_ANGLE_PREPARED;
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void assignmentReefLevelGoalsForScoring(){
+        switch (this.coralHeightReef) {
+            case L1:
+                goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.L1_HEIGHT;
+                goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.L1_ANGLE;
+                break;
+            case L2:
+                goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.L2_HEIGHT;
+                goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.L2_ANGLE_SCORING;
+                break;
+            case L3:
+                goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.L3_HEIGHT;
+                goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.L3_ANGLE_SCORING;
+                break;
+            case L4:
+                goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.L4_HEIGHT;
+                goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.L4_ANGLE_SCORING;
                 break;
             default:
                 break;
@@ -342,7 +378,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     }
     
     private void setConfigsEndEffector() {
-        endEffectorMotor.setMotorBrake(true);
+        endEffectorMotor.setMotorBrake(false);
         endEffectorMotor.setInverted(false);
         endEffectorMotor.setVelocityFactor(EndEffectorConstants.VELOCITY_FACTOR_MOTOR_RPM_TO_MECHANISM_RPM);
         endEffectorMotor.burnFlash();
@@ -433,11 +469,12 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         double angleRad = Math.toRadians(alphaPivotAngle);
         double angleDeg = (alphaPivotAngle % 360 + 360) % 360;
 
-        if (angleDeg == 0 || angleDeg == 90 || angleDeg == 180 || angleDeg == 360 || angleDeg == 450 || angleDeg == 540) {
-            return ElevatorConstants.tunning_values_elevator.setpoints.MIN_HEIGHT;
-        }
         if (angleDeg == 270) {
             return ElevatorConstants.tunning_values_elevator.setpoints.DEFAULT_POSITION;
+        }
+
+        if (angleDeg % 90 == 0) {
+            return ElevatorConstants.tunning_values_elevator.setpoints.MIN_HEIGHT;
         }
     
         if (Math.sin(angleRad) * ElevatorConstants.tunning_values_elevator.stable_transition.ARM_HYPOTENUSE 

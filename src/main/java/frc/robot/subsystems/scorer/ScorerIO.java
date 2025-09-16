@@ -46,6 +46,8 @@ public interface ScorerIO {
 
     void prepareToScoreCoral();
 
+    void scoreCoral();
+
     void moveScorerToDefaultPosition();
 
     void overrideHasCoral();
@@ -63,4 +65,8 @@ public interface ScorerIO {
     Supplier<ReefLevel> getTargetCoralReefLevelSupplier();
 
     Supplier<AlgaeHeightReef> getTargetAlgaeReefLevelSupplier();
+
+    boolean isElevatorAtTargetPosition(double elevatorTargetPosition);
+
+    boolean isPivotAtTargetPosition(double pivotTargetPosition);
 }
