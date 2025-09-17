@@ -476,7 +476,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     private double minimumHeightElevator(double targetPivotPosition, boolean isIntakeHomed) {
         final double indexerClearanceHeight;
 
-        if(isIntakeHomed && (targetPivotPosition > 270 || this.pivotMotor.getPosition() > 270)){
+        if(isIntakeHomed && (targetPivotPosition > 270 + PivotConstants.tunning_values_pivot.PIVOT_ANGLE_ERROR_FOR_CONSIDERING_INTAKE_POSITION || this.pivotMotor.getPosition() > 270 + PivotConstants.tunning_values_pivot.PIVOT_ANGLE_ERROR_FOR_CONSIDERING_INTAKE_POSITION)){
             indexerClearanceHeight = IntakeConstants.INTAKE_HEIGHT_FROM_GROUND_HOMED;
         } else {
             indexerClearanceHeight = IntakeConstants.INTAKE_HEIGHT_FROM_GROUND_INTAKING;
