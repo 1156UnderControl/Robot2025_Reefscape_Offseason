@@ -1,9 +1,9 @@
-package frc.robot.commands.States;
+package frc.robot.commands.Scorer;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.scorer.ScorerSubsystem;
 
-public class ScoreCoral extends Command{
+public class PrepareToScoreCoral extends Command{
     private ScorerSubsystem scorer;
 
     @Override
@@ -14,7 +14,7 @@ public class ScoreCoral extends Command{
 
     @Override
     public void execute(){
-        this.scorer.scoreCoral();
+        this.scorer.prepareToScoreCoral();
     }
 
     @Override
@@ -22,6 +22,6 @@ public class ScoreCoral extends Command{
 
     @Override
     public boolean isFinished() {
-        return this.scorer.isElevatorAtTargetPosition() && this.scorer.isPivotAtTargetPosition() && !this.scorer.hasCoral();
+        return false;
     }
 }
