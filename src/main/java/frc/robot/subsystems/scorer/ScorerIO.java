@@ -66,6 +66,8 @@ public interface ScorerIO {
 
     Supplier<AlgaeHeightReef> getTargetAlgaeReefLevelSupplier();
 
+    void setIntakeUpSupplier(Supplier<Boolean> intakeUpSupplier);
+
     boolean isElevatorAtTargetPosition(double elevatorTargetPosition);
 
     boolean isPivotAtTargetPosition(double pivotTargetPosition);

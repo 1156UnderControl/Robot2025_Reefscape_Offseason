@@ -12,13 +12,15 @@ public class IntakeConstants {
   public static final String intakePivotMotorName = "Intake Pivot";
   public static final String indexerMotorName = "Indexer";
   public static final int port_IR = 0;
-  public static final Pose2d BREAK_POINT_POSE_PIVOT_CLOSED = new Pose2d(0.517806, 0.330912, new Rotation2d());
+  public static final double INTAKE_HEIGHT_FROM_GROUND_INTAKING = 0.330912;
+  public static final double INTAKE_HEIGHT_FROM_GROUND_HOMED = 0.5842;
 
   public class tunning_values_intake {
       public static final double INTAKE_SPEED = 0.9;
       public static final double EXPELL_SPEED = -1;
       public static final double STOP_SPEED = 0;
       public static final double INDEXER_SPEED = 0.6;
+      public static final double ANGLE_ERROR_ALLOWED = 1;
       
       public class PID {
         public static final double P = 0.045;

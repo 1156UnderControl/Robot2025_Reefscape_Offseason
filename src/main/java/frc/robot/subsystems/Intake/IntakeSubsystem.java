@@ -1,5 +1,7 @@
 package frc.robot.subsystems.Intake;
 
+import java.util.function.Supplier;
+
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -27,7 +29,6 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
 
 
     private boolean hasCollected;
-    private boolean isIntakePivotAtTargetPosition;
 
     public static IntakeSubsystem getInstance() {
         if (instance == null) {
@@ -112,6 +113,17 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
     @Override
     public void periodic(){
         this.updateLogs();
+    }
+
+    @Override
+    public boolean isIntakeAtTargetPosition(double targetPosition){
+        return this.intakePivot.getPosition() <= targetPosition + IntakeConstants.tunning_values_intake.ANGLE_ERROR_ALLOWED || 
+            this.intakePivot.getPosition() >= targetPosition - IntakeConstants.tunning_values_intake.ANGLE_ERROR_ALLOWED;
+    }
+
+    @Override
+    public Supplier<Boolean> getIntakeUpSupplier(){
+        return () -> !this.isIntakeAtTargetPosition(IntakeConstants.tunning_values_intake.setpoints.INTAKE_ANGLE_COLLECTING);
     }
 
     private void goToTargetPosition(double targetPosition){

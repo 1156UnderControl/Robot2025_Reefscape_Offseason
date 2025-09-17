@@ -1,5 +1,7 @@
 package frc.robot.subsystems.Intake;
 
+import java.util.function.Supplier;
+
 public interface IntakeIO {
 
     void collectCoral();
@@ -13,4 +15,8 @@ public interface IntakeIO {
     void goToIntakePosition();
 
     boolean indexerHasCoral();
+
+    boolean isIntakeAtTargetPosition(double targetPosition);
+
+    Supplier<Boolean> getIntakeUpSupplier();
 }
