@@ -42,7 +42,7 @@ public class ElevatorConstants {
     public class stable_transition {
       public static final double ARM_ANGLE_POINT = 7.520704;
       public static final double ARM_HYPOTENUSE = 0.630709;
-      public static final double ELEVATOR_SAFETY_MARGIN = 0.05;
+      public static final double ELEVATOR_SAFETY_MARGIN = 0.2;
     }
   }
 }

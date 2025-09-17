@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.pathplanner.lib.config.PIDConstants;
@@ -298,6 +300,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
   protected void updateLogs() {
     this.swerveStateLogger.append(this.state);
     this.targetBranchLogger.append(this.targetBranch.name());
+    Logger.recordOutput("SwerveModulesStates", getState().ModuleStates);
   }
 
   @Override

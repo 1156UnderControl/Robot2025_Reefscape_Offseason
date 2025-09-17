@@ -20,6 +20,7 @@ public interface ScorerIO {
         public boolean manualScoreAlgae = false;
         public boolean pivotSafeMeasuresEnabled = false;
         public String scorerState = "Idle";
+        public double minimumHeightElevator = 0.0;
     }
 
     boolean hasCoral();

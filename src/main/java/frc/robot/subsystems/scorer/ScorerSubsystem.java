@@ -59,7 +59,11 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
 
     private boolean goingToIndexerPosition;
 
+    private boolean goingToTargetElevatorPosition;
+
     private Supplier<Boolean> intakeUpSupplier;
+
+    private double securedMinimumTargetElevatorPosition;
 
     public static ScorerSubsystem getInstance() {
         if (instance == null) {
@@ -97,6 +101,8 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         this.manualScoreAlgae = false;
         this.pivotSafeMeasuresEnabled = false;
         this.goingToIndexerPosition = false;
+        this.goingToTargetElevatorPosition = false;
+        this.securedMinimumTargetElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.DEFAULT_POSITION;
     }
 
     private void updateLogs(ScorerIOInputsAutoLogged scorerInputs) {
@@ -108,6 +114,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         scorerInputs.manualScoreAlgae = this.manualScoreAlgae;
         scorerInputs.pivotSafeMeasuresEnabled = this.pivotSafeMeasuresEnabled;
         scorerInputs.scorerState = this.scorerState;
+        scorerInputs.minimumHeightElevator = this.securedMinimumTargetElevatorPosition;
 
         this.elevatorLead.updateInputs(elevatorLeadInputs);
         this.elevatorFollower.updateInputs(elevatorFollowerInputs);
@@ -235,6 +242,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     @Override
     public void scoreCoral(){
         this.assignmentReefLevelGoalsForScoring();
+        this.endEffectorMotor.set(-0.5);
         this.setScorerStructureGoals(this.goalElevatorPosition, this.goalPivotPosition);
     }
 
@@ -393,15 +401,14 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     }
 
     private void setScorerStructureGoals(double targetElevatorPosition, double targetPivotPosition){ 
-        double securedMinimumTargetElevatorPosition;
         double securedTargetElevatorPosition;
 
         securedTargetElevatorPosition = Math.clamp(targetElevatorPosition, ElevatorConstants.tunning_values_elevator.setpoints.MIN_HEIGHT, ElevatorConstants.tunning_values_elevator.setpoints.MAX_HEIGHT);
 
         if((this.pivotMotor.getPosition() <= 270 && targetPivotPosition <= 270) || (this.pivotMotor.getPosition() > 270 && targetPivotPosition > 270)){
-            securedMinimumTargetElevatorPosition = this.minimumHeightElevator(Math.abs(((targetPivotPosition % 360) - 270) - ElevatorConstants.tunning_values_elevator.stable_transition.ARM_ANGLE_POINT), this.intakeUpSupplier.get());
+            this.securedMinimumTargetElevatorPosition = this.minimumHeightElevator(Math.abs(((targetPivotPosition % 360) - 270) - ElevatorConstants.tunning_values_elevator.stable_transition.ARM_ANGLE_POINT), this.intakeUpSupplier.get());
             if(securedTargetElevatorPosition == ElevatorConstants.tunning_values_elevator.setpoints.CORAL_COLLECT_INDEXER){
-                if((this.elevatorLead.getPosition() > securedMinimumTargetElevatorPosition || this.isElevatorAtTargetPosition(securedMinimumTargetElevatorPosition)) || this.goingToIndexerPosition){
+                if((this.elevatorLead.getPosition() > this.securedMinimumTargetElevatorPosition || this.isElevatorAtTargetPosition(this.securedMinimumTargetElevatorPosition)) || this.goingToIndexerPosition){
                     this.pivotSafeMeasuresEnabled = false;
                     if(this.isPivotAtTargetPosition(targetPivotPosition)){
                         this.goingToIndexerPosition = true;
@@ -410,65 +417,68 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
                         this.pivotMotor.setPositionReference(targetPivotPosition);
                     }
                 } else {
+                    this.goingToIndexerPosition = false;
+                    this.pivotSafeMeasuresEnabled = true;
+                    this.elevatorLead.setPositionReference(this.securedMinimumTargetElevatorPosition);
+                }
+                return;
+            }
+            if(this.elevatorLead.getPosition() > this.securedMinimumTargetElevatorPosition || this.isElevatorAtTargetPosition(this.securedMinimumTargetElevatorPosition) || goingToTargetElevatorPosition){
+                this.pivotSafeMeasuresEnabled = false;
+                if(securedTargetElevatorPosition >= this.securedMinimumTargetElevatorPosition){
+                    this.goingToTargetElevatorPosition = true;
+                    this.elevatorLead.setPositionReference(securedTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);
+                    this.pivotMotor.setPositionReference(targetPivotPosition);
+                } else {
+                    if(this.isPivotAtTargetPosition(targetPivotPosition)){
+                        this.goingToTargetElevatorPosition = true;
+                        this.elevatorLead.setPositionReference(this.securedMinimumTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);
+                    } else {
+                        this.pivotMotor.setPositionReference(targetPivotPosition);
+                    }
+                }
+            } else {
+                this.goingToTargetElevatorPosition = false;
+                this.pivotSafeMeasuresEnabled = true;
+                this.elevatorLead.setPositionReference(this.securedMinimumTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);
+            }
+
+        } else {
+            this.securedMinimumTargetElevatorPosition = this.minimumHeightElevator(270, this.intakeUpSupplier.get());
+            if(securedTargetElevatorPosition == ElevatorConstants.tunning_values_elevator.setpoints.CORAL_COLLECT_INDEXER){
+                if((this.elevatorLead.getPosition() > this.securedMinimumTargetElevatorPosition || this.isElevatorAtTargetPosition(this.securedMinimumTargetElevatorPosition)) || this.goingToIndexerPosition){
+                    this.pivotSafeMeasuresEnabled = false;
+                    if(this.isPivotAtTargetPosition(targetPivotPosition)){
+                        this.goingToIndexerPosition = true;
+                        this.elevatorLead.setPositionReference(securedTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);
+                    } else {
+                        this.pivotMotor.setPositionReference(targetPivotPosition);
+                    }
+                } else {
+                    this.goingToIndexerPosition = false;
                     this.pivotSafeMeasuresEnabled = true;
                     this.elevatorLead.setPositionReference(securedMinimumTargetElevatorPosition);
                 }
                 return;
             }
-            if(this.elevatorLead.getPosition() > securedMinimumTargetElevatorPosition || this.isElevatorAtTargetPosition(securedMinimumTargetElevatorPosition)){
+            if(this.elevatorLead.getPosition() > this.securedMinimumTargetElevatorPosition || this.isElevatorAtTargetPosition(this.securedMinimumTargetElevatorPosition) || goingToTargetElevatorPosition){
                 this.pivotSafeMeasuresEnabled = false;
-                if(securedTargetElevatorPosition >= securedMinimumTargetElevatorPosition){
+                if(securedTargetElevatorPosition >= this.securedMinimumTargetElevatorPosition){
+                    this.goingToTargetElevatorPosition = true;
                     this.elevatorLead.setPositionReference(securedTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);
                     this.pivotMotor.setPositionReference(targetPivotPosition);
                 } else {
                     if(this.isPivotAtTargetPosition(targetPivotPosition)){
-                        this.elevatorLead.setPositionReference(securedMinimumTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);
+                        this.goingToTargetElevatorPosition = true;
+                        this.elevatorLead.setPositionReference(this.securedMinimumTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);
                     } else {
                         this.pivotMotor.setPositionReference(targetPivotPosition);
                     }
                 }
             } else {
+                this.goingToTargetElevatorPosition = false;
                 this.pivotSafeMeasuresEnabled = true;
-                if(securedTargetElevatorPosition < securedMinimumTargetElevatorPosition){
-                    this.elevatorLead.setPositionReference(securedMinimumTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);
-                } else {
-                    this.elevatorLead.setPositionReference(securedTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);
-                }
-            }
-
-        } else {
-            securedMinimumTargetElevatorPosition = this.minimumHeightElevator(270, this.intakeUpSupplier.get());
-            if(securedTargetElevatorPosition == ElevatorConstants.tunning_values_elevator.setpoints.CORAL_COLLECT_INDEXER){
-                if(this.elevatorLead.getPosition() > securedMinimumTargetElevatorPosition || this.isElevatorAtTargetPosition(securedMinimumTargetElevatorPosition)){
-                    this.pivotSafeMeasuresEnabled = false;
-                    if(this.isPivotAtTargetPosition(targetPivotPosition)){
-                        this.elevatorLead.setPositionReference(securedTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);
-                    } else {
-                        this.pivotMotor.setPositionReference(targetPivotPosition);
-                    }
-                } else {
-                    this.pivotSafeMeasuresEnabled = true;
-                    this.elevatorLead.setPositionReference(securedMinimumTargetElevatorPosition);
-                }
-            }
-            if(this.elevatorLead.getPosition() > securedMinimumTargetElevatorPosition || this.isElevatorAtTargetPosition(securedMinimumTargetElevatorPosition)){
-                this.pivotSafeMeasuresEnabled = false;
-                if(this.isPivotAtTargetPosition(targetPivotPosition)){
-                    if(securedTargetElevatorPosition < this.minimumHeightElevator(this.pivotMotor.getPosition(), this.intakeUpSupplier.get())){
-                        this.elevatorLead.setPositionReference(securedMinimumTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);
-                    } else {
-                        this.elevatorLead.setPositionReference(securedTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);
-                    }
-                } else {
-                    this.pivotMotor.setPositionReference(targetPivotPosition);
-                }
-            } else {
-                this.pivotSafeMeasuresEnabled = true;
-                if(securedTargetElevatorPosition < this.minimumHeightElevator(this.pivotMotor.getPosition(), this.intakeUpSupplier.get())){
-                    this.elevatorLead.setPositionReference(securedMinimumTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);
-                } else {
-                    this.elevatorLead.setPositionReference(securedTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);
-                }
+                this.elevatorLead.setPositionReference(this.securedMinimumTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);
             }
         }
     }
@@ -488,11 +498,11 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
             return ElevatorConstants.tunning_values_elevator.setpoints.DEFAULT_POSITION;
         }
         if (targetPivotPosition % 90.0 == 0.0) {
-            return ElevatorConstants.tunning_values_elevator.setpoints.MIN_HEIGHT;
+            return ElevatorConstants.tunning_values_elevator.setpoints.MIN_HEIGHT + ElevatorConstants.tunning_values_elevator.stable_transition.ELEVATOR_SAFETY_MARGIN;
         }
 
         final double requiredElevatorHeight = indexerClearanceHeight - ElevatorConstants.tunning_values_elevator.stable_transition.ARM_HYPOTENUSE * Math.sin(angleRadians);
 
-        return Math.clamp(requiredElevatorHeight, ElevatorConstants.tunning_values_elevator.setpoints.MIN_HEIGHT, ElevatorConstants.tunning_values_elevator.setpoints.MAX_HEIGHT);
+        return Math.clamp(requiredElevatorHeight, ElevatorConstants.tunning_values_elevator.setpoints.MIN_HEIGHT, ElevatorConstants.tunning_values_elevator.setpoints.MAX_HEIGHT) + ElevatorConstants.tunning_values_elevator.stable_transition.ELEVATOR_SAFETY_MARGIN;
   }
 }
