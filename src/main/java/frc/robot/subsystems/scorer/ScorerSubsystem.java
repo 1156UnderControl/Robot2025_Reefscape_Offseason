@@ -483,26 +483,32 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         }
     }
 
-    private double minimumHeightElevator(double targetPivotPosition, boolean isIntakeHomed) {
-        final double indexerClearanceHeight;
+    private double minimumHeightElevator(double alphaPivotAngle, boolean intakeUpSupplier) {
+        double angleDegrees = alphaPivotAngle - 270;
+        double angleRadians = Math.toRadians(Math.abs(angleDegrees));
+        double intakeHeightFromGround;
 
-        if(isIntakeHomed && (targetPivotPosition > 270 + PivotConstants.tunning_values_pivot.PIVOT_ANGLE_ERROR_FOR_CONSIDERING_INTAKE_POSITION || this.pivotMotor.getPosition() > 270 + PivotConstants.tunning_values_pivot.PIVOT_ANGLE_ERROR_FOR_CONSIDERING_INTAKE_POSITION)){
-            indexerClearanceHeight = IntakeConstants.INTAKE_HEIGHT_FROM_GROUND_HOMED;
-        } else {
-            indexerClearanceHeight = IntakeConstants.INTAKE_HEIGHT_FROM_GROUND_INTAKING;
-        }
-
-        final double angleRadians = Math.toRadians(targetPivotPosition);
-
-        if (targetPivotPosition == 270.0) {
+        if (angleDegrees == 270) {
             return ElevatorConstants.tunning_values_elevator.setpoints.DEFAULT_POSITION;
         }
-        if (targetPivotPosition % 90.0 == 0.0) {
-            return ElevatorConstants.tunning_values_elevator.setpoints.MIN_HEIGHT + ElevatorConstants.tunning_values_elevator.stable_transition.ELEVATOR_SAFETY_MARGIN;
+
+        if (angleDegrees % 90 == 0) {
+            return ElevatorConstants.tunning_values_elevator.setpoints.MIN_HEIGHT + ElevatorConstants.tunning_values_elevator.stable_transition.HIGH_ELEVATOR_SAFETY_MARGIN;
+        }
+    
+        if(angleDegrees > 0 && intakeUpSupplier){
+            intakeHeightFromGround = IntakeConstants.INTAKE_HEIGHT_FROM_GROUND_HOMED;
+        } else {
+            intakeHeightFromGround = IntakeConstants.INTAKE_HEIGHT_FROM_GROUND_INTAKING;
         }
 
-        final double requiredElevatorHeight = indexerClearanceHeight - ElevatorConstants.tunning_values_elevator.stable_transition.ARM_HYPOTENUSE * Math.sin(angleRadians);
+        if (Math.sin(angleRadians) * ElevatorConstants.tunning_values_elevator.stable_transition.ARM_HYPOTENUSE 
+                <= SwerveConstants.ROBOT_SIZE / 2) {
+            return (Math.cos(angleRadians) * ElevatorConstants.tunning_values_elevator.stable_transition.ARM_HYPOTENUSE
+                   + intakeHeightFromGround) + ElevatorConstants.tunning_values_elevator.stable_transition.NORMAL_ELEVATOR_SAFETY_MARGIN;
+        }
 
-        return Math.clamp(requiredElevatorHeight, ElevatorConstants.tunning_values_elevator.setpoints.MIN_HEIGHT, ElevatorConstants.tunning_values_elevator.setpoints.MAX_HEIGHT) + ElevatorConstants.tunning_values_elevator.stable_transition.ELEVATOR_SAFETY_MARGIN;
-  }
+        return (((SwerveConstants.ROBOT_SIZE / 2) / Math.tan(angleRadians)) 
+               + intakeHeightFromGround) + ElevatorConstants.tunning_values_elevator.stable_transition.NORMAL_ELEVATOR_SAFETY_MARGIN;
+    }
 }
