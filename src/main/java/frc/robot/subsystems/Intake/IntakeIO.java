@@ -2,7 +2,14 @@ package frc.robot.subsystems.Intake;
 
 import java.util.function.Supplier;
 
+import org.littletonrobotics.junction.AutoLog;
+
 public interface IntakeIO {
+
+    @AutoLog
+    public static class IntakeIOInputs{
+        public boolean indexerHasCoral = false;
+    }
 
     void collectCoral();
 
