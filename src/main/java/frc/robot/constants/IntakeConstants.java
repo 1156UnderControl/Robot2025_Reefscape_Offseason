@@ -39,6 +39,7 @@ public class IntakeConstants {
         public static final double MAX_ANGLE = 0;
         public static final double MIN_ANGLE = 0;
         public static final double INTAKE_ANGLE_HOMED = 45;
+        public static final double INTAKE_ANGLE_FOR_NOT_TOUCHING_PIVOT = 30;
         public static final double INTAKE_ANGLE_COLLECTING = 5;
   
         //27.3 position intake homed

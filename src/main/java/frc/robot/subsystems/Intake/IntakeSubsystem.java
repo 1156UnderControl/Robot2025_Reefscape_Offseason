@@ -123,7 +123,7 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
 
     @Override
     public Supplier<Boolean> getIntakeUpSupplier(){
-        return () -> !this.isIntakeAtTargetPosition(IntakeConstants.tunning_values_intake.setpoints.INTAKE_ANGLE_COLLECTING);
+        return () -> this.intakePivot.getPosition() > IntakeConstants.tunning_values_intake.setpoints.INTAKE_ANGLE_FOR_NOT_TOUCHING_PIVOT;
     }
 
     private void goToTargetPosition(double targetPosition){
