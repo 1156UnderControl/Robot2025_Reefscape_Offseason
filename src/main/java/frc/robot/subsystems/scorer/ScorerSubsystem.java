@@ -406,7 +406,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         securedTargetElevatorPosition = Math.clamp(targetElevatorPosition, ElevatorConstants.tunning_values_elevator.setpoints.MIN_HEIGHT, ElevatorConstants.tunning_values_elevator.setpoints.MAX_HEIGHT);
 
         if((this.pivotMotor.getPosition() <= 270 && targetPivotPosition <= 270) || (this.pivotMotor.getPosition() > 270 && targetPivotPosition > 270)){
-            this.securedMinimumTargetElevatorPosition = this.minimumHeightElevator(Math.abs(((targetPivotPosition % 360) - 270) - ElevatorConstants.tunning_values_elevator.stable_transition.ARM_ANGLE_POINT), this.intakeUpSupplier.get());
+            this.securedMinimumTargetElevatorPosition = this.minimumHeightElevator(targetPivotPosition, this.intakeUpSupplier.get());
             if(securedTargetElevatorPosition == ElevatorConstants.tunning_values_elevator.setpoints.CORAL_COLLECT_INDEXER){
                 if((this.elevatorLead.getPosition() > this.securedMinimumTargetElevatorPosition || this.isElevatorAtTargetPosition(this.securedMinimumTargetElevatorPosition)) || this.goingToIndexerPosition){
                     this.pivotSafeMeasuresEnabled = false;
@@ -485,30 +485,25 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
 
     private double minimumHeightElevator(double alphaPivotAngle, boolean intakeUpSupplier) {
         double angleDegrees = alphaPivotAngle - 270;
-        double angleRadians = Math.toRadians(Math.abs(angleDegrees));
         double intakeHeightFromGround;
-
-        if (angleDegrees == 270) {
-            return ElevatorConstants.tunning_values_elevator.setpoints.DEFAULT_POSITION;
-        }
 
         if (angleDegrees % 90 == 0) {
             return ElevatorConstants.tunning_values_elevator.setpoints.MIN_HEIGHT + ElevatorConstants.tunning_values_elevator.stable_transition.HIGH_ELEVATOR_SAFETY_MARGIN;
         }
     
-        if(angleDegrees > 0 && intakeUpSupplier){
+        if((angleDegrees > 0 && angleDegrees <= 90) && intakeUpSupplier){
             intakeHeightFromGround = IntakeConstants.INTAKE_HEIGHT_FROM_GROUND_HOMED;
         } else {
             intakeHeightFromGround = IntakeConstants.INTAKE_HEIGHT_FROM_GROUND_INTAKING;
         }
 
-        if (Math.sin(angleRadians) * ElevatorConstants.tunning_values_elevator.stable_transition.ARM_HYPOTENUSE 
-                <= SwerveConstants.ROBOT_SIZE / 2) {
-            return (Math.cos(angleRadians) * ElevatorConstants.tunning_values_elevator.stable_transition.ARM_HYPOTENUSE
-                   + intakeHeightFromGround) + ElevatorConstants.tunning_values_elevator.stable_transition.NORMAL_ELEVATOR_SAFETY_MARGIN;
+        if(angleDegrees < -ElevatorConstants.tunning_values_elevator.stable_transition.ARM_ANGLE_POINT){
+            return ((Math.cos(angleDegrees + ElevatorConstants.tunning_values_elevator.stable_transition.ARM_ANGLE_POINT) * ElevatorConstants.tunning_values_elevator.stable_transition.ARM_HYPOTENUSE) + ElevatorConstants.tunning_values_elevator.stable_transition.NORMAL_ELEVATOR_SAFETY_MARGIN) + intakeHeightFromGround;
+        } 
+        if(angleDegrees >= -ElevatorConstants.tunning_values_elevator.stable_transition.ARM_ANGLE_POINT && angleDegrees <= ElevatorConstants.tunning_values_elevator.stable_transition.ARM_ANGLE_POINT){
+            return ((Math.cos(0) * ElevatorConstants.tunning_values_elevator.stable_transition.ARM_HYPOTENUSE) + ElevatorConstants.tunning_values_elevator.stable_transition.NORMAL_ELEVATOR_SAFETY_MARGIN) + intakeHeightFromGround;
         }
-
-        return (((SwerveConstants.ROBOT_SIZE / 2) / Math.tan(angleRadians)) 
-               + intakeHeightFromGround) + ElevatorConstants.tunning_values_elevator.stable_transition.NORMAL_ELEVATOR_SAFETY_MARGIN;
+        
+        return ((Math.cos(angleDegrees - ElevatorConstants.tunning_values_elevator.stable_transition.ARM_ANGLE_POINT) * ElevatorConstants.tunning_values_elevator.stable_transition.ARM_HYPOTENUSE) + ElevatorConstants.tunning_values_elevator.stable_transition.NORMAL_ELEVATOR_SAFETY_MARGIN) + intakeHeightFromGround;
     }
 }

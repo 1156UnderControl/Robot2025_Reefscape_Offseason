@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import frc.Java_Is_UnderControl.Swerve.constants.SwerveConstants;
 import frc.robot.constants.FieldConstants.Algae.AlgaeHeightReef;
 import frc.robot.constants.FieldConstants.ReefLevel;
+import frc.robot.commands.Intake.CollectCoralFromGround;
 import frc.robot.commands.Scorer.CollectCoralFromIndexer;
 import frc.robot.commands.States.PrepareToScoreCoral;
 import frc.robot.commands.States.ScoreCoral;
@@ -48,21 +49,14 @@ public class RobotContainer {
     this.scorer.setIntakeUpSupplier(this.intake.getIntakeUpSupplier());
     this.swerve.setDefaultCommand(Commands.run(() -> swerve.driveAlignAngleJoystick(), this.swerve));
     this.scorer.setDefaultCommand(Commands.run(() -> this.scorer.moveScorerToDefaultPosition(), this.scorer));
+    this.intake.setDefaultCommand(Commands.run(() -> this.intake.goToIntakePosition(), this.intake));
     this.configureButtonBindings();
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
   }
 
   private void configureButtonBindings() {
     this.driverController.a().onTrue(
-      new PrepareToScoreCoral()
-    );
-
-    this.driverController.b().onTrue(
-      new ScoreCoral()
-    );
-
-    this.driverController.x().onTrue(
-      new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L3))
+      new CollectCoralFromGround(this.intake)
     );
   }
   public Command getAutonomousCommand() {

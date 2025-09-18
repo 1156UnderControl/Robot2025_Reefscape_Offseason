@@ -38,10 +38,10 @@ public class PivotConstants {
       public static final double ALGAE_COLLECT_MID = 0;
       public static final double ALGAE_COLLECT_LOW = 0;
       public static final double ALGAE_COLLECT_GROUND = 0;
-      public static final double DEFAULT_ANGLE = 267.5;
+      public static final double DEFAULT_ANGLE = 265.0;
       public static final double DEFAULT_ANGLE_WITH_CORAL = 270;
       public static final double DEFAULT_ANGLE_WITH_ALGAE = 90;
-      public static final double CORAL_COLLECT_INDEXER = 267.5;
+      public static final double CORAL_COLLECT_INDEXER = 265.0;
     }
   }
 }
