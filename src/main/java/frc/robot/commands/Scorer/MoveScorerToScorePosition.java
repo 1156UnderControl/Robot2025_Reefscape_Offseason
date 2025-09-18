@@ -3,10 +3,10 @@ package frc.robot.commands.Scorer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.scorer.ScorerSubsystem;
 
-public class ScoreCoral extends Command{
+public class MoveScorerToScorePosition extends Command{
     private final ScorerSubsystem scorer;
 
-    public ScoreCoral(ScorerSubsystem scorer){
+    public MoveScorerToScorePosition(ScorerSubsystem scorer){
         this.scorer = scorer;
         this.addRequirements(this.scorer);
     }
