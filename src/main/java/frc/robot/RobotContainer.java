@@ -58,6 +58,10 @@ public class RobotContainer {
     this.driverController.a().onTrue(
       new CollectCoralFromGround(this.intake)
     );
+
+    this.driverController.b().onTrue(
+      new CollectCoralFromIndexer(this.scorer)
+    );
   }
   
   public Command getAutonomousCommand() {
