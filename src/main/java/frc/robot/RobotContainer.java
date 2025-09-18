@@ -51,18 +51,9 @@ public class RobotContainer {
   }
 
   private void configureButtonBindings() {
-    this.driverController.a().onTrue(
-      new PrepareToScoreCoral()
-    );
-
-    this.driverController.b().onTrue(
-      new ScoreCoral()
-    );
-
-    this.driverController.x().onTrue(
-      new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L3))
-    );
+    
   }
+  
   public Command getAutonomousCommand() {
     return autoChooser.get();
   }

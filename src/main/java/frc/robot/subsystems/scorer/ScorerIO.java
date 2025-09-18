@@ -44,9 +44,9 @@ public interface ScorerIO {
 
     void prepareToScoreAlgae();
 
-    void prepareToScoreCoral();
+    void moveToPrepareScoreCoral();
 
-    void scoreCoral();
+    void moveToScoreCoral();
 
     void moveScorerToDefaultPosition();
 
@@ -69,4 +69,6 @@ public interface ScorerIO {
     boolean isElevatorAtTargetPosition(double elevatorTargetPosition);
 
     boolean isPivotAtTargetPosition(double pivotTargetPosition);
+
+    boolean isScorerAtTargetPosition();
 }

@@ -4,20 +4,25 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.scorer.ScorerSubsystem;
 
 public class ScoreCoral extends Command{
-    private ScorerSubsystem scorer;
+    private final ScorerSubsystem scorer;
 
-    @Override
-    public void initialize(){
-        this.scorer = ScorerSubsystem.getInstance();
+    public ScoreCoral(ScorerSubsystem scorer){
+        this.scorer = scorer;
         this.addRequirements(this.scorer);
     }
 
     @Override
-    public void execute(){
-        this.scorer.scoreCoral();
-        if(this.scorer.isElevatorAtTargetPosition() && this.scorer.isPivotAtTargetPosition()){
-        this.scorer.placeCoral();
+    public void initialize(){
     }
+
+    @Override
+    public void execute(){
+        if(this.scorer.hasCoral()){
+            this.scorer.moveToScoreCoral();
+            if(this.scorer.isScorerAtTargetPosition()){
+                this.scorer.placeCoral();
+            }
+        }
     }
 
     @Override
@@ -25,6 +30,6 @@ public class ScoreCoral extends Command{
 
     @Override
     public boolean isFinished() {
-        return this.scorer.isElevatorAtTargetPosition() && this.scorer.isPivotAtTargetPosition() && !this.scorer.hasCoral();
+        return false;
     }
 }

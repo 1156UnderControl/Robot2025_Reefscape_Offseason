@@ -148,6 +148,11 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     }
 
     @Override
+    public boolean isScorerAtTargetPosition(){
+        return this.isElevatorAtTargetPosition() && this.isPivotAtTargetPosition();
+    }
+
+    @Override
     public boolean isElevatorAtTargetPosition() {
         return this.isElevatorAtTargetPosition(this.goalElevatorPosition);
     }
@@ -176,13 +181,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
 
     @Override
     public void placeCoral() {
-        if(this.hasCoral){
-            if(this.isEndEffectorAtTargetVelocity(EndEffectorConstants.tunning_values_endeffector.setpoints.DUTY_CYCLE_EXPELL_CORAL)){
-
-            } else {
-                this.setEndEffectorDutyCycle(EndEffectorConstants.tunning_values_endeffector.setpoints.DUTY_CYCLE_EXPELL_CORAL);
-            }
-        }
+        this.endEffectorMotor.set(EndEffectorConstants.tunning_values_endeffector.setpoints.DUTY_CYCLE_EXPELL_CORAL);
     }
 
     @Override
@@ -224,13 +223,13 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     }
 
     @Override
-    public void prepareToScoreCoral(){
+    public void moveToPrepareScoreCoral(){
         this.assignmentReefLevelGoalsForPreparing();
         this.setScorerStructureGoals(this.goalElevatorPosition, this.goalPivotPosition);
     }
 
     @Override
-    public void scoreCoral(){
+    public void moveToScoreCoral(){
         this.assignmentReefLevelGoalsForScoring();
         this.setScorerStructureGoals(this.goalElevatorPosition, this.goalPivotPosition);
     }
