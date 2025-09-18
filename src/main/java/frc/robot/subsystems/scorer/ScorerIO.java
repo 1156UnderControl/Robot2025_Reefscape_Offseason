@@ -20,6 +20,7 @@ public interface ScorerIO {
         public boolean manualScoreAlgae = false;
         public boolean pivotSafeMeasuresEnabled = false;
         public String scorerState = "Idle";
+        public double minimumHeightElevator = 0.0;
     }
 
     boolean hasCoral();
@@ -65,6 +66,8 @@ public interface ScorerIO {
     Supplier<ReefLevel> getTargetCoralReefLevelSupplier();
 
     Supplier<AlgaeHeightReef> getTargetAlgaeReefLevelSupplier();
+
+    void setIntakeUpSupplier(Supplier<Boolean> intakeUpSupplier);
 
     boolean isElevatorAtTargetPosition(double elevatorTargetPosition);
 

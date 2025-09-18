@@ -36,13 +36,14 @@ public class ElevatorConstants {
       public static final double DEFAULT_POSITION = 0.922;
       public static final double DEFAULT_POSITION_WITH_CORAL = 1;
       public static final double DEFAULT_POSITION_WITH_ALGAE = 0.636;
-      public static final double CORAL_COLLECT_INDEXER = 0.820;
+      public static final double CORAL_COLLECT_INDEXER = 0.95;
     }
 
     public class stable_transition {
       public static final double ARM_ANGLE_POINT = 7.520704;
       public static final double ARM_HYPOTENUSE = 0.630709;
-      public static final double ELEVATOR_SAFETY_MARGIN = 0.05;
+      public static final double HIGH_ELEVATOR_SAFETY_MARGIN = 0.2;
+      public static final double NORMAL_ELEVATOR_SAFETY_MARGIN = 0.05;
     }
   }
 }

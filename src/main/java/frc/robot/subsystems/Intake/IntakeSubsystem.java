@@ -1,5 +1,7 @@
 package frc.robot.subsystems.Intake;
 
+import java.util.function.Supplier;
+
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -24,10 +26,9 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
     private final MotorIOInputsAutoLogged intakeWheelsInputs;
     private final MotorIOInputsAutoLogged intakePivotInputs;
     private final MotorIOInputsAutoLogged indexerInputs;
-
+    private final IntakeIOInputsAutoLogged intakeInputs;
 
     private boolean hasCollected;
-    private boolean isIntakePivotAtTargetPosition;
 
     public static IntakeSubsystem getInstance() {
         if (instance == null) {
@@ -46,16 +47,20 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
         this.intakeWheelsInputs = new MotorIOInputsAutoLogged();
         this.intakePivotInputs = new MotorIOInputsAutoLogged();
         this.indexerInputs = new MotorIOInputsAutoLogged();
+        this.intakeInputs = new IntakeIOInputsAutoLogged();
+        this.hasCollected = false;
 
         this.setConfigsIntakePivot();
     }
 
     private void updateLogs(){
+        this.intakeInputs.indexerHasCoral = this.hasCollected;
         this.intakeWheels.updateInputs(intakeWheelsInputs); 
         this.intakePivot.updateInputs(intakePivotInputs);
         this.indexer.updateInputs(indexerInputs);
 
 
+        Logger.processInputs("Subsystems/Intake/", intakeInputs);
         Logger.processInputs("Motors/Intake/Wheels", intakeWheelsInputs);
         Logger.processInputs("Motors/Intake/Pivot", intakePivotInputs);
         Logger.processInputs("Motors/Intake/Indexer", indexerInputs);
@@ -78,8 +83,10 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
     
     @Override
     public void collectCoral(){
-        this.intakeWheels.set(IntakeConstants.tunning_values_intake.INTAKE_SPEED);
-        this.indexer.set(IntakeConstants.tunning_values_intake.INDEXER_SPEED);
+        if(!this.hasCollected){
+            this.intakeWheels.set(IntakeConstants.tunning_values_intake.INTAKE_SPEED);
+            this.indexer.set(IntakeConstants.tunning_values_intake.INDEXER_SPEED);
+        }
     }
 
     @Override
@@ -106,12 +113,28 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
 
     @Override
     public boolean indexerHasCoral(){
-        return this.indexerSensor.getBoolean();
+        return this.hasCollected;
+    }
+
+    private void runCoralIntakeDetection(){
+        this.hasCollected = this.indexerSensor.getBoolean();
     }
 
     @Override
     public void periodic(){
+        this.runCoralIntakeDetection();
         this.updateLogs();
+    }
+
+    @Override
+    public boolean isIntakeAtTargetPosition(double targetPosition){
+        return this.intakePivot.getPosition() <= targetPosition + IntakeConstants.tunning_values_intake.ANGLE_ERROR_ALLOWED || 
+            this.intakePivot.getPosition() >= targetPosition - IntakeConstants.tunning_values_intake.ANGLE_ERROR_ALLOWED;
+    }
+
+    @Override
+    public Supplier<Boolean> getIntakeUpSupplier(){
+        return () -> this.intakePivot.getPosition() > IntakeConstants.tunning_values_intake.setpoints.INTAKE_ANGLE_FOR_NOT_TOUCHING_PIVOT;
     }
 
     private void goToTargetPosition(double targetPosition){

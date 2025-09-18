@@ -13,6 +13,7 @@ public class PivotConstants {
     public static final double VELOCITY_FACTOR_MOTOR_RPM_TO_MECHANISM_DEG_PER_SECOND = 9;
     public static final double ZERO_OFFSET_ABSOLUTE_ENCODER = 0.6311826;
     public static final double ANGLE_ERROR_ALLOWED = 1;
+    public static final double PIVOT_ANGLE_ERROR_FOR_CONSIDERING_INTAKE_POSITION = 5;
 
     public class PID {
       public static final double P = 0.025;
@@ -37,10 +38,10 @@ public class PivotConstants {
       public static final double ALGAE_COLLECT_MID = 0;
       public static final double ALGAE_COLLECT_LOW = 0;
       public static final double ALGAE_COLLECT_GROUND = 0;
-      public static final double DEFAULT_ANGLE = 267.5;
+      public static final double DEFAULT_ANGLE = 265.0;
       public static final double DEFAULT_ANGLE_WITH_CORAL = 270;
       public static final double DEFAULT_ANGLE_WITH_ALGAE = 90;
-      public static final double CORAL_COLLECT_INDEXER = 267.5;
+      public static final double CORAL_COLLECT_INDEXER = 265.0;
     }
   }
 }
