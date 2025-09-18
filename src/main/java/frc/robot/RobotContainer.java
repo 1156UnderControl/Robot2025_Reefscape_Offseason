@@ -13,8 +13,8 @@ import frc.robot.constants.FieldConstants.Algae.AlgaeHeightReef;
 import frc.robot.constants.FieldConstants.ReefLevel;
 import frc.robot.commands.Intake.CollectCoralFromGround;
 import frc.robot.commands.Scorer.CollectCoralFromIndexer;
-import frc.robot.commands.States.PrepareToScoreCoral;
-import frc.robot.commands.States.ScoreCoral;
+import frc.robot.commands.Scorer.PrepareToScoreCoral;
+import frc.robot.commands.Scorer.ScoreCoral;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.OperatorController;
 import frc.robot.subsystems.Intake.IntakeSubsystem;
@@ -59,6 +59,7 @@ public class RobotContainer {
       new CollectCoralFromGround(this.intake)
     );
   }
+  
   public Command getAutonomousCommand() {
     return autoChooser.get();
   }

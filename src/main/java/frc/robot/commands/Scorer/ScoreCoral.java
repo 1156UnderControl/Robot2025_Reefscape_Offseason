@@ -3,10 +3,10 @@ package frc.robot.commands.Scorer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.scorer.ScorerSubsystem;
 
-public class CollectCoralFromIndexer extends Command{
+public class ScoreCoral extends Command{
     private final ScorerSubsystem scorer;
 
-    public CollectCoralFromIndexer(ScorerSubsystem scorer){
+    public ScoreCoral(ScorerSubsystem scorer){
         this.scorer = scorer;
         this.addRequirements(this.scorer);
     }
@@ -17,8 +17,11 @@ public class CollectCoralFromIndexer extends Command{
 
     @Override
     public void execute(){
-        if(!this.scorer.hasCoral() && !this.scorer.hasAlgae()){
-            this.scorer.collectCoralFromIndexer();
+        if(this.scorer.hasCoral()){
+            this.scorer.moveToScoreCoral();
+            if(this.scorer.isScorerAtTargetPosition()){
+                this.scorer.placeCoral();
+            }
         }
     }
 
@@ -27,6 +30,6 @@ public class CollectCoralFromIndexer extends Command{
 
     @Override
     public boolean isFinished() {
-        return this.scorer.hasCoral() || this.scorer.hasAlgae();
+        return false;
     }
 }
