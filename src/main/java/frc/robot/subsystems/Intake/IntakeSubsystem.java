@@ -122,10 +122,6 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
         return indexerHasCoral;
     }
 
-    public void setHasCoral(){
-        this.indexerHasCoral = true;
-    }
-
     private void runCoralIntakeDetection(){
         this.indexerHasCoral = this.indexerSensor.getBoolean();
     }
