@@ -70,14 +70,19 @@ public class SwerveConstants {
     new Translation2d(-10.375, -10.375)
   };
 
-  private static final Slot0Configs steerGains = new Slot0Configs()
+private static final Slot0Configs ksteerGains = new Slot0Configs()
     .withKP(80).withKI(0).withKD(0)
     .withKS(0.26).withKV(0).withKA(0)
     .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
 
-  private static final Slot0Configs driveGains = new Slot0Configs()
+private static final Slot0Configs kdriveGains = new Slot0Configs()
     .withKP(0.3).withKI(0).withKD(0)
     .withKS(0.074247).withKV(0.12407);
+
+private static final Slot0Configs ksteerGainsBackLeft = new Slot0Configs()
+    .withKP(50).withKI(0).withKD(0)
+    .withKS(0.26).withKV(0).withKA(0)
+    .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
 
   private static final ClosedLoopOutputType kSteerClosedLoopOutput = ClosedLoopOutputType.Voltage;
 
@@ -120,7 +125,6 @@ public class SwerveConstants {
   private static final Voltage kSteerFrictionVoltage = Volts.of(0.2);
   private static final Voltage kDriveFrictionVoltage = Volts.of(0.2);
 
-  private static final double kDriveGearRatioBackLeft = 6.746031746031747;
   private static final double kSteerGearRatioBackLeft = 12.8;
 
   public static final SwerveDrivetrainConstants DrivetrainConstants = new SwerveDrivetrainConstants()
@@ -128,7 +132,7 @@ public class SwerveConstants {
             .withPigeon2Id(kPigeonId)
             .withPigeon2Configs(pigeonConfigs); 
 
-    private static SwerveModuleConstantsFactory<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> getConstantCreator(double steerRatio, double driveRatio) {
+    private static SwerveModuleConstantsFactory<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> getConstantCreator(double steerRatio, double driveRatio, Slot0Configs steerGains, Slot0Configs driveGains) {
         return new SwerveModuleConstantsFactory<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>()
             .withDriveMotorGearRatio(driveRatio)
             .withSteerMotorGearRatio(steerRatio)
@@ -190,22 +194,22 @@ public class SwerveConstants {
     private static final Distance kBackRightYPos = Inches.of(-10.375);  
 
     public static final SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> FrontLeft =
-        getConstantCreator(kSteerGearRatio, kDriveGearRatio).createModuleConstants(
+        getConstantCreator(kSteerGearRatio, kDriveGearRatio, ksteerGains, kdriveGains).createModuleConstants(
             kFrontLeftSteerMotorId, kFrontLeftDriveMotorId, kFrontLeftEncoderId, kFrontLeftEncoderOffset,
             kFrontLeftXPos, kFrontLeftYPos, kInvertLeftSide, kFrontLeftSteerMotorInverted, kFrontLeftEncoderInverted
         );
     public static final SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> FrontRight =
-        getConstantCreator(kSteerGearRatio, kDriveGearRatio).createModuleConstants(
+        getConstantCreator(kSteerGearRatio, kDriveGearRatio, ksteerGains, kdriveGains).createModuleConstants(
             kFrontRightSteerMotorId, kFrontRightDriveMotorId, kFrontRightEncoderId, kFrontRightEncoderOffset,
             kFrontRightXPos, kFrontRightYPos, kInvertRightSide, kFrontRightSteerMotorInverted, kFrontRightEncoderInverted
         );
     public static final SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> BackLeft =
-        getConstantCreator(kSteerGearRatio, kDriveGearRatio).createModuleConstants(
+        getConstantCreator(kSteerGearRatioBackLeft, kDriveGearRatio, ksteerGainsBackLeft, kdriveGains).createModuleConstants(
             kBackLeftSteerMotorId, kBackLeftDriveMotorId, kBackLeftEncoderId, kBackLeftEncoderOffset,
             kBackLeftXPos, kBackLeftYPos, kInvertLeftSide, kBackLeftSteerMotorInverted, kBackLeftEncoderInverted
         );
     public static final SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> BackRight =
-        getConstantCreator(kSteerGearRatio, kDriveGearRatio).createModuleConstants(
+        getConstantCreator(kSteerGearRatio, kDriveGearRatio, ksteerGains, kdriveGains).createModuleConstants(
             kBackRightSteerMotorId, kBackRightDriveMotorId, kBackRightEncoderId, kBackRightEncoderOffset,
             kBackRightXPos, kBackRightYPos, kInvertRightSide, kBackRightSteerMotorInverted, kBackRightEncoderInverted
         );  

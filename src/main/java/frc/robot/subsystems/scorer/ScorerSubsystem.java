@@ -316,7 +316,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
 
     @Override
     public Supplier<Boolean> getReefScoringModeSupplier() {
-        return () -> this.elevatorLead.getPosition() > ElevatorConstants.tunning_values_elevator.setpoints.L3_HEIGHT;
+        return () -> this.elevatorLead.getPosition() > ElevatorConstants.tunning_values_elevator.POSITION_FOR_REDUCING_SWERVE_SPEED;
     }
 
     @Override
@@ -444,8 +444,8 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
             PivotConstants.tunning_values_pivot.PID.IZone);
         pivotMotor.setMinMotorOutput(-0.8);
         pivotMotor.setMaxMotorOutput(0.8);
-        pivotMotor.setPosition(pivotMotor.getPositionExternalAbsoluteEncoder());
         pivotMotor.burnFlash();
+        pivotMotor.setPosition(pivotMotor.getPositionExternalAbsoluteEncoder());
     }
     
     private void setConfigsEndEffector() {
