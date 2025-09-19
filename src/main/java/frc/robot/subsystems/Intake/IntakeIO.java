@@ -26,4 +26,8 @@ public interface IntakeIO {
     boolean isIntakeAtTargetPosition(double targetPosition);
 
     Supplier<Boolean> getIntakeUpSupplier();
+
+    void setCoastMode();
+
+    void setBrakeMode();
 }

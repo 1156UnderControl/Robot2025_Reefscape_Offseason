@@ -13,13 +13,15 @@ import frc.robot.constants.FieldConstants.Algae.AlgaeHeightReef;
 import frc.robot.constants.FieldConstants.ReefLevel;
 import frc.robot.commands.Scorer.MoveScorerToScorePosition;
 import frc.robot.commands.States.CollectCoralPosition;
+import frc.Java_Is_UnderControl.Swerve.constants.SwerveConstants;
+import frc.robot.commands.Intake.CollectCoralFromIndexer;
+import frc.robot.commands.States.BrakeState;
+import frc.robot.commands.States.CoastState;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.OperatorController;
 import frc.robot.subsystems.Intake.IntakeSubsystem;
 import frc.robot.subsystems.scorer.ScorerSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
-
-import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -57,11 +59,11 @@ public class RobotContainer {
       new CollectCoralPosition(intake, scorer)
       ).and(() -> !this.scorer.hasCoral());
 
-    this.driverController.b().onTrue(
-      Commands.run(() -> intake.setHasCoral())
-    );
 
+    driverController.x().and(() -> DriverStation.isDisabled()).whileTrue(Commands
+        .runEnd(() -> new CoastState(scorer, intake), () -> new BrakeState(scorer, intake)).ignoringDisable(true));
   }
+  
   public Command getAutonomousCommand() {
     return autoChooser.get();
   }

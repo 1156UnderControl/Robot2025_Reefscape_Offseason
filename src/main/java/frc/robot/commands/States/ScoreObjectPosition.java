@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.Scorer.MoveScorerToPrepareScore;
 import frc.robot.commands.Scorer.MoveScorerToScorePosition;
 import frc.robot.joysticks.OperatorController;
-import frc.robot.subsystems.Intake.IntakeSubsystem;
 import frc.robot.subsystems.scorer.ScorerSubsystem;
 
 public class ScoreObjectPosition extends SequentialCommandGroup {
@@ -24,5 +23,5 @@ public ScoreObjectPosition (ScorerSubsystem scorer){
                 .until(operatorController.goToReefA())
                 );
         
-            }
-        }
+    }
+}

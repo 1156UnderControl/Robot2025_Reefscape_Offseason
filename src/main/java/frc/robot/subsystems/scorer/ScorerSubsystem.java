@@ -323,6 +323,32 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         this.intakeUpSupplier = intakeUpSupplier;
     }
 
+    @Override
+    public void setCoastMode(){
+        this.endEffectorMotor.setMotorBrake(false);
+        this.pivotMotor.setMotorBrake(false);
+        this.elevatorLead.setMotorBrake(false);
+        this.elevatorFollower.setMotorBrake(false);
+
+        this.endEffectorMotor.burnFlash();
+        this.pivotMotor.burnFlash();
+        this.elevatorLead.burnFlash();
+        this.elevatorFollower.burnFlash();
+    }
+
+    @Override
+    public void setBrakeMode(){
+        this.endEffectorMotor.setMotorBrake(true);
+        this.pivotMotor.setMotorBrake(true);
+        this.elevatorLead.setMotorBrake(true);
+        this.elevatorFollower.setMotorBrake(true);
+
+        this.endEffectorMotor.burnFlash();
+        this.pivotMotor.burnFlash();
+        this.elevatorLead.burnFlash();
+        this.elevatorFollower.burnFlash();
+    }
+
     private void assignmentReefLevelGoalsForPreparing(){
         switch (this.coralHeightReef) {
             case L1:

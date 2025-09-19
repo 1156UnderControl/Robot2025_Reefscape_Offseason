@@ -76,4 +76,8 @@ public interface ScorerIO {
     boolean isPivotAtTargetPosition(double pivotTargetPosition);
 
     boolean isScorerAtTargetPosition();
+
+    void setCoastMode();
+
+    void setBrakeMode();
 }
