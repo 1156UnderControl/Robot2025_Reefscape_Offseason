@@ -6,6 +6,13 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
+import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
+import frc.robot.constants.FieldConstants.Algae.AlgaeHeightReef;
+import frc.robot.constants.FieldConstants.ReefLevel;
+import frc.robot.commands.Scorer.MoveScorerToScorePosition;
+import frc.robot.commands.States.CollectCoralPosition;
 import frc.Java_Is_UnderControl.Swerve.constants.SwerveConstants;
 import frc.robot.commands.Intake.CollectCoralFromIndexer;
 import frc.robot.commands.States.BrakeState;
@@ -49,12 +56,9 @@ public class RobotContainer {
 
   private void configureButtonBindings() {
     this.driverController.a().onTrue(
-      new CollectCoralFromIndexer(this.intake)
-    );
+      new CollectCoralPosition(intake, scorer)
+      ).and(() -> !this.scorer.hasCoral());
 
-    this.driverController.b().onTrue(
-      new CollectCoralFromIndexer(this.intake)
-    );
 
     driverController.x().and(() -> DriverStation.isDisabled()).whileTrue(Commands
         .runEnd(() -> new CoastState(scorer, intake), () -> new BrakeState(scorer, intake)).ignoringDisable(true));

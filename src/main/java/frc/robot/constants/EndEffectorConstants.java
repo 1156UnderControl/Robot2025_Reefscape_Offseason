@@ -9,6 +9,8 @@ public class EndEffectorConstants {
 
   public class tunning_values_endeffector {
     public static final double APPLIED_OUTPUT_ERROR_ALLOWED = 0.1;
+    public static final double VELOCITY_TO_DETECT_RPM_FALL = 2000;
+    public static final double MINIMUM_VELOCITY_FOR_DETECTION = 3000;
 
     public class setpoints {
       public static final double DUTY_CYCLE_INTAKE_CORAL = 1;

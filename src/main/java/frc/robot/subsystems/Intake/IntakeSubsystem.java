@@ -1,10 +1,12 @@
 package frc.robot.subsystems.Intake;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.Java_Is_UnderControl.Motors.MotorIO;
@@ -13,9 +15,11 @@ import frc.Java_Is_UnderControl.Motors.SparkFlexMotor;
 import frc.Java_Is_UnderControl.Sensors.InfraRed;
 import frc.Java_Is_UnderControl.Sensors.SensorIO;
 import frc.robot.constants.IntakeConstants;
+import frc.robot.joysticks.OperatorController;
 
 public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
     private static IntakeSubsystem instance;
+    private final XboxController controller = new XboxController(0);
 
     private final MotorIO intakeWheels;
     private final MotorIO intakePivot;
@@ -28,7 +32,7 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
     private final MotorIOInputsAutoLogged indexerInputs;
     private final IntakeIOInputsAutoLogged intakeInputs;
 
-    private boolean hasCollected;
+    private boolean indexerHasCoral;
 
     public static IntakeSubsystem getInstance() {
         if (instance == null) {
@@ -48,13 +52,13 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
         this.intakePivotInputs = new MotorIOInputsAutoLogged();
         this.indexerInputs = new MotorIOInputsAutoLogged();
         this.intakeInputs = new IntakeIOInputsAutoLogged();
-        this.hasCollected = false;
+        this.indexerHasCoral = false;
 
         this.setConfigsIntakePivot();
     }
 
     private void updateLogs(){
-        this.intakeInputs.indexerHasCoral = this.hasCollected;
+        this.intakeInputs.indexerHasCoral = this.indexerHasCoral;
         this.intakeWheels.updateInputs(intakeWheelsInputs); 
         this.intakePivot.updateInputs(intakePivotInputs);
         this.indexer.updateInputs(indexerInputs);
@@ -83,7 +87,7 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
     
     @Override
     public void collectCoral(){
-        if(!this.hasCollected){
+        if(!this.indexerHasCoral){
             this.intakeWheels.set(IntakeConstants.tunning_values_intake.INTAKE_SPEED);
             this.indexer.set(IntakeConstants.tunning_values_intake.INDEXER_SPEED);
         }
@@ -102,7 +106,9 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
 
     @Override
     public void goToIntakePosition(){
-        this.intakePivot.setPositionReference(IntakeConstants.tunning_values_intake.setpoints.INTAKE_ANGLE_COLLECTING);   
+        if(!this.indexerHasCoral){ 
+            this.intakePivot.setPositionReference(IntakeConstants.tunning_values_intake.setpoints.INTAKE_ANGLE_COLLECTING); 
+        }  
     }      
 
     @Override
@@ -113,11 +119,15 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
 
     @Override
     public boolean indexerHasCoral(){
-        return this.hasCollected;
+        return indexerHasCoral;
+    }
+
+    public void setHasCoral(){
+        this.indexerHasCoral = true;
     }
 
     private void runCoralIntakeDetection(){
-        this.hasCollected = this.indexerSensor.getBoolean();
+        this.indexerHasCoral = this.indexerSensor.getBoolean();
     }
 
     @Override

@@ -29,6 +29,8 @@ public interface ScorerIO {
 
     void collectCoralFromIndexer();
 
+    void runEndEffectorCoralDetection();
+
     void placeCoral();
 
     void placeAlgae();

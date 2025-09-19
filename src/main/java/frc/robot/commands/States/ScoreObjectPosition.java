@@ -8,14 +8,20 @@ import frc.robot.joysticks.OperatorController;
 import frc.robot.subsystems.scorer.ScorerSubsystem;
 
 public class ScoreObjectPosition extends SequentialCommandGroup {
-    OperatorController operatorController = OperatorController.getInstance();
-    ScorerSubsystem scorer = ScorerSubsystem.getInstance();
+    OperatorController operatorController;
+    ScorerSubsystem scorer;
 
-    public ScoreObjectPosition (ScorerSubsystem scorer){ 
-        addCommands(
-            new MoveScorerToPrepareScore(this.scorer),
-            Commands.waitUntil(operatorController.scoreObject())
-                .andThen(new MoveScorerToScorePosition(this.scorer))
-        );
+public ScoreObjectPosition (ScorerSubsystem scorer){ 
+    this.scorer = scorer; 
+
+
+    addCommands(
+        new MoveScorerToPrepareScore(scorer)
+            .until(() -> this.scorer.isElevatorAtTargetPosition() && this.scorer.isPivotAtTargetPosition()),
+                Commands.waitUntil(operatorController.scoreObject())
+                .andThen(new MoveScorerToScorePosition(scorer))
+                .until(operatorController.goToReefA())
+                );
+        
     }
 }
