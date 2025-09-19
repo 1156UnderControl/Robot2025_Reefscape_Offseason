@@ -142,7 +142,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
 
     @Override
     public boolean hasCoral() {
-        return EndEffectorInfraRed.getBoolean();
+        return false;
     }
 
     @Override

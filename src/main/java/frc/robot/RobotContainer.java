@@ -13,6 +13,7 @@ import frc.robot.constants.FieldConstants.Algae.AlgaeHeightReef;
 import frc.robot.constants.FieldConstants.ReefLevel;
 import frc.robot.commands.Scorer.MoveScorerToScorePosition;
 import frc.robot.commands.States.CollectCoralPosition;
+import frc.robot.commands.States.ScoreObjectPosition;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.OperatorController;
 import frc.robot.subsystems.Intake.IntakeSubsystem;
@@ -53,14 +54,14 @@ public class RobotContainer {
   }
 
   private void configureButtonBindings() {
-    this.driverController.a().onTrue(
-      new CollectCoralPosition(intake, scorer)
-      ).and(() -> !this.scorer.hasCoral());
-
-    this.driverController.b().onTrue(
-      Commands.run(() -> intake.setHasCoral())
+    
+    this.driverController.y().onTrue(
+      new ScoreObjectPosition(scorer)
     );
 
+    this.driverController.x().onTrue(
+      new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L2))
+    );
   }
   public Command getAutonomousCommand() {
     return autoChooser.get();
