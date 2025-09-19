@@ -15,7 +15,7 @@ import frc.Java_Is_UnderControl.Motors.SparkFlexMotor;
 import frc.Java_Is_UnderControl.Sensors.InfraRed;
 import frc.Java_Is_UnderControl.Sensors.SensorIO;
 import frc.Java_Is_UnderControl.Sensors.SensorIOInputsAutoLogged;
-import frc.Java_Is_UnderControl.Swerve.constants.SwerveConstants;
+import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.EndEffectorConstants;
 import frc.robot.constants.IntakeConstants;
@@ -43,6 +43,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     
     private boolean hasCoral;
     private boolean hasAlgae;
+    private boolean endEffectorAccelerated;
     private ReefLevel coralHeightReef;
     private AlgaeHeightReef algaeHeightReef;
     private TargetBranch autoAlgaeCollectBranch;
@@ -144,6 +145,15 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     public boolean hasAlgae() {
         return this.hasAlgae;
     }
+
+
+    @Override
+    public void runEndEffectorCoralDetection(){
+        if(this.endEffectorMotor.getVelocity() >= EndEffectorConstants.tunning_values_endeffector.END_EFFECTOR_DETECTION_VELOCITY){
+            this.endEffectorAccelerated = true;
+         }
+    }
+
 
     @Override
     public void collectCoralFromIndexer(){

@@ -8,12 +8,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
-import frc.Java_Is_UnderControl.Swerve.constants.SwerveConstants;
+import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
 import frc.robot.constants.FieldConstants.Algae.AlgaeHeightReef;
 import frc.robot.constants.FieldConstants.ReefLevel;
 import frc.robot.commands.Intake.CollectCoralFromIndexer;
-import frc.robot.commands.Scorer.CollectCoralFromIndexer;
-import frc.robot.commands.Scorer.PrepareToScoreCoral;
 import frc.robot.commands.Scorer.MoveScorerToScorePosition;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.OperatorController;
@@ -59,9 +57,6 @@ public class RobotContainer {
       new CollectCoralFromIndexer(this.intake)
     );
 
-    this.driverController.b().onTrue(
-      new CollectCoralFromIndexer(this.scorer)
-    );
   }
   
   public Command getAutonomousCommand() {

@@ -13,7 +13,6 @@ public class CollectCoralFromIndexer extends Command{
 
     @Override
     public void initialize(){
-        this.addRequirements(this.intake);
     }
 
     @Override
