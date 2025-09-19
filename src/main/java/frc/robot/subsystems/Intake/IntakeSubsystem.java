@@ -137,6 +137,25 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
         return () -> this.intakePivot.getPosition() > IntakeConstants.tunning_values_intake.setpoints.INTAKE_ANGLE_FOR_NOT_TOUCHING_PIVOT;
     }
 
+
+    @Override
+    public void setCoastMode(){
+        this.intakePivot.setMotorBrake(false);
+        this.intakeWheels.setMotorBrake(false);
+
+        this.intakePivot.burnFlash();
+        this.intakeWheels.burnFlash();
+    }
+
+    @Override
+    public void setBrakeMode(){
+        this.intakePivot.setMotorBrake(false);
+        this.intakeWheels.setMotorBrake(false);
+
+        this.intakePivot.burnFlash();
+        this.intakeWheels.burnFlash();
+    }
+
     private void goToTargetPosition(double targetPosition){
         double securedTargetPosition = Math.clamp(targetPosition, IntakeConstants.tunning_values_intake.setpoints.MIN_ANGLE, IntakeConstants.tunning_values_intake.setpoints.MAX_ANGLE);
         this.intakePivot.setPositionReference(securedTargetPosition);

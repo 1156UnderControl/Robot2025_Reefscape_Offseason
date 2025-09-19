@@ -43,8 +43,8 @@ import frc.Java_Is_UnderControl.Logging.EnhancedLoggers.CustomBooleanLogger;
 import frc.Java_Is_UnderControl.Logging.EnhancedLoggers.CustomChassisSpeedsLogger;
 import frc.Java_Is_UnderControl.Logging.EnhancedLoggers.CustomDoubleLogger;
 import frc.Java_Is_UnderControl.Logging.EnhancedLoggers.CustomPose2dLogger;
-import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
-import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants.TunerSwerveDrivetrain;
+import frc.Java_Is_UnderControl.Swerve.constants.SwerveConstants;
+import frc.Java_Is_UnderControl.Swerve.constants.SwerveConstants.TunerSwerveDrivetrain;
 import frc.Java_Is_UnderControl.Util.AllianceFlipUtil;
 import frc.Java_Is_UnderControl.Util.CustomMath;
 import frc.Java_Is_UnderControl.Util.Util;
@@ -283,8 +283,8 @@ public abstract class BaseSwerveSubsystem extends TunerSwerveDrivetrain implemen
     this.resetPose(initialHolonomicPose);
   }
 
-  public void resetTranslation(Pose2d translationToReset) {
-    this.resetTranslation(translationToReset.getTranslation());
+  public void resetTranslation(Translation2d translationToReset) {
+    this.resetTranslation(translationToReset);
   }
 
   public void zeroGyro() {
