@@ -16,6 +16,7 @@ import frc.Java_Is_UnderControl.Sensors.InfraRed;
 import frc.Java_Is_UnderControl.Sensors.SensorIO;
 import frc.Java_Is_UnderControl.Sensors.SensorIOInputsAutoLogged;
 import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
+import frc.Java_Is_UnderControl.Util.StabilizeChecker;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.EndEffectorConstants;
 import frc.robot.constants.IntakeConstants;
@@ -43,7 +44,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     
     private boolean hasCoral;
     private boolean hasAlgae;
-    private boolean endEffectorAccelerated;
+    private boolean endEffectorAccelerated = false;
     private ReefLevel coralHeightReef;
     private AlgaeHeightReef algaeHeightReef;
     private TargetBranch autoAlgaeCollectBranch;
@@ -57,6 +58,8 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     private boolean manualScoreAlgae;
 
     private boolean pivotSafeMeasuresEnabled;
+    
+    private StabilizeChecker stablePosition = new StabilizeChecker(0.2);
 
     private boolean goingToIndexerPosition;
 
@@ -149,8 +152,13 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
 
     @Override
     public void runEndEffectorCoralDetection(){
-        if(this.endEffectorMotor.getVelocity() >= EndEffectorConstants.tunning_values_endeffector.END_EFFECTOR_DETECTION_VELOCITY){
+        if(this.endEffectorMotor.getVelocity() >= EndEffectorConstants.tunning_values_endeffector.MINIMUM_VELOCITY_FOR_DETECTION){
             this.endEffectorAccelerated = true;
+         }
+         if(this.endEffectorMotor.getVelocity() <=
+          EndEffectorConstants.tunning_values_endeffector.VELOCITY_TO_DETECT_RPM_FALL && endEffectorAccelerated && stablePosition
+          .isStableInCondition(() -> this.isPivotAtTargetPosition(PivotConstants.tunning_values_pivot.setpoints.CORAL_COLLECT_INDEXER))){
+            this.hasCoral = true;
          }
     }
 
