@@ -9,10 +9,12 @@ import frc.robot.subsystems.Intake.IntakeSubsystem;
 import frc.robot.subsystems.scorer.ScorerSubsystem;
 
 public class ScoreObjectPosition extends SequentialCommandGroup {
-    OperatorController operatorController = OperatorController.getInstance();
-    ScorerSubsystem scorer = ScorerSubsystem.getInstance();
+    OperatorController operatorController;
+    ScorerSubsystem scorer;
 
 public ScoreObjectPosition (ScorerSubsystem scorer){ 
+    this.scorer = scorer; 
+
 
     addCommands(
         new MoveScorerToPrepareScore(scorer)
