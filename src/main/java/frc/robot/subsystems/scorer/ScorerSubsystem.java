@@ -70,6 +70,8 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
 
     private double securedMinimumTargetElevatorPosition;
 
+    private boolean isCoralIntakeMode;
+
     public static ScorerSubsystem getInstance() {
         if (instance == null) {
           instance = new ScorerSubsystem();
@@ -108,6 +110,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         this.goingToIndexerPosition = false;
         this.goingToTargetElevatorPosition = false;
         this.securedMinimumTargetElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.DEFAULT_POSITION;
+        this.isCoralIntakeMode = true;
     }
 
     private void updateLogs(ScorerIOInputsAutoLogged scorerInputs) {
@@ -137,6 +140,11 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
 
     @Override
     public void periodic() {
+        if(this.isCoralIntakeMode){
+            this.hasCoral = this.runEndEffectorObjectDetection();
+        } else {
+            this.hasAlgae = this.runEndEffectorObjectDetection();
+        }
         this.updateLogs(scorerInputs);
     }
 
@@ -152,15 +160,17 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
 
 
     @Override
-    public void runEndEffectorCoralDetection(){
+    public boolean runEndEffectorObjectDetection(){
         if(this.endEffectorMotor.getVelocity() >= EndEffectorConstants.tunning_values_endeffector.MINIMUM_VELOCITY_FOR_DETECTION){
             this.endEffectorAccelerated = true;
-         }
-         if(this.endEffectorMotor.getVelocity() <=
-          EndEffectorConstants.tunning_values_endeffector.VELOCITY_TO_DETECT_RPM_FALL && endEffectorAccelerated && stablePosition
-          .isStableInCondition(() -> this.isPivotAtTargetPosition(PivotConstants.tunning_values_pivot.setpoints.CORAL_COLLECT_INDEXER))){
-            this.hasCoral = true;
-         }
+        }
+
+        if(this.endEffectorMotor.getVelocity() <= EndEffectorConstants.tunning_values_endeffector.VELOCITY_TO_DETECT_RPM_FALL && endEffectorAccelerated && stablePosition.isStableInCondition(() -> this.isPivotAtTargetPosition(PivotConstants.tunning_values_pivot.setpoints.CORAL_COLLECT_INDEXER))){
+            this.endEffectorAccelerated = false;
+            return true;
+        } else {
+            return false;
+        }
     }
 
 
@@ -168,6 +178,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     public void collectCoralFromIndexer(){
         if(!this.hasCoral && !hasAlgae){
             this.scorerState = "Collecting_Coral_From_Indexer";
+            this.isCoralIntakeMode = true;
             if(this.isEndEffectorAtTargetVelocity(EndEffectorConstants.tunning_values_endeffector.setpoints.DUTY_CYCLE_INTAKE_CORAL)){
                 this.setScorerStructureGoals(ElevatorConstants.tunning_values_elevator.setpoints.CORAL_COLLECT_INDEXER, PivotConstants.tunning_values_pivot.setpoints.CORAL_COLLECT_INDEXER);
             } else {
