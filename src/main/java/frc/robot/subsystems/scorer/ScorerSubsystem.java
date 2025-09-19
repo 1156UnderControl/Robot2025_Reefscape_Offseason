@@ -42,6 +42,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     private final MotorIOInputsAutoLogged endEffectorInputs;
     private final SensorIOInputsAutoLogged EndEffectorInfraRedInputs;
     
+    private boolean indexerHasCoral;
     private boolean hasCoral;
     private boolean hasAlgae;
     private boolean endEffectorAccelerated = false;

@@ -1,5 +1,6 @@
 package frc.robot.subsystems.Intake;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
@@ -28,7 +29,7 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
     private final MotorIOInputsAutoLogged indexerInputs;
     private final IntakeIOInputsAutoLogged intakeInputs;
 
-    private boolean hasCollected;
+    private boolean indexerHasCoral;
 
     public static IntakeSubsystem getInstance() {
         if (instance == null) {
@@ -48,13 +49,13 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
         this.intakePivotInputs = new MotorIOInputsAutoLogged();
         this.indexerInputs = new MotorIOInputsAutoLogged();
         this.intakeInputs = new IntakeIOInputsAutoLogged();
-        this.hasCollected = false;
+        this.indexerHasCoral = false;
 
         this.setConfigsIntakePivot();
     }
 
     private void updateLogs(){
-        this.intakeInputs.indexerHasCoral = this.hasCollected;
+        this.intakeInputs.indexerHasCoral = this.indexerHasCoral;
         this.intakeWheels.updateInputs(intakeWheelsInputs); 
         this.intakePivot.updateInputs(intakePivotInputs);
         this.indexer.updateInputs(indexerInputs);
@@ -83,7 +84,7 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
     
     @Override
     public void collectCoral(){
-        if(!this.hasCollected){
+        if(!this.indexerHasCoral){
             this.intakeWheels.set(IntakeConstants.tunning_values_intake.INTAKE_SPEED);
             this.indexer.set(IntakeConstants.tunning_values_intake.INDEXER_SPEED);
         }
@@ -113,11 +114,11 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
 
     @Override
     public boolean indexerHasCoral(){
-        return this.hasCollected;
+        return this.indexerHasCoral;
     }
 
     private void runCoralIntakeDetection(){
-        this.hasCollected = this.indexerSensor.getBoolean();
+        this.indexerHasCoral = this.indexerSensor.getBoolean();
     }
 
     @Override

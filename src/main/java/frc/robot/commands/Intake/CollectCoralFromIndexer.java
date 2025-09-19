@@ -25,6 +25,6 @@ public class CollectCoralFromIndexer extends Command{
 
     @Override
     public boolean isFinished() {
-        return this.intake.indexerHasCoral();
+        return false;
     }
 }
