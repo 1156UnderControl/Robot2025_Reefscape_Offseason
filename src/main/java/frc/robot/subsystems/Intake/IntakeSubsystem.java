@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.Java_Is_UnderControl.Motors.MotorIO;
@@ -14,9 +15,11 @@ import frc.Java_Is_UnderControl.Motors.SparkFlexMotor;
 import frc.Java_Is_UnderControl.Sensors.InfraRed;
 import frc.Java_Is_UnderControl.Sensors.SensorIO;
 import frc.robot.constants.IntakeConstants;
+import frc.robot.joysticks.OperatorController;
 
 public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
     private static IntakeSubsystem instance;
+    private final XboxController controller = new XboxController(0);
 
     private final MotorIO intakeWheels;
     private final MotorIO intakePivot;
@@ -114,7 +117,11 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
 
     @Override
     public boolean indexerHasCoral(){
-        return this.indexerHasCoral;
+        return indexerHasCoral;
+    }
+
+    public void setHasCoral(){
+        this.indexerHasCoral = true;
     }
 
     private void runCoralIntakeDetection(){
