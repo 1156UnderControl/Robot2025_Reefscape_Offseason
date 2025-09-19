@@ -1,6 +1,7 @@
 package frc.robot.commands.States;
 
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.Intake.MoveIntakeToCollectPosition;
 import frc.robot.commands.Scorer.CollectCoralFromIndexer;
@@ -20,11 +21,7 @@ public class CollectCoralPosition extends SequentialCommandGroup {
 
     addCommands(
       new MoveScorerToDefaultPosition(scorer),
-      new MoveIntakeToCollectPosition(intake)
-        .onlyIf(() -> !this.scorer.hasCoral())
-        .until(() -> this.intake.indexerHasCoral())
-        .andThen(new MoveScorerToDefaultPosition(scorer))
-        .andThen(new CollectCoralFromIndexer(scorer))
-);
+      new MoveIntakeToCollectPosition(intake).until(() -> this.intake.indexerHasCoral())
+        .andThen(new ConditionalCommand(Commands.none(), new CollectCoralFromIndexer(scorer), () -> this.scorer.hasAlgae())));
   }
 }

@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
 import frc.robot.constants.FieldConstants.Algae.AlgaeHeightReef;
 import frc.robot.constants.FieldConstants.ReefLevel;
-import frc.robot.commands.Intake.CollectCoralFromIndexer;
 import frc.robot.commands.Scorer.MoveScorerToScorePosition;
 import frc.robot.commands.States.CollectCoralPosition;
 import frc.robot.joysticks.DriverController;
@@ -56,7 +55,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
     this.driverController.a().onTrue(
       new CollectCoralPosition(intake, scorer)
-    );
+      ).and(() -> !this.scorer.hasCoral());
+
     this.driverController.b().onTrue(
       Commands.run(() -> intake.setHasCoral())
     );

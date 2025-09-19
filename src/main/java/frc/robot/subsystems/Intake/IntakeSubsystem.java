@@ -106,7 +106,9 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
 
     @Override
     public void goToIntakePosition(){
-        this.intakePivot.setPositionReference(IntakeConstants.tunning_values_intake.setpoints.INTAKE_ANGLE_COLLECTING);   
+        if(!this.indexerHasCoral){ 
+            this.intakePivot.setPositionReference(IntakeConstants.tunning_values_intake.setpoints.INTAKE_ANGLE_COLLECTING); 
+        }  
     }      
 
     @Override
