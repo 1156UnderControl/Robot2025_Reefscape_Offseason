@@ -283,8 +283,8 @@ public abstract class BaseSwerveSubsystem extends TunerSwerveDrivetrain implemen
     this.resetPose(initialHolonomicPose);
   }
 
-  public void resetTranslation(Pose2d translationToReset) {
-    this.resetTranslation(translationToReset.getTranslation());
+  public void resetTranslation(Translation2d translationToReset) {
+    this.resetTranslation(translationToReset);
   }
 
   public void zeroGyro() {

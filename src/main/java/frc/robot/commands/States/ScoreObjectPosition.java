@@ -7,7 +7,6 @@ import frc.robot.commands.Scorer.MoveScorerToPrepareScore;
 import frc.robot.commands.Scorer.MoveScorerToScorePosition;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.OperatorController;
-import frc.robot.subsystems.Intake.IntakeSubsystem;
 import frc.robot.subsystems.scorer.ScorerSubsystem;
 
 public class ScoreObjectPosition extends SequentialCommandGroup {
@@ -28,5 +27,5 @@ ScoreObjectPosition (ScorerSubsystem scorer){
                 .until((driverController.b()))
                 );
         
-            }
-        }
+    }
+}

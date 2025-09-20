@@ -29,7 +29,7 @@ public interface ScorerIO {
 
     void collectCoralFromIndexer();
 
-    void runEndEffectorCoralDetection();
+    boolean runEndEffectorObjectDetection();
 
     void placeCoral();
 
@@ -76,4 +76,8 @@ public interface ScorerIO {
     boolean isPivotAtTargetPosition(double pivotTargetPosition);
 
     boolean isScorerAtTargetPosition();
+
+    void setCoastMode();
+
+    void setBrakeMode();
 }
