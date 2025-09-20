@@ -17,16 +17,16 @@ public class MoveScorerToPrepareScore extends Command{
 
     @Override
     public void execute(){
-        if(this.scorer.hasCoral()){
+       // if(this.scorer.hasCoral()){
             this.scorer.moveToPrepareScoreCoral();
         }
-    }
+    
 
     @Override
     public void end(boolean interrupted) {}
 
     @Override
     public boolean isFinished() {
-        return false;
+        return this.scorer.isElevatorAtTargetPosition() && this.scorer.isPivotAtTargetPosition();
     }
 }

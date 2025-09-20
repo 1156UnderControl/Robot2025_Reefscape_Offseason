@@ -15,6 +15,7 @@ import frc.robot.constants.FieldConstants.ReefLevel;
 import frc.robot.commands.Scorer.MoveScorerToPrepareScore;
 import frc.robot.commands.Scorer.MoveScorerToScorePosition;
 import frc.robot.commands.States.CollectCoralPosition;
+import frc.robot.commands.States.ScoreObjectPosition;
 import frc.robot.commands.States.BrakeState;
 import frc.robot.commands.States.CoastState;
 import frc.robot.joysticks.DriverController;
@@ -56,6 +57,15 @@ public class RobotContainer {
   }
 
   private void configureButtonBindings() {
+    
+    this.driverController.y().onTrue(
+      new ScoreObjectPosition(scorer)
+    );
+
+    this.driverController.x().onTrue(
+      new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L2))
+    );
+
     this.operatorController.reefL1().onTrue(
       new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L1))
     );
