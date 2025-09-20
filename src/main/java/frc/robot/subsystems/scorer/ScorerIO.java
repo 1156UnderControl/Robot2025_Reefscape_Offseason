@@ -26,6 +26,7 @@ public interface ScorerIO {
         public boolean pivotSafeMeasuresEnabled = false;
         public String scorerState = "Idle";
         public double minimumHeightElevator = 0.0;
+        public double absoluteEncoderPosition = 0.0;
     }
 
     boolean hasCoral();
