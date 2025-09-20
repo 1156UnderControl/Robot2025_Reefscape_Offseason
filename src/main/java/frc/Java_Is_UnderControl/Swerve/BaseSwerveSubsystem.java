@@ -89,7 +89,7 @@ public abstract class BaseSwerveSubsystem extends TunerSwerveDrivetrain implemen
 
   private double targetHeadingDegrees = Double.NaN;
 
-  private double lastDesiredJoystickAngle = AllianceFlipUtil.shouldFlip() ? 180 : 0;
+  private double lastDesiredJoystickAngle = AllianceFlipUtil.shouldFlip() ? 0 : 180;
 
   private CustomChassisSpeedsLogger targetSpeedsLogger = new CustomChassisSpeedsLogger("/SwerveSubsystem/TargetSpeeds");
 
