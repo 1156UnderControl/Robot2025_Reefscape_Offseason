@@ -9,6 +9,8 @@ import static edu.wpi.first.units.Units.Volts;
 
 import java.util.function.Supplier;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -89,7 +91,7 @@ public abstract class BaseSwerveSubsystem extends TunerSwerveDrivetrain implemen
 
   private double targetHeadingDegrees = Double.NaN;
 
-  private double lastDesiredJoystickAngle = AllianceFlipUtil.shouldFlip() ? 0 : 180;
+  private double lastDesiredJoystickAngle;
 
   private CustomChassisSpeedsLogger targetSpeedsLogger = new CustomChassisSpeedsLogger("/SwerveSubsystem/TargetSpeeds");
 
@@ -189,6 +191,7 @@ public abstract class BaseSwerveSubsystem extends TunerSwerveDrivetrain implemen
       startSimThread();
     }
     configureAutoBuilder();
+    this.lastDesiredJoystickAngle = AllianceFlipUtil.shouldFlip() ? 0 : 180;
   }
 
   protected BaseSwerveSubsystem(BaseSwerveConfig config, SwerveDrivetrainConstants drivetrainConstants,
@@ -205,6 +208,8 @@ public abstract class BaseSwerveSubsystem extends TunerSwerveDrivetrain implemen
       startSimThread();
     }
     configureAutoBuilder();
+
+    this.lastDesiredJoystickAngle = AllianceFlipUtil.shouldFlip() ? 0 : 180;
   }
 
   /**
@@ -407,7 +412,7 @@ public abstract class BaseSwerveSubsystem extends TunerSwerveDrivetrain implemen
     // }
     this.updateBaseLogs();
     this.updateLogs();
-
+    Logger.recordOutput("TargetHeading", this.targetHeadingDegrees);
   }
 
   private void updateBaseLogs() {
@@ -432,10 +437,10 @@ public abstract class BaseSwerveSubsystem extends TunerSwerveDrivetrain implemen
   }
 
   protected void driveFieldOrientedLockedJoystickAngle(ChassisSpeeds speeds, double xHeading, double yHeading) {
-    double angle = Util.withinHypotDeadband(xHeading, yHeading) ? lastDesiredJoystickAngle
+    double angle = Util.withinHypotDeadband(xHeading, yHeading) ? Units.degreesToRadians(lastDesiredJoystickAngle)
         : Math.atan2(xHeading, yHeading);
-    lastDesiredJoystickAngle = angle;
     this.targetHeadingDegrees = Units.radiansToDegrees(angle);
+    this.lastDesiredJoystickAngle = this.targetHeadingDegrees;
     applyFieldCentricDrivePointingAtAngle
         .withTargetDirection(Rotation2d.fromDegrees(targetHeadingDegrees))
         .withVelocityX(speeds.vx).withVelocityY(speeds.vy);

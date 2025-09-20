@@ -13,10 +13,8 @@ public class UpdatePivotInternalEncoder extends Command{
     this.addRequirements(scorer);
   }
 
-
   @Override
   public void initialize() {}
-
 
   @Override
   public void execute() {
