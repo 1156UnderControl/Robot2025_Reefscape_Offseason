@@ -16,6 +16,8 @@ public class PivotConstants {
     public static final double PIVOT_ANGLE_ERROR_FOR_CONSIDERING_INTAKE_POSITION = 5;
     public static final double PIVOT_ANGLE_ERROR_FOR_UPDATING_INTERNAL_ENCODER_POSITION = 1;
     public static final double MAX_VELOCITY_FOR_UPDATING_INTERNAL_ENCODER_POSITION = 3;
+    public static final double MIN_ANGLE_FOR_UPDATING_INTERNAL_ENCODER_POSITION = 40;
+    public static final double MAX_ANGLE_FOR_UPDATING_INTERNAL_ENCODER_POSITION = 500;
 
     public class PID {
       public static final double P = 0.025;

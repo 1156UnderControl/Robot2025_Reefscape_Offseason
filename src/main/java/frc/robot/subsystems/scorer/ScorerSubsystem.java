@@ -422,7 +422,10 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
 
     @Override
     public boolean isUpdatingInternalPivotEncoderNecessary(){
-        return (Math.abs(this.pivotMotor.getPositionExternalAbsoluteEncoder() - this.pivotMotor.getPosition()) > PivotConstants.tunning_values_pivot.PIVOT_ANGLE_ERROR_FOR_UPDATING_INTERNAL_ENCODER_POSITION) && this.pivotMotor.getVelocityExternalEncoder() < PivotConstants.tunning_values_pivot.MAX_VELOCITY_FOR_UPDATING_INTERNAL_ENCODER_POSITION;
+        return (Math.abs(this.pivotMotor.getPositionExternalAbsoluteEncoder() - this.pivotMotor.getPosition()) > PivotConstants.tunning_values_pivot.PIVOT_ANGLE_ERROR_FOR_UPDATING_INTERNAL_ENCODER_POSITION) && 
+        this.pivotMotor.getVelocityExternalEncoder() < PivotConstants.tunning_values_pivot.MAX_VELOCITY_FOR_UPDATING_INTERNAL_ENCODER_POSITION && 
+        this.pivotMotor.getPosition() > PivotConstants.tunning_values_pivot.MIN_ANGLE_FOR_UPDATING_INTERNAL_ENCODER_POSITION && 
+        this.pivotMotor.getPosition() < PivotConstants.tunning_values_pivot.MAX_ANGLE_FOR_UPDATING_INTERNAL_ENCODER_POSITION;
     }
 
     @Override
