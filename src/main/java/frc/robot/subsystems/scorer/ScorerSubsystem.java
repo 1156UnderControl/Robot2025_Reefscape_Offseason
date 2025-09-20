@@ -151,6 +151,9 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
 
     @Override
     public void periodic() {
+        if(this.isUpdatingInternalPivotEncoderNecessary()){
+            this.updateInternalPivotEncoder();
+        }
         this.updateLogs(scorerInputs);
     }
 
@@ -414,6 +417,16 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     @Override
     public void resetCollectTimer(){
         this.collectTimer.reset();
+    }
+
+    @Override
+    public boolean isUpdatingInternalPivotEncoderNecessary(){
+        return (Math.abs(this.pivotMotor.getPositionExternalAbsoluteEncoder() - this.pivotMotor.getPosition()) > PivotConstants.tunning_values_pivot.PIVOT_ANGLE_ERROR_FOR_UPDATING_INTERNAL_ENCODER_POSITION) && this.pivotMotor.getVelocityExternalEncoder() < PivotConstants.tunning_values_pivot.MAX_VELOCITY_FOR_UPDATING_INTERNAL_ENCODER_POSITION;
+    }
+
+    @Override
+    public void updateInternalPivotEncoder(){
+        this.pivotMotor.setPosition(this.pivotMotor.getPositionExternalAbsoluteEncoder());
     }
 
     private void assignmentReefLevelGoalsForPreparing(){

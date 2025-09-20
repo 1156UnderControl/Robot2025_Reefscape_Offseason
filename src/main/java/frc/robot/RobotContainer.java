@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
 import frc.robot.constants.FieldConstants.ReefLevel;
 import frc.robot.commands.Scorer.MoveScorerToPrepareScore;
+import frc.robot.commands.Scorer.UpdatePivotInternalEncoder;
 import frc.robot.commands.States.CollectCoralPosition;
 import frc.robot.commands.States.DefaultPosition;
 import frc.robot.commands.States.ScoreObjectPosition;
@@ -84,6 +85,8 @@ public class RobotContainer {
 
     driverController.x().and(() -> DriverStation.isDisabled()).whileTrue(Commands
         .runEnd(() -> new CoastState(scorer, intake), () -> new BrakeState(scorer, intake)).ignoringDisable(true));
+
+    driverController.y().and(() -> DriverStation.isDisabled()).whileTrue(new UpdatePivotInternalEncoder(scorer).ignoringDisable(true));
   }
   
   public Command getAutonomousCommand() {

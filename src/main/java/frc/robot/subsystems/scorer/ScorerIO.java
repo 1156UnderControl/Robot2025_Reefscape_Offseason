@@ -93,4 +93,8 @@ public interface ScorerIO {
     double getCollectTimer();
 
     void resetCollectTimer();
+
+    boolean isUpdatingInternalPivotEncoderNecessary();
+
+    void updateInternalPivotEncoder();
 }

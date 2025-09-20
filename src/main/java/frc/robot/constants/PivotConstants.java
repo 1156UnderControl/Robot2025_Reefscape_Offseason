@@ -10,10 +10,12 @@ public class PivotConstants {
     public static final double MAX_ACCELERATION = 10000;
     public static final double ANGLE_FACTOR_ROTOR_ROTATION_TO_MECHANISM_DEGREES = 5.17755415218;
     public static final double ANGLE_FACTOR_MECHANISM_ROTATION_TO_MECHANISM_DEGREES = 540;
-    public static final double VELOCITY_FACTOR_MOTOR_RPM_TO_MECHANISM_DEG_PER_SECOND = 9;
+    public static final double VELOCITY_FACTOR_MOTOR_RPM_TO_MECHANISM_DEG_PER_SECOND = 0.00003086;
     public static final double ZERO_OFFSET_ABSOLUTE_ENCODER = 0.6311826;
     public static final double ANGLE_ERROR_ALLOWED = 1;
     public static final double PIVOT_ANGLE_ERROR_FOR_CONSIDERING_INTAKE_POSITION = 5;
+    public static final double PIVOT_ANGLE_ERROR_FOR_UPDATING_INTERNAL_ENCODER_POSITION = 1;
+    public static final double MAX_VELOCITY_FOR_UPDATING_INTERNAL_ENCODER_POSITION = 3;
 
     public class PID {
       public static final double P = 0.025;
