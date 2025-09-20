@@ -1,4 +1,4 @@
-package frc.robot.Joysticks;
+package frc.robot.joysticks;
 
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 

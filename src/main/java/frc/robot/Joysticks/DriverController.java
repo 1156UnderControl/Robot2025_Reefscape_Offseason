@@ -1,4 +1,4 @@
-package frc.robot.Joysticks;
+package frc.robot.joysticks;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -32,11 +32,11 @@ public class DriverController implements IDriverController {
     if (turboActivate().getAsBoolean()) {
       return -MathUtil.applyDeadband(
               performAllianceInputDirectionCorrection(driverController.getLeftX()), this.deadBand)
-          * 0.5;
+          * 1;
     }
     return -MathUtil.applyDeadband(
             performAllianceInputDirectionCorrection(driverController.getLeftX()), this.deadBand)
-        * 0.3;
+        * 0.7;
   }
 
   @Override
@@ -44,21 +44,21 @@ public class DriverController implements IDriverController {
     if (turboActivate().getAsBoolean()) {
       return -MathUtil.applyDeadband(
               performAllianceInputDirectionCorrection(driverController.getLeftY()), this.deadBand)
-          * 0.5;
+          * 1.0;
     }
     return -MathUtil.applyDeadband(
             performAllianceInputDirectionCorrection(driverController.getLeftY()), this.deadBand)
-        * 0.3;
+        * 0.7;
   }
 
   @Override
   public double getCOS_Joystick() {
-    return performAllianceInputDirectionCorrection(-driverController.getRightX());
+    return -performAllianceInputDirectionCorrection(driverController.getRightX());
   }
 
   @Override
   public double getSIN_Joystick() {
-    return performAllianceInputDirectionCorrection(-driverController.getRightY());
+    return -performAllianceInputDirectionCorrection(driverController.getRightY());
   }
 
   @Override

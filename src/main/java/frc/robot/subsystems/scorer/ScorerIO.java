@@ -1,23 +1,83 @@
 package frc.robot.subsystems.scorer;
 
+import java.util.function.Supplier;
+
 import org.littletonrobotics.junction.AutoLog;
+
+import frc.robot.constants.FieldConstants.Algae.AlgaeHeightReef;
+import frc.robot.constants.FieldConstants.ReefLevel;
+import frc.robot.constants.SwerveConstants.TargetBranch;
 
 public interface ScorerIO {
 
     @AutoLog
     public static class ScorerIOInputs{
-        public double elevatorLeadPosition = 0.0;
-        public double elevatorLeadTargetPosition = 0.0;
-        public double elevatorLeadVelocity = 0.0;
-        public double elevatorLeadTargetVelocity = 0.0;
-        public boolean elevatorLeadIsInverted = false;
-
-        public double elevatorFollowerPosition = 0.0;
-        public double elevatorFollowerTargetPosition = 0.0;
-        public double elevatorFollowerVelocity = 0.0;
-        public double elevatorFollowerTargetVelocity = 0.0;
-        public boolean elevatorFollowerIsInverted = false;
+        public boolean hasCoral = false;
+        public boolean hasAlgae = false;
+        public ReefLevel targetCoralLevel = ReefLevel.L1;
+        public AlgaeHeightReef targetAlgaeLevel = AlgaeHeightReef.MID;
+        public boolean manualScoreCoral = false;
+        public boolean manualScoreAlgae = false;
+        public boolean pivotSafeMeasuresEnabled = false;
+        public String scorerState = "Idle";
+        public double minimumHeightElevator = 0.0;
     }
 
-    void setElevatorDutyCicle(double dutyCycle);
+    boolean hasCoral();
+
+    boolean hasAlgae();
+
+    void collectCoralFromIndexer();
+
+    boolean runEndEffectorObjectDetection();
+
+    void placeCoral();
+
+    void placeAlgae();
+
+    void setTargetCoralLevel(ReefLevel coralHeightReef);
+
+    void setTargetAlgaeLevel(AlgaeHeightReef algaeHeightReef);
+
+    void setAutoAlgaeCollectBranch(TargetBranch autoAlgaeCollectBranch);
+
+    void setManualScoreCoral(boolean manualScoreCoral);
+    
+    void setManualScoreAlgae(boolean manualScoreAlgae);
+
+    void prepareToScoreAlgae();
+
+    void moveToPrepareScoreCoral();
+
+    void moveToScoreCoral();
+
+    void moveScorerToDefaultPosition();
+
+    void overrideHasCoral();
+
+    void overrideHasAlgae();
+
+    void overrideNoObject();
+
+    boolean isElevatorAtTargetPosition();
+
+    boolean isPivotAtTargetPosition();
+
+    Supplier<Boolean> getReefScoringModeSupplier();
+
+    Supplier<ReefLevel> getTargetCoralReefLevelSupplier();
+
+    Supplier<AlgaeHeightReef> getTargetAlgaeReefLevelSupplier();
+
+    void setIntakeUpSupplier(Supplier<Boolean> intakeUpSupplier);
+
+    boolean isElevatorAtTargetPosition(double elevatorTargetPosition);
+
+    boolean isPivotAtTargetPosition(double pivotTargetPosition);
+
+    boolean isScorerAtTargetPosition();
+
+    void setCoastMode();
+
+    void setBrakeMode();
 }

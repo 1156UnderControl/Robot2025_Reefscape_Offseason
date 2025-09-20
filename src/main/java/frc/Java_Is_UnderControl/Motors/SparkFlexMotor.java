@@ -154,10 +154,14 @@ public class SparkFlexMotor implements MotorIO {
   }
 
   @Override
-  public void setMaxMotorOutput(double maxOutput) {}
+  public void setMaxMotorOutput(double maxOutput) {
+    this.config.closedLoop.maxOutput(maxOutput);
+  }
 
   @Override
-  public void setMinMotorOutput(double minOutput) {}
+  public void setMinMotorOutput(double minOutput) {
+    this.config.closedLoop.minOutput(minOutput);
+  }
 
   @Override
   public void configurePIDF(double P, double I, double D, double F, double Izone) {
@@ -520,5 +524,10 @@ public class SparkFlexMotor implements MotorIO {
   @Override
   public double getVelocityExternalEncoder() {
     return this.motor.getExternalEncoder().getVelocity();
+  }
+
+  @Override
+  public boolean getLimitSwitch(boolean isForward) {
+    return isForward ? this.motor.getForwardLimitSwitch().isPressed() : this.motor.getReverseLimitSwitch().isPressed();
   }
 }

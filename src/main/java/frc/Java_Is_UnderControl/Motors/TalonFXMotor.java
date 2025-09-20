@@ -6,6 +6,7 @@ import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
@@ -87,7 +88,7 @@ public class TalonFXMotor implements MotorIO {
   private final StatusSignal<Current> current;
 
 
-  public TalonFXMotor(int id, String canivoreBus, GravityTypeValue gravityType, String motorName) {
+  public TalonFXMotor(int id, int canivoreBus, GravityTypeValue gravityType, String motorName) {
     this.gravityType = gravityType;
     motor = new TalonFX(id, CANBus.systemCore(canivoreBus));
     talonConfigurator = motor.getConfigurator();
@@ -573,5 +574,10 @@ public class TalonFXMotor implements MotorIO {
   @Override
   public void setAbsoluteEncoderZeroOffset(double zeroOffset) {
     return;
+  }
+
+  @Override
+  public boolean getLimitSwitch(boolean isForward) {
+    return false;
   }
 }
