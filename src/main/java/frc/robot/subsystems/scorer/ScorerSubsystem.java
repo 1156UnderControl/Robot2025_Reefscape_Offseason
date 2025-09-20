@@ -314,6 +314,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         }
 
         if(this.transitionModeEnabled){
+            this.scorerState = "Default_Position_Transitioning";
             this.setElevatorGoals(ElevatorConstants.tunning_values_elevator.setpoints.SAFE_TO_DEFAULT_POSITION);
             if(this.isElevatorAtTargetPosition()){
                 this.setPivotGoals(goalPivotPosition);
