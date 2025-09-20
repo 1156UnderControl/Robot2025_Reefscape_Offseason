@@ -11,7 +11,7 @@ public class ElevatorConstants {
   public class tunning_values_elevator {
     public static final double POSITION_FACTOR_MOTOR_ROTATION_TO_MECHANISM_METERS = 0.0412436;
     public static final double VELOCITY_FACTOR_MOTOR_RPM_TO_METERS_PER_SECOND = 1;
-    public static final double POSITION_ERROR_ALLOWED = 0.01;
+    public static final double POSITION_ERROR_ALLOWED = 0.05;
     public static final double POSITION_FOR_REDUCING_SWERVE_SPEED = 1.5;
 
     public class PID {
@@ -35,9 +35,10 @@ public class ElevatorConstants {
       public static final double ALGAE_COLLECT_LOW = 0;
       public static final double ALGAE_COLLECT_GROUND = 0;
       public static final double DEFAULT_POSITION = 0.922;
-      public static final double DEFAULT_POSITION_WITH_CORAL = 1;
+      public static final double DEFAULT_POSITION_WITH_CORAL = 0.45;
       public static final double DEFAULT_POSITION_WITH_ALGAE = 0.636;
-      public static final double CORAL_COLLECT_INDEXER = 0.95;
+      public static final double SAFE_TO_DEFAULT_POSITION = 1;
+      public static final double CORAL_COLLECT_INDEXER = 0.88;
     }
 
     public class stable_transition {
