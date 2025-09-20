@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.Java_Is_UnderControl.Motors.MotorIO;
 import frc.Java_Is_UnderControl.Motors.MotorIOInputsAutoLogged;
 import frc.Java_Is_UnderControl.Motors.NoMotor;
@@ -71,7 +72,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
 
     private double securedMinimumTargetElevatorPosition;
 
-    private boolean isCoralIntakeMode;
+    private boolean isCoralIntakeMode = true;
 
     public static ScorerSubsystem getInstance() {
         if (instance == null) {
@@ -143,11 +144,6 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
 
     @Override
     public void periodic() {
-        if(this.isCoralIntakeMode){
-            this.hasCoral = this.runEndEffectorObjectDetection();
-        } else {
-            this.hasAlgae = this.runEndEffectorObjectDetection();
-        }
         this.updateLogs(scorerInputs);
     }
 
@@ -161,6 +157,11 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         return this.hasAlgae;
     }
 
+    @Override
+    public Trigger hasObject() {
+        return new Trigger(() -> this.hasAlgae || this.hasCoral);
+    }
+
 
     @Override
     public boolean runEndEffectorObjectDetection(){
@@ -168,7 +169,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
             this.endEffectorAccelerated = true;
         }
 
-        if(this.endEffectorMotor.getVelocity() <= EndEffectorConstants.tunning_values_endeffector.VELOCITY_TO_DETECT_RPM_FALL && endEffectorAccelerated && stablePosition.isStableInCondition(() -> this.isPivotAtTargetPosition(PivotConstants.tunning_values_pivot.setpoints.CORAL_COLLECT_INDEXER))){
+        if(this.endEffectorMotor.getVelocity() <= EndEffectorConstants.tunning_values_endeffector.VELOCITY_TO_DETECT_RPM_FALL && endEffectorAccelerated ){
             this.endEffectorAccelerated = false;
             return true;
         }
@@ -179,14 +180,14 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
 
     @Override
     public void collectCoralFromIndexer(){
+        this.scorerState = "Collecting_Coral_From_Indexer";
+        //this.hasCoral = this.runEndEffectorObjectDetection();
         if(!this.hasCoral && !hasAlgae){
-            this.scorerState = "Collecting_Coral_From_Indexer";
             this.isCoralIntakeMode = true;
+            this.setEndEffectorDutyCycle(EndEffectorConstants.tunning_values_endeffector.setpoints.DUTY_CYCLE_INTAKE_CORAL);
             if(this.endEffectorMotor.getVelocity() > 2000){
                 moveElevatorToCollectCoral();
                 movePivotToDefaultWithoutGP();
-            } else {
-                this.setEndEffectorDutyCycle(EndEffectorConstants.tunning_values_endeffector.setpoints.DUTY_CYCLE_INTAKE_CORAL);
             }
         }
     }
@@ -226,17 +227,18 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     @Override
     public void placeCoral() {
         this.endEffectorMotor.set(EndEffectorConstants.tunning_values_endeffector.setpoints.DUTY_CYCLE_EXPELL_CORAL);
+        this.hasCoral = false;
     }
 
     @Override
     public void placeAlgae() {
-        if(this.hasAlgae){
-            this.setEndEffectorDutyCycle(EndEffectorConstants.tunning_values_endeffector.setpoints.DUTY_CYCLE_EXPELL_ALGAE);
-        }
+        this.setEndEffectorDutyCycle(EndEffectorConstants.tunning_values_endeffector.setpoints.DUTY_CYCLE_EXPELL_ALGAE);
+        this.hasAlgae = false;
     }
 
     @Override
-    public void setTargetCoralLevel(ReefLevel coralHeightReef) {
+    public void 
+    setTargetCoralLevel(ReefLevel coralHeightReef) {
         this.coralHeightReef = coralHeightReef;
     }
 
@@ -263,20 +265,23 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     @Override
     public void prepareToScoreAlgae(){
         this.setScorerTargetAlgae();
-        this.setScorerStructureGoals(goalElevatorPosition, goalPivotPosition);
+        this.setElevatorGoals(this.goalElevatorPosition);
+        this.setPivotGoals(this.goalPivotPosition);
     }
 
     @Override
     public void moveToPrepareScoreCoral(){
         this.assignmentReefLevelGoalsForPreparing();
-        this.setScorerStructureGoals(this.goalElevatorPosition, this.goalPivotPosition);
+        this.setElevatorGoals(this.goalElevatorPosition);
+        this.setPivotGoals(this.goalPivotPosition);
     }
 
     @Override
     public void moveToScoreCoral(){
         this.assignmentReefLevelGoalsForScoring();
         this.endEffectorMotor.set(-0.5);
-        this.setScorerStructureGoals(this.goalElevatorPosition, this.goalPivotPosition);
+        this.setElevatorGoals(this.goalElevatorPosition);
+        this.setPivotGoals(this.goalPivotPosition);
     }
 
     @Override
@@ -318,11 +323,13 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
 
     @Override
     public void movePivotToDefaultWithoutGP() {
+        this.scorerState = "Pivot_To_Default_Without_GP";
         setPivotGoals(PivotConstants.tunning_values_pivot.setpoints.DEFAULT_ANGLE);
     }
 
     @Override
     public void movePivotToDefaultWithGP() {
+        this.scorerState = "Pivot_To_Default_With_GP";
         setPivotGoals(PivotConstants.tunning_values_pivot.setpoints.DEFAULT_ANGLE_WITH_GAME_PIECE);
     }
 
