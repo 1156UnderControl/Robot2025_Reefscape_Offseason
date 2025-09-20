@@ -54,18 +54,6 @@ public interface ScorerIO {
 
     void stopEndEffector();
 
-    void moveElevatorToTransitionDefault();
-
-    void moveElevatorToDefaultWithoutGP();
-
-    void moveElevatorToDefaultWithCoral();
-
-    void moveElevatorToCollectCoral();
-
-    void movePivotToDefaultWithGP();
-
-    void movePivotToDefaultWithoutGP();
-
     void prepareToScoreAlgae();
 
     void moveToPrepareScoreCoral();
@@ -101,4 +89,8 @@ public interface ScorerIO {
     void setCoastMode();
 
     void setBrakeMode();
+
+    double getCollectTimer();
+
+    void resetCollectTimer();
 }

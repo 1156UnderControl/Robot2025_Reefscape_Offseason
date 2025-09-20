@@ -26,18 +26,7 @@ public class MoveScorerToDefaultPosition extends Command {
 
   @Override
   public void execute() {
-    if(wentToSafe){
-      this.scorer.movePivotToDefaultWithoutGP();
-      if(this.scorer.isPivotAtTargetPosition()){
-        this.scorer.moveElevatorToDefaultWithoutGP();
-        finished = true;
-      }
-    }else{
-      this.scorer.moveElevatorToTransitionDefault();
-      if(this.scorer.isElevatorAtTargetPosition()){
-        this.wentToSafe = true;
-      }
-    }
+    this.scorer.moveScorerToDefaultPosition();
   }
 
   @Override

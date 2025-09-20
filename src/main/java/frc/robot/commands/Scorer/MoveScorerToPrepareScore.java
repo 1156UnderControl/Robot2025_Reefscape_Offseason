@@ -17,9 +17,10 @@ public class MoveScorerToPrepareScore extends Command{
 
     @Override
     public void execute(){
-       // if(this.scorer.hasCoral()){
+        if(this.scorer.hasCoral()){
             this.scorer.moveToPrepareScoreCoral();
         }
+    }
     
 
     @Override
