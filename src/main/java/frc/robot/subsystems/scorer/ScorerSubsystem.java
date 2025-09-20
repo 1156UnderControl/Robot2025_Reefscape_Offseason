@@ -496,6 +496,8 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
             ElevatorConstants.tunning_values_elevator.PID.D,
             ElevatorConstants.tunning_values_elevator.PID.arbFF,
             ElevatorConstants.tunning_values_elevator.PID.IZone);
+        this.elevatorLead.setMinMotorOutput(-0.8);
+        this.elevatorLead.setMaxMotorOutput(0.8);
         this.elevatorFollower.burnFlash();
         this.elevatorLead.burnFlash();
         this.elevatorLead.setPosition(ElevatorConstants.ELEVATOR_HEIGHT_OFFSET_FROM_GROUND);
