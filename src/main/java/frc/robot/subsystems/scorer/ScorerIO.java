@@ -14,6 +14,8 @@ public interface ScorerIO {
     public static class ScorerIOInputs{
         public boolean hasCoral = false;
         public boolean hasAlgae = false;
+        public boolean isAtPositionPivot = false;
+        public boolean isAtPositionElevator = false;
         public ReefLevel targetCoralLevel = ReefLevel.L1;
         public AlgaeHeightReef targetAlgaeLevel = AlgaeHeightReef.MID;
         public boolean manualScoreCoral = false;
@@ -44,6 +46,20 @@ public interface ScorerIO {
     void setManualScoreCoral(boolean manualScoreCoral);
     
     void setManualScoreAlgae(boolean manualScoreAlgae);
+
+    void stopEndEffector();
+
+    void moveElevatorToTransitionDefault();
+
+    void moveElevatorToDefaultWithoutGP();
+
+    void moveElevatorToDefaultWithCoral();
+
+    void moveElevatorToCollectCoral();
+
+    void movePivotToDefaultWithGP();
+
+    void movePivotToDefaultWithoutGP();
 
     void prepareToScoreAlgae();
 
