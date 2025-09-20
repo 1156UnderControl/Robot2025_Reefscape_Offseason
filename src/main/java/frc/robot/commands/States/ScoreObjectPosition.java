@@ -18,8 +18,6 @@ public
 ScoreObjectPosition (ScorerSubsystem scorer){ 
     this.scorer = scorer; 
     this.driverController = DriverController.getInstance();
-
-
     addCommands(
         new MoveScorerToPrepareScore(scorer),
                 Commands.waitUntil(driverController.a()),

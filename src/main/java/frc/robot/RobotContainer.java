@@ -7,14 +7,11 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
-import frc.robot.constants.FieldConstants.Algae.AlgaeHeightReef;
 import frc.robot.constants.FieldConstants.ReefLevel;
 import frc.robot.commands.Scorer.MoveScorerToPrepareScore;
-import frc.robot.commands.Scorer.MoveScorerToScorePosition;
 import frc.robot.commands.States.CollectCoralPosition;
+import frc.robot.commands.States.DefaultPosition;
 import frc.robot.commands.States.ScoreObjectPosition;
 import frc.robot.commands.States.BrakeState;
 import frc.robot.commands.States.CoastState;
@@ -50,7 +47,7 @@ public class RobotContainer {
 
     this.scorer.setIntakeUpSupplier(this.intake.getIntakeUpSupplier());
     this.swerve.setDefaultCommand(Commands.run(() -> swerve.driveAlignAngleJoystick(), this.swerve));
-    this.scorer.setDefaultCommand(Commands.run(() -> this.scorer.moveScorerToDefaultPosition(), this.scorer));
+    this.scorer.setDefaultCommand(new DefaultPosition(intake, scorer));
     this.intake.setDefaultCommand(Commands.run(() -> this.intake.goToIntakePosition(), this.intake));
     this.configureButtonBindings();
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -59,31 +56,30 @@ public class RobotContainer {
   private void configureButtonBindings() {
     
     this.driverController.y().onTrue(
+      new CollectCoralPosition(intake, scorer)
+    );
+
+    this.driverController.x().and(scorer.hasObject()).onTrue(
       new ScoreObjectPosition(scorer)
     );
 
-    this.driverController.x().onTrue(
+    this.driverController.leftBumper().onTrue(new DefaultPosition(intake, scorer));
+
+
+    this.driverController.leftArrow().onTrue(
+      new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L1))
+    );
+
+    this.driverController.rightArrow().onTrue(
       new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L2))
     );
 
-    this.operatorController.reefL1().onTrue(
-      new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L1))
+    this.driverController.downArrow().onTrue(
+      new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L3))
     );
 
-    this.operatorController.reefL2().onTrue(
-      new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L1))
-    );
-
-    this.operatorController.reefL3().onTrue(
-      new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L1))
-    );
-
-    this.operatorController.reefL4().onTrue(
-      new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L1))
-    );
-
-    this.operatorController.prepareToScore().onTrue(
-      new MoveScorerToPrepareScore(scorer)
+    this.driverController.upArrow().onTrue(
+      new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L4))
     );
 
     driverController.x().and(() -> DriverStation.isDisabled()).whileTrue(Commands
