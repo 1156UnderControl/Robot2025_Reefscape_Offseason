@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
-public class NoMotor implements IMotor {
+public class NoMotor implements MotorIO {
 
   @Override
   public String getMotorName() {
@@ -21,6 +21,19 @@ public class NoMotor implements IMotor {
   @Override
   public void clearStickyFaults() {
     return;
+  }
+
+  @Override
+  public void updateInputs(MotorIOInputs inputs){
+    inputs.appliedOutput = 0.0;
+    inputs.current = 0.0;
+    inputs.position = 0.0;
+    inputs.velocity = 0.0;
+    inputs.temperature = 0.0;
+    inputs.faults = 0;
+    inputs.targetPosition = 0.0;
+    inputs.targetSpeed = 0.0;
+    inputs.isInverted = false;
   }
 
   @Override
@@ -221,7 +234,7 @@ public class NoMotor implements IMotor {
   }
 
   @Override
-  public void setTwoSysIDMotors(Subsystem currentSubsystem, IMotor otherMotor) {
+  public void setTwoSysIDMotors(Subsystem currentSubsystem, MotorIO otherMotor) {
     return;
   }
 
@@ -268,11 +281,6 @@ public class NoMotor implements IMotor {
   @Override
   public double getVelocityExternalEncoder() {
     return 0.0;
-  }
-
-  @Override
-  public void updateLogs() {
-    return;
   }
 
   @Override

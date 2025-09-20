@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.swerve;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -14,7 +14,7 @@ import frc.Java_Is_UnderControl.Swerve.Configs.BaseSwerveConfig;
 import frc.Java_Is_UnderControl.Swerve.Configs.SwervePathPlannerConfig;
 import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
 import frc.robot.Joysticks.DriverController;
-import frc.robot.subsystems.generated.TunerConstants;
+import frc.robot.subsystems.swerve.generated.TunerConstants;
 
 import java.util.HashMap;
 

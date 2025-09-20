@@ -11,8 +11,8 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
-import frc.Java_Is_UnderControl.Swerve.IO.PhoenixOdometryThread;
-import frc.robot.subsystems.generated.TunerConstants;
+import frc.Java_Is_UnderControl.Swerve.IO.SIgnals.PhoenixOdometryThread;
+import frc.robot.subsystems.swerve.generated.TunerConstants;
 
 import java.util.Queue;
 

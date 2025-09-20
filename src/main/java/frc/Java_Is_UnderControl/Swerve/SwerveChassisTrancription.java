@@ -5,7 +5,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
-import frc.robot.subsystems.generated.TunerConstants;
+import frc.robot.subsystems.swerve.generated.TunerConstants;
 
 import java.util.HashMap;
 import java.util.Optional;

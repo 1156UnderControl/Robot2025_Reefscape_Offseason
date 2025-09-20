@@ -6,7 +6,7 @@ import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
-import com.ctre.phoenix6.CANBus;
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -21,27 +21,25 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.datalog.BooleanLogEntry;
-import edu.wpi.first.datalog.StringLogEntry;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.units.VoltageUnit;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.MutDistance;
 import edu.wpi.first.units.measure.MutLinearVelocity;
 import edu.wpi.first.units.measure.MutVoltage;
 import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.units.measure.Voltage;
-import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.Java_Is_UnderControl.Logging.enhanced_loggers.CustomDoubleLogger;
-import frc.Java_Is_UnderControl.Logging.enhanced_loggers.CustomIntegerLogger;
 import frc.Java_Is_UnderControl.Util.Phoenix6Util;
 
-public class TalonFXMotor implements IMotor {
+public class TalonFXMotor implements MotorIO {
   private TalonFX motor;
 
   private GravityTypeValue gravityType;
@@ -61,24 +59,6 @@ public class TalonFXMotor implements IMotor {
   private boolean factoryDefaultOcurred = false;
 
   private MotionMagicVoltage magicVoltage = new MotionMagicVoltage(0);
-
-  private CustomDoubleLogger appliedOutputLog;
-
-  private CustomDoubleLogger targetOutputLog;
-
-  private CustomDoubleLogger currentLog;
-
-  private CustomDoubleLogger positionLog;
-
-  private CustomDoubleLogger velocityLog;
-
-  private CustomDoubleLogger temperatureLog;
-
-  private CustomIntegerLogger faultsLog;
-
-  private CustomDoubleLogger targetPositionLog;
-
-  private CustomDoubleLogger targetSpeedLog;
 
   private MotorOutputConfigs configs = new MotorOutputConfigs();
 
@@ -102,68 +82,23 @@ public class TalonFXMotor implements IMotor {
 
   private TrapezoidProfile.State trapezoidGoal = new TrapezoidProfile.State();
 
-  private boolean isBrakeMode;
+  private final StatusSignal<Angle> position;
+  private final StatusSignal<AngularVelocity> velocity;
+  private final StatusSignal<Current> current;
 
-  public TalonFXMotor(int id, GravityTypeValue gravityType, String motorName) {
-    this.gravityType = gravityType;
-    motor = new TalonFX(id);
-    talonConfigurator = motor.getConfigurator();
-    this.clearStickyFaults();
-    this.factoryDefault();
-    this.setCurrentLimit(80);
-    this.setupLogs(id);
-    this.updateLogs();
-    this.motorName = motorName;
-  }
 
-  public TalonFXMotor(int id, GravityTypeValue gravityType, String motorName, int canivoreBus) {
+  public TalonFXMotor(int id, String canivoreBus, GravityTypeValue gravityType, String motorName) {
     this.gravityType = gravityType;
     motor = new TalonFX(id, CANBus.systemCore(canivoreBus));
     talonConfigurator = motor.getConfigurator();
     this.clearStickyFaults();
     this.factoryDefault();
     this.setCurrentLimit(80);
-    this.setupLogs(id);
-    this.updateLogs();
     this.motorName = motorName;
-  }
 
-  public TalonFXMotor(int id, String motorName, int canivoreBus) {
-    this(id, GravityTypeValue.Elevator_Static, motorName, canivoreBus);
-  }
-
-  public TalonFXMotor(int id, String motorName) {
-    this(id, GravityTypeValue.Elevator_Static, motorName);
-  }
-
-  private void setupLogs(int motorId) {
-    this.appliedOutputLog = new CustomDoubleLogger("/motors/" + motorId + "/appliedOutput");
-    this.targetOutputLog = new CustomDoubleLogger("/motors/" + motorId + "/targetOutput");
-    this.currentLog = new CustomDoubleLogger("/motors/" + motorId + "/current");
-    this.positionLog = new CustomDoubleLogger("/motors/" + motorId + "/position");
-    this.velocityLog = new CustomDoubleLogger("/motors/" + motorId + "/velocity");
-    this.temperatureLog = new CustomDoubleLogger("/motors/" + motorId + "/temperature");
-    this.faultsLog = new CustomIntegerLogger("/motors/" + motorId + "/faults");
-    this.targetPositionLog = new CustomDoubleLogger("/motors/" + motorId + "/targetPosition");
-    this.targetSpeedLog = new CustomDoubleLogger("/motors/" + motorId + "/targetSpeed");
-    StringLogEntry descriptionLog =
-        new StringLogEntry(DataLogManager.getLog(), "/motors/" + motorId + "/Description");
-    descriptionLog.append(this.motor.getDescription());
-    BooleanLogEntry isInvertedLog =
-        new BooleanLogEntry(DataLogManager.getLog(), "/motors/" + motorId + "/isInverted");
-    isInvertedLog.append(isInverted());
-  }
-
-  @Override
-  public void updateLogs() {
-    // this.appliedOutputLog.append(this.motor.getDutyCycle().getValueAsDouble());
-    // this.currentLog.append(this.motor.getStatorCurrent().getValueAsDouble());
-    // this.positionLog.append(this.getPosition());
-    // this.velocityLog.append(this.motor.getVelocity().getValueAsDouble());
-    // this.temperatureLog.append(this.motor.getDeviceTemp().getValueAsDouble());
-    // this.faultsLog.append(this.motor.getFaultField().getValue());
-    // this.targetPositionLog.append(this.targetPosition);
-    // this.targetSpeedLog.append(this.targetVelocity);
+    position = this.motor.getPosition();
+    velocity = this.motor.getVelocity();
+    current = this.motor.getStatorCurrent();
   }
 
   @Override
@@ -240,6 +175,19 @@ public class TalonFXMotor implements IMotor {
 
     // TODO: Configure Status Frame 2 thru 21 if necessary
     // https://v5.docs.ctr-electronics.com/en/stable/ch18_CommonAPI.html#setting-status-frame-periods
+  }
+
+  @Override
+  public void updateInputs(MotorIOInputs inputs) {
+    inputs.appliedOutput = this.getAppliedOutput();
+    inputs.current = this.current.getValueAsDouble();
+    inputs.position = this.position.getValueAsDouble();
+    inputs.velocity = this.velocity.getValueAsDouble();
+    inputs.temperature = this.motor.getDeviceTemp().getValueAsDouble();
+    inputs.faults = this.motor.getFaultField().getValue();
+    inputs.targetPosition = this.targetPosition;
+    inputs.targetSpeed = this.targetVelocity;
+    inputs.isInverted = this.isInverted();
   }
 
   public void setMaxMotorOutput(double maxOutput) {
@@ -544,7 +492,7 @@ public class TalonFXMotor implements IMotor {
   }
 
   @Override
-  public void setTwoSysIDMotors(Subsystem currentSubsystem, IMotor otherMotor) {
+  public void setTwoSysIDMotors(Subsystem currentSubsystem, MotorIO otherMotor) {
     this.sysIdRoutine =
         new SysIdRoutine(
             new SysIdRoutine.Config(
