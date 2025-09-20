@@ -63,7 +63,6 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
         this.intakePivot.updateInputs(intakePivotInputs);
         this.indexer.updateInputs(indexerInputs);
 
-
         Logger.processInputs("Subsystems/Intake/", intakeInputs);
         Logger.processInputs("Motors/Intake/Wheels", intakeWheelsInputs);
         Logger.processInputs("Motors/Intake/Pivot", intakePivotInputs);
@@ -87,10 +86,8 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
     
     @Override
     public void collectCoral(){
-        if(!this.indexerHasCoral){
-            this.intakeWheels.set(IntakeConstants.tunning_values_intake.INTAKE_SPEED);
-            this.indexer.set(IntakeConstants.tunning_values_intake.INDEXER_SPEED);
-        }
+        this.intakeWheels.set(IntakeConstants.tunning_values_intake.INTAKE_SPEED);
+        this.indexer.set(IntakeConstants.tunning_values_intake.INDEXER_SPEED);
     }
 
     @Override
@@ -123,7 +120,7 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
     }
 
     private void runCoralIntakeDetection(){
-        this.indexerHasCoral = this.indexerSensor.getBoolean();
+        this.indexerHasCoral = this.intakePivot.getLimitSwitch(true);
     }
 
     @Override
