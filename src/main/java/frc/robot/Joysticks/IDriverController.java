@@ -33,7 +33,13 @@ public interface IDriverController {
 
   Trigger isForcingDriverControl();
 
-  Trigger cancelAction();
+  Trigger leftArrow();
+
+  Trigger rightArrow();
+
+  Trigger upArrow();
+
+  Trigger downArrow();
 
   Trigger setHasAlgae();
 

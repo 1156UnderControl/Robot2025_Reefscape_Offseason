@@ -118,8 +118,23 @@ public class DriverController implements IDriverController {
   }
 
   @Override
-  public Trigger cancelAction() {
+  public Trigger leftArrow() {
     return driverController.povLeft();
+  }
+
+  @Override
+  public Trigger rightArrow() {
+      return driverController.povRight();
+  }
+
+  @Override
+  public Trigger upArrow() {
+      return driverController.povUp();
+  }
+
+  @Override
+  public Trigger downArrow() {
+      return driverController.povDown();
   }
 
   @Override
