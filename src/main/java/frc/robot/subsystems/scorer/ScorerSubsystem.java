@@ -255,6 +255,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     @Override
     public void 
     setTargetCoralLevel(ReefLevel coralHeightReef) {
+        SmartDashboard.putString("ESTADO" , "SETANDO POSICAO: " + coralHeightReef.toString());
         this.coralHeightReef = coralHeightReef;
     }
 

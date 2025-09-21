@@ -33,7 +33,7 @@ public class IntakeConstants {
       }
   
       public class setpoints {
-        public static final double POSITION_FACTOR_MOTOR_ROTATION_TO_MECHANISM_ANGLE = 0.09;
+        public static final double POSITION_FACTOR_MOTOR_ROTATION_TO_MECHANISM_ANGLE = 3.76471;
         public static final double VELOCITY_FACTOR_MOTOR_RPM_TO_MECHANISM_ANGLE_PER_SECOND = 1;
         public static final double ZERO_POSITION_IN_ANGLE = 0;
         public static final double MAX_ANGLE = 0;
