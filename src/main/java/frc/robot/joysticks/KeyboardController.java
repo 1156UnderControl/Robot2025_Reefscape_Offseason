@@ -1,4 +1,4 @@
-package frc.robot.Joysticks;
+package frc.robot.joysticks;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
