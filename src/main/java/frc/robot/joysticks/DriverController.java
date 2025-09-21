@@ -30,11 +30,11 @@ public class DriverController implements IDriverController {
   @Override
   public double getXtranslation() {
     if (turboActivate().getAsBoolean()) {
-      return -MathUtil.applyDeadband(
+      return MathUtil.applyDeadband(
               performAllianceInputDirectionCorrection(driverController.getLeftX()), this.deadBand)
           * 1;
     }
-    return -MathUtil.applyDeadband(
+    return MathUtil.applyDeadband(
             performAllianceInputDirectionCorrection(driverController.getLeftX()), this.deadBand)
         * 0.7;
   }
@@ -42,23 +42,23 @@ public class DriverController implements IDriverController {
   @Override
   public double getYtranslation() {
     if (turboActivate().getAsBoolean()) {
-      return -MathUtil.applyDeadband(
+      return MathUtil.applyDeadband(
               performAllianceInputDirectionCorrection(driverController.getLeftY()), this.deadBand)
           * 1.0;
     }
-    return -MathUtil.applyDeadband(
+    return MathUtil.applyDeadband(
             performAllianceInputDirectionCorrection(driverController.getLeftY()), this.deadBand)
         * 0.7;
   }
 
   @Override
   public double getCOS_Joystick() {
-    return -performAllianceInputDirectionCorrection(driverController.getRightX());
+    return performAllianceInputDirectionCorrection(driverController.getRightX());
   }
 
   @Override
   public double getSIN_Joystick() {
-    return -performAllianceInputDirectionCorrection(driverController.getRightY());
+    return performAllianceInputDirectionCorrection(driverController.getRightY());
   }
 
   @Override
@@ -118,8 +118,23 @@ public class DriverController implements IDriverController {
   }
 
   @Override
-  public Trigger cancelAction() {
+  public Trigger leftArrow() {
     return driverController.povLeft();
+  }
+
+  @Override
+  public Trigger rightArrow() {
+      return driverController.povRight();
+  }
+
+  @Override
+  public Trigger upArrow() {
+      return driverController.povUp();
+  }
+
+  @Override
+  public Trigger downArrow() {
+      return driverController.povDown();
   }
 
   @Override

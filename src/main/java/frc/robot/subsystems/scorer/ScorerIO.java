@@ -4,6 +4,9 @@ import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.AutoLog;
 
+import com.pathplanner.lib.auto.AutoBuilder.TriFunction;
+
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.FieldConstants.Algae.AlgaeHeightReef;
 import frc.robot.constants.FieldConstants.ReefLevel;
 import frc.robot.constants.SwerveConstants.TargetBranch;
@@ -14,6 +17,8 @@ public interface ScorerIO {
     public static class ScorerIOInputs{
         public boolean hasCoral = false;
         public boolean hasAlgae = false;
+        public boolean isAtPositionPivot = false;
+        public boolean isAtPositionElevator = false;
         public ReefLevel targetCoralLevel = ReefLevel.L1;
         public AlgaeHeightReef targetAlgaeLevel = AlgaeHeightReef.MID;
         public boolean manualScoreCoral = false;
@@ -21,11 +26,14 @@ public interface ScorerIO {
         public boolean pivotSafeMeasuresEnabled = false;
         public String scorerState = "Idle";
         public double minimumHeightElevator = 0.0;
+        public double absoluteEncoderPosition = 0.0;
     }
 
     boolean hasCoral();
 
     boolean hasAlgae();
+
+    boolean hasObject();
 
     void collectCoralFromIndexer();
 
@@ -44,6 +52,8 @@ public interface ScorerIO {
     void setManualScoreCoral(boolean manualScoreCoral);
     
     void setManualScoreAlgae(boolean manualScoreAlgae);
+
+    void stopEndEffector();
 
     void prepareToScoreAlgae();
 
@@ -80,4 +90,14 @@ public interface ScorerIO {
     void setCoastMode();
 
     void setBrakeMode();
+
+    double getCollectTimer();
+
+    void resetCollectTimer();
+
+    boolean isUpdatingInternalPivotEncoderNecessary();
+
+    void updateInternalPivotEncoder();
+
+    double getEndEffectorAppliedOutput();
 }

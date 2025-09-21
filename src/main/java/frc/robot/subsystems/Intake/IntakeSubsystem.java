@@ -1,21 +1,14 @@
 package frc.robot.subsystems.Intake;
 
-import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
-
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.Java_Is_UnderControl.Motors.MotorIO;
 import frc.Java_Is_UnderControl.Motors.MotorIOInputsAutoLogged;
 import frc.Java_Is_UnderControl.Motors.SparkFlexMotor;
-import frc.Java_Is_UnderControl.Sensors.InfraRed;
-import frc.Java_Is_UnderControl.Sensors.SensorIO;
 import frc.robot.constants.IntakeConstants;
-import frc.robot.joysticks.OperatorController;
 
 public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
     private static IntakeSubsystem instance;
@@ -24,8 +17,6 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
     private final MotorIO intakeWheels;
     private final MotorIO intakePivot;
     private final MotorIO indexer;
-
-    private final SensorIO indexerSensor;
     
     private final MotorIOInputsAutoLogged intakeWheelsInputs;
     private final MotorIOInputsAutoLogged intakePivotInputs;
@@ -46,8 +37,6 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
         this.intakePivot = new SparkFlexMotor(IntakeConstants.ID_intakePivotMotor, IntakeConstants.intakeBusID, IntakeConstants.intakePivotMotorName);
         this.indexer = new SparkFlexMotor(IntakeConstants.ID_indexerMotor, IntakeConstants.intakeBusID, IntakeConstants.indexerMotorName);
 
-        this.indexerSensor = new InfraRed(0, false);
-
         this.intakeWheelsInputs = new MotorIOInputsAutoLogged();
         this.intakePivotInputs = new MotorIOInputsAutoLogged();
         this.indexerInputs = new MotorIOInputsAutoLogged();
@@ -62,7 +51,6 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
         this.intakeWheels.updateInputs(intakeWheelsInputs); 
         this.intakePivot.updateInputs(intakePivotInputs);
         this.indexer.updateInputs(indexerInputs);
-
 
         Logger.processInputs("Subsystems/Intake/", intakeInputs);
         Logger.processInputs("Motors/Intake/Wheels", intakeWheelsInputs);
@@ -87,10 +75,8 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
     
     @Override
     public void collectCoral(){
-        if(!this.indexerHasCoral){
-            this.intakeWheels.set(IntakeConstants.tunning_values_intake.INTAKE_SPEED);
-            this.indexer.set(IntakeConstants.tunning_values_intake.INDEXER_SPEED);
-        }
+        this.intakeWheels.set(IntakeConstants.tunning_values_intake.INTAKE_SPEED);
+        this.indexer.set(IntakeConstants.tunning_values_intake.INDEXER_SPEED);
     }
 
     @Override
@@ -123,7 +109,7 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
     }
 
     private void runCoralIntakeDetection(){
-        this.indexerHasCoral = this.indexerSensor.getBoolean();
+        this.indexerHasCoral = !this.intakePivot.getLimitSwitch(true);
     }
 
     @Override

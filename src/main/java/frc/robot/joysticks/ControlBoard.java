@@ -92,11 +92,6 @@ public class ControlBoard implements IDriverController, IOperatorController {
   }
 
   @Override
-  public Trigger cancelAction() {
-    return mDriverController.cancelAction();
-  }
-
-  @Override
   public Trigger setHasAlgae() {
     return mDriverController.setHasAlgae();
   }
@@ -114,5 +109,29 @@ public class ControlBoard implements IDriverController, IOperatorController {
   @Override
   public Trigger start() {
     return mDriverController.start();
+  }
+
+  @Override
+  public Trigger leftArrow() {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'leftArrow'");
+  }
+
+  @Override
+  public Trigger rightArrow() {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'rightArrow'");
+  }
+
+  @Override
+  public Trigger upArrow() {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'upArrow'");
+  }
+
+  @Override
+  public Trigger downArrow() {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'downArrow'");
   }
 }

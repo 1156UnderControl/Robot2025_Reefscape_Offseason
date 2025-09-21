@@ -17,14 +17,12 @@ public class MoveScorerToScorePosition extends Command{
 
     @Override
     public void execute(){
-        //if(this.scorer.hasCoral()){
-            this.scorer.moveToScoreCoral();
-            if(this.scorer.isScorerAtTargetPosition()){
-                this.scorer.placeCoral();
-            }
+        this.scorer.moveToScoreCoral();
+        if(this.scorer.isScorerAtTargetPosition()){
+            this.scorer.placeCoral();
         }
+    }
     
-
     @Override
     public void end(boolean interrupted) {}
 
