@@ -24,6 +24,7 @@ public class ClimberSubsystem extends SubsystemBase implements ClimberIO {
     private double goalPivot;
     private boolean stopClimber = false;
     private double LimitPosition;
+    private boolean atClimbedPosition;
 
     public static ClimberSubsystem getInstance() {
         if (instance == null) {
@@ -69,14 +70,8 @@ public class ClimberSubsystem extends SubsystemBase implements ClimberIO {
         Logger.processInputs("Motors/Climber/cageIntake", cageIntakeInputs);
     }
     
-    public boolean isAtClimbPosition(){
-        if (pivotMotor.setPositionReference(ClimberConstants.setpoints.GOAL_PREPARE_TO_CLIMB)) {
-        return true; } else{ return false;
-        
-    }
-}
     public void climb(){
-        pivotMotor.setPositionReference(ClimberConstants.setpoints.CLIMB);
+     pivotMotor.setPositionReference(ClimberConstants.setpoints.CLIMB);
     }
     
     public double limitPosition(){
@@ -86,6 +81,7 @@ public class ClimberSubsystem extends SubsystemBase implements ClimberIO {
         (goalPivot<ClimberConstants.setpoints.MIN_ANGLE?
         ClimberConstants.setpoints.MIN_ANGLE: goalPivot);
     }
+
 
 
     public boolean isPreparedToIntake(){
@@ -100,6 +96,17 @@ public class ClimberSubsystem extends SubsystemBase implements ClimberIO {
                 pivotMotor.setPositionReference(ClimberConstants.setpoints.INTAKE_CAGE_ANGLE);
             }
         }
+   public void isAtClimbedPosition(){
+        if(this.pivotMotor.getPosition() > ClimberConstants.setpoints.MIN_STOW_ANGLE_TOLERANCE && this.pivotMotor.getPosition() < ClimberConstants.setpoints.MAX_ANGLE){
+            pivotMotor.set(ClimberConstants.setpoints.GOAL_CLIMBED);
+            atClimbedPosition = true;
+        }
+    }
+
+        public boolean getIsAtClimbedPosition(){
+            return atClimbedPosition;
+        }
+   
 
     public void setCoastClimber(){
     pivotMotor.setMotorBrake(false);
@@ -120,6 +127,9 @@ public class ClimberSubsystem extends SubsystemBase implements ClimberIO {
 
     public void unlockClimber(){
         pivotMotor.set(0);
+    }
+    public void stopClimber(){
+    cageIntakeMotor.set(0);
     }
 
     @Override
