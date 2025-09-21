@@ -33,7 +33,7 @@ public interface ScorerIO {
 
     boolean hasAlgae();
 
-    Trigger hasObject();
+    boolean hasObject();
 
     void collectCoralFromIndexer();
 

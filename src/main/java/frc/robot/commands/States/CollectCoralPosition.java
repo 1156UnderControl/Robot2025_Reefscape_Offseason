@@ -16,16 +16,13 @@ public class CollectCoralPosition extends SequentialCommandGroup {
 
   private IntakeSubsystem intake;
   private ScorerSubsystem scorer;
-  private final DriverController driverController;
 
   public CollectCoralPosition(IntakeSubsystem intake, ScorerSubsystem scorer) {
     this.intake = intake;
     this.scorer = scorer;
-    this.driverController = DriverController.getInstance();
 
     addCommands(
-      new MoveScorerToDefaultPosition(scorer),
-      new MoveIntakeToCollectPosition(intake).until(this.driverController.b())
-        .andThen(new ConditionalCommand(Commands.idle(scorer, intake), new CollectCoralFromIndexer(scorer), () -> this.scorer.hasCoral())));
+      new MoveIntakeToCollectPosition(this.intake)
+        .andThen(new CollectCoralFromIndexer(scorer)));
   }
 }

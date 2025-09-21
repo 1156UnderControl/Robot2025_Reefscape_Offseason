@@ -169,8 +169,8 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     }
 
     @Override
-    public Trigger hasObject() {
-        return new Trigger(() -> this.hasAlgae || this.hasCoral);
+    public boolean hasObject() {
+        return this.hasAlgae || this.hasCoral;
     }
 
 
@@ -191,14 +191,13 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
 
     @Override
     public void collectCoralFromIndexer(){
-        this.scorerState = "Collecting_Coral_From_Indexer";
         if(!this.hasCoral && !hasAlgae){
-            this.isCoralIntakeMode = true;
+            this.transitionModeEnabled = true;
+            this.scorerState = "Collecting_Coral_From_Indexer";
             this.setEndEffectorDutyCycle(EndEffectorConstants.tunning_values_endeffector.setpoints.DUTY_CYCLE_INTAKE_CORAL);
             if(this.endEffectorMotor.getVelocity() > 2000){
                 moveElevatorToCollectCoral();
                 if(this.isElevatorAtTargetPosition()){
-                    this.transitionModeEnabled = true;
                     this.collectTimer.start();
                 }
             }
@@ -316,7 +315,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
 
         if(this.transitionModeEnabled){
             this.scorerState = "Default_Position_Transitioning";
-            this.setElevatorGoals(ElevatorConstants.tunning_values_elevator.setpoints.SAFE_TO_DEFAULT_POSITION);
+            this.goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.SAFE_TO_DEFAULT_POSITION;
             if(this.isElevatorAtTargetPosition()){
                 this.setPivotGoals(goalPivotPosition);
                 if(this.isPivotAtTargetPosition()){
@@ -335,7 +334,8 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     }
 
     private void moveElevatorToCollectCoral() {
-        setElevatorGoals(ElevatorConstants.tunning_values_elevator.setpoints.CORAL_COLLECT_INDEXER);
+        this.goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.CORAL_COLLECT_INDEXER;
+        this.elevatorLead.setPositionReference(this.goalElevatorPosition);
     }
 
     @Override
@@ -494,8 +494,8 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
             ElevatorConstants.tunning_values_elevator.PID.D,
             ElevatorConstants.tunning_values_elevator.PID.arbFF,
             ElevatorConstants.tunning_values_elevator.PID.IZone);
-        this.elevatorLead.setMinMotorOutput(-0.8);
-        this.elevatorLead.setMaxMotorOutput(0.8);
+        this.elevatorLead.setMinMotorOutput(-0.65);
+        this.elevatorLead.setMaxMotorOutput(0.65);
         this.elevatorFollower.burnFlash();
         this.elevatorLead.burnFlash();
         this.elevatorLead.setPosition(ElevatorConstants.ELEVATOR_HEIGHT_OFFSET_FROM_GROUND);

@@ -30,6 +30,6 @@ public class CollectCoralFromIndexer extends Command{
 
     @Override
     public boolean isFinished() {
-        return this.scorer.getCollectTimer() > 0.5;
+        return this.scorer.getCollectTimer() > 5;
     }
 }

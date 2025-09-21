@@ -60,7 +60,7 @@ public class RobotContainer {
       new CollectCoralPosition(intake, scorer)
     );
 
-    this.driverController.x().and(scorer.hasObject()).onTrue(
+    this.driverController.x().and(() -> scorer.hasObject()).onTrue(
       new ScoreObjectPosition(scorer)
     );
 

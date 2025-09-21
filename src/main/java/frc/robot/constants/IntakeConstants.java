@@ -33,14 +33,14 @@ public class IntakeConstants {
       }
   
       public class setpoints {
-        public static final double POSITION_FACTOR_MOTOR_ROTATION_TO_MECHANISM_ANGLE = 3.76471;
+        public static final double POSITION_FACTOR_MOTOR_ROTATION_TO_MECHANISM_ANGLE = 0.09;
         public static final double VELOCITY_FACTOR_MOTOR_RPM_TO_MECHANISM_ANGLE_PER_SECOND = 1;
         public static final double ZERO_POSITION_IN_ANGLE = 0;
         public static final double MAX_ANGLE = 0;
         public static final double MIN_ANGLE = 0;
         public static final double INTAKE_ANGLE_HOMED = 45;
         public static final double INTAKE_ANGLE_FOR_NOT_TOUCHING_PIVOT = 30;
-        public static final double INTAKE_ANGLE_COLLECTING = 3.0;
+        public static final double INTAKE_ANGLE_COLLECTING = 0;
   
       }
     }
