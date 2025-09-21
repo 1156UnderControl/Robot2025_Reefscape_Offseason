@@ -11,7 +11,8 @@ public class ElevatorConstants {
   public class tunning_values_elevator {
     public static final double POSITION_FACTOR_MOTOR_ROTATION_TO_MECHANISM_METERS = 0.0412436;
     public static final double VELOCITY_FACTOR_MOTOR_RPM_TO_METERS_PER_SECOND = 1;
-    public static final double POSITION_ERROR_ALLOWED = 0;
+    public static final double POSITION_ERROR_ALLOWED = 0.05;
+    public static final double POSITION_FOR_REDUCING_SWERVE_SPEED = 1.5;
 
     public class PID {
       public static final double P = 2.45;
@@ -22,8 +23,8 @@ public class ElevatorConstants {
     }
 
     public class setpoints {
-      public static final double MAX_HEIGHT = 0;
-      public static final double MIN_HEIGHT = 0;
+      public static final double MAX_HEIGHT = 1.8;
+      public static final double MIN_HEIGHT = 0.39624;
       public static final double NET_HEIGHT = 0;
       public static final double PROCESSOR_HEIGHT = 0;
       public static final double L1_HEIGHT = 0.85;
@@ -34,15 +35,17 @@ public class ElevatorConstants {
       public static final double ALGAE_COLLECT_LOW = 0;
       public static final double ALGAE_COLLECT_GROUND = 0;
       public static final double DEFAULT_POSITION = 0.922;
-      public static final double DEFAULT_POSITION_WITH_CORAL = 1;
+      public static final double DEFAULT_POSITION_WITH_CORAL = 0.45;
       public static final double DEFAULT_POSITION_WITH_ALGAE = 0.636;
-      public static final double CORAL_COLLECT_INDEXER = 0.820;
+      public static final double SAFE_TO_DEFAULT_POSITION = 1;
+      public static final double CORAL_COLLECT_INDEXER = 0.88;
     }
 
     public class stable_transition {
       public static final double ARM_ANGLE_POINT = 7.520704;
       public static final double ARM_HYPOTENUSE = 0.630709;
-      public static final double ELEVATOR_SAFETY_MARGIN = 0.05;
+      public static final double HIGH_ELEVATOR_SAFETY_MARGIN = 0.2;
+      public static final double NORMAL_ELEVATOR_SAFETY_MARGIN = 0.05;
     }
   }
 }

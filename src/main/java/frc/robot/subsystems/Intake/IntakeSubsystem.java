@@ -1,33 +1,29 @@
 package frc.robot.subsystems.Intake;
 
-import org.littletonrobotics.junction.Logger;
+import java.util.function.Supplier;
 
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.littletonrobotics.junction.Logger;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.Java_Is_UnderControl.Motors.MotorIO;
 import frc.Java_Is_UnderControl.Motors.MotorIOInputsAutoLogged;
 import frc.Java_Is_UnderControl.Motors.SparkFlexMotor;
-import frc.Java_Is_UnderControl.Sensors.InfraRed;
-import frc.Java_Is_UnderControl.Sensors.SensorIO;
 import frc.robot.constants.IntakeConstants;
 
 public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
     private static IntakeSubsystem instance;
+    private final XboxController controller = new XboxController(0);
 
     private final MotorIO intakeWheels;
     private final MotorIO intakePivot;
     private final MotorIO indexer;
-
-    private final SensorIO indexerSensor;
     
     private final MotorIOInputsAutoLogged intakeWheelsInputs;
     private final MotorIOInputsAutoLogged intakePivotInputs;
     private final MotorIOInputsAutoLogged indexerInputs;
+    private final IntakeIOInputsAutoLogged intakeInputs;
 
-
-    private boolean hasCollected;
-    private boolean isIntakePivotAtTargetPosition;
+    private boolean indexerHasCoral;
 
     public static IntakeSubsystem getInstance() {
         if (instance == null) {
@@ -41,21 +37,22 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
         this.intakePivot = new SparkFlexMotor(IntakeConstants.ID_intakePivotMotor, IntakeConstants.intakeBusID, IntakeConstants.intakePivotMotorName);
         this.indexer = new SparkFlexMotor(IntakeConstants.ID_indexerMotor, IntakeConstants.intakeBusID, IntakeConstants.indexerMotorName);
 
-        this.indexerSensor = new InfraRed(0, false);
-
         this.intakeWheelsInputs = new MotorIOInputsAutoLogged();
         this.intakePivotInputs = new MotorIOInputsAutoLogged();
         this.indexerInputs = new MotorIOInputsAutoLogged();
+        this.intakeInputs = new IntakeIOInputsAutoLogged();
+        this.indexerHasCoral = false;
 
         this.setConfigsIntakePivot();
     }
 
     private void updateLogs(){
+        this.intakeInputs.indexerHasCoral = this.indexerHasCoral;
         this.intakeWheels.updateInputs(intakeWheelsInputs); 
         this.intakePivot.updateInputs(intakePivotInputs);
         this.indexer.updateInputs(indexerInputs);
 
-
+        Logger.processInputs("Subsystems/Intake/", intakeInputs);
         Logger.processInputs("Motors/Intake/Wheels", intakeWheelsInputs);
         Logger.processInputs("Motors/Intake/Pivot", intakePivotInputs);
         Logger.processInputs("Motors/Intake/Indexer", indexerInputs);
@@ -95,7 +92,9 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
 
     @Override
     public void goToIntakePosition(){
-        this.intakePivot.setPositionReference(IntakeConstants.tunning_values_intake.setpoints.INTAKE_ANGLE_COLLECTING);   
+        if(!this.indexerHasCoral){ 
+            this.intakePivot.setPositionReference(IntakeConstants.tunning_values_intake.setpoints.INTAKE_ANGLE_COLLECTING); 
+        }  
     }      
 
     @Override
@@ -106,12 +105,47 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
 
     @Override
     public boolean indexerHasCoral(){
-        return this.indexerSensor.getBoolean();
+        return indexerHasCoral;
+    }
+
+    private void runCoralIntakeDetection(){
+        this.indexerHasCoral = !this.intakePivot.getLimitSwitch(true);
     }
 
     @Override
     public void periodic(){
+        this.runCoralIntakeDetection();
         this.updateLogs();
+    }
+
+    @Override
+    public boolean isIntakeAtTargetPosition(double targetPosition){
+        return this.intakePivot.getPosition() <= targetPosition + IntakeConstants.tunning_values_intake.ANGLE_ERROR_ALLOWED || 
+            this.intakePivot.getPosition() >= targetPosition - IntakeConstants.tunning_values_intake.ANGLE_ERROR_ALLOWED;
+    }
+
+    @Override
+    public Supplier<Boolean> getIntakeUpSupplier(){
+        return () -> this.intakePivot.getPosition() > IntakeConstants.tunning_values_intake.setpoints.INTAKE_ANGLE_FOR_NOT_TOUCHING_PIVOT;
+    }
+
+
+    @Override
+    public void setCoastMode(){
+        this.intakePivot.setMotorBrake(false);
+        this.intakeWheels.setMotorBrake(false);
+
+        this.intakePivot.burnFlash();
+        this.intakeWheels.burnFlash();
+    }
+
+    @Override
+    public void setBrakeMode(){
+        this.intakePivot.setMotorBrake(false);
+        this.intakeWheels.setMotorBrake(false);
+
+        this.intakePivot.burnFlash();
+        this.intakeWheels.burnFlash();
     }
 
     private void goToTargetPosition(double targetPosition){
