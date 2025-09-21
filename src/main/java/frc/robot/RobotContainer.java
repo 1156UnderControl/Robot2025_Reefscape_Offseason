@@ -49,23 +49,20 @@ public class RobotContainer {
     this.scorer.setIntakeUpSupplier(this.intake.getIntakeUpSupplier());
     this.swerve.setDefaultCommand(Commands.run(() -> swerve.driveAlignAngleJoystick(), this.swerve));
     this.scorer.setDefaultCommand(new DefaultPosition(intake, scorer));
-    this.intake.setDefaultCommand(Commands.run(() -> this.intake.goToIntakePosition(), this.intake));
+    //this.intake.setDefaultCommand(Commands.run(() -> this.intake.goToIntakePosition(), this.intake));
     this.configureButtonBindings();
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
   }
 
   private void configureButtonBindings() {
     
-    this.driverController.y().onTrue(
+    this.driverController.a().onTrue(
       new CollectCoralPosition(intake, scorer)
     );
 
     this.driverController.x().and(() -> scorer.hasObject()).onTrue(
       new ScoreObjectPosition(scorer)
     );
-
-    this.driverController.leftBumper().onTrue(new DefaultPosition(intake, scorer));
-
 
     this.driverController.leftArrow().onTrue(
       new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L1))
@@ -83,10 +80,10 @@ public class RobotContainer {
       new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L4))
     );
 
-    driverController.x().and(() -> DriverStation.isDisabled()).whileTrue(Commands
-        .runEnd(() -> new CoastState(scorer, intake), () -> new BrakeState(scorer, intake)).ignoringDisable(true));
+    //driverController.x().and(() -> DriverStation.isDisabled()).whileTrue(Commands
+    //    .runEnd(() -> new CoastState(scorer, intake), () -> new BrakeState(scorer, intake)).ignoringDisable(true));
 
-    driverController.y().and(() -> DriverStation.isDisabled()).whileTrue(new UpdatePivotInternalEncoder(scorer).ignoringDisable(true));
+    //driverController.y().and(() -> DriverStation.isDisabled()).whileTrue(new UpdatePivotInternalEncoder(scorer).ignoringDisable(true));
   }
   
   public Command getAutonomousCommand() {

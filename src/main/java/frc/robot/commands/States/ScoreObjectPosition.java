@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.Scorer.MoveScorerToPrepareScore;
 import frc.robot.commands.Scorer.MoveScorerToScorePosition;
+import frc.robot.commands.Scorer.StopEndEffector;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.OperatorController;
 import frc.robot.subsystems.scorer.ScorerSubsystem;
@@ -19,10 +20,10 @@ ScoreObjectPosition (ScorerSubsystem scorer){
     this.driverController = DriverController.getInstance();
     addCommands(
         new MoveScorerToPrepareScore(scorer),
-                Commands.waitUntil(driverController.a()),
+                Commands.waitUntil(driverController.y()),
                 new MoveScorerToScorePosition(scorer)
-                .until((driverController.a()))
-                );
+                .until(driverController.b()),
+                new StopEndEffector(scorer));
         
     }
 }

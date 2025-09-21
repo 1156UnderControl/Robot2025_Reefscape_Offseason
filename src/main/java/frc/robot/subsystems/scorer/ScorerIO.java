@@ -98,4 +98,6 @@ public interface ScorerIO {
     boolean isUpdatingInternalPivotEncoderNecessary();
 
     void updateInternalPivotEncoder();
+
+    double getEndEffectorAppliedOutput();
 }

@@ -9,11 +9,13 @@ public class CollectCoralFromIndexer extends Command{
 
     public CollectCoralFromIndexer(ScorerSubsystem scorer){
         this.scorer = scorer;
+        addRequirements(this.scorer);
     }
 
     @Override
     public void initialize(){
         this.addRequirements(this.scorer);
+        this.scorer.resetCollectTimer();
     }
 
     @Override
@@ -30,6 +32,6 @@ public class CollectCoralFromIndexer extends Command{
 
     @Override
     public boolean isFinished() {
-        return this.scorer.getCollectTimer() > 5;
+        return this.scorer.getCollectTimer() > 0.5;
     }
 }
