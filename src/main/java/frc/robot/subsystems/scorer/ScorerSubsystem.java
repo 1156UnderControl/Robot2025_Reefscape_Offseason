@@ -305,14 +305,17 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     public void moveScorerToDefaultPosition(){
         this.endEffectorAccelerated = false;
         if(this.hasCoral){
+            this.endEffectorMotor.set(EndEffectorConstants.tunning_values_endeffector.setpoints.DUTY_CYCLE_HOLDING_CORAL);
             this.goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.DEFAULT_POSITION_WITH_CORAL;
             this.goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.DEFAULT_ANGLE_WITH_CORAL;
             this.scorerState = "Default_Position_With_Coral";
         } else if (this.hasAlgae){
+            this.endEffectorMotor.set(EndEffectorConstants.tunning_values_endeffector.setpoints.DUTY_CYCLE_HOLDING_ALGAE);
             this.goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.DEFAULT_POSITION_WITH_ALGAE;
             this.goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.DEFAULT_ANGLE_WITH_ALGAE;
             this.scorerState = "Default_Position_With_Algae";
         } else {
+            this.endEffectorMotor.set(0);
             this.goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.DEFAULT_POSITION;
             this.goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.DEFAULT_ANGLE;
             this.scorerState = "Default_Position_Without_Objects";
