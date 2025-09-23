@@ -10,11 +10,13 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
 import frc.robot.constants.FieldConstants.ReefLevel;
+import frc.robot.constants.SwerveConstants.TargetBranch;
 import frc.robot.commands.Scorer.MoveScorerToPrepareScore;
 import frc.robot.commands.Scorer.UpdatePivotInternalEncoder;
 import frc.robot.commands.States.CollectCoralPosition;
 import frc.robot.commands.States.DefaultPosition;
 import frc.robot.commands.States.ScoreObjectPosition;
+import frc.robot.commands.States.AutoScoreCoralPosition;
 import frc.robot.commands.States.BrakeState;
 import frc.robot.commands.States.CoastState;
 import frc.robot.joysticks.DriverController;
@@ -29,7 +31,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
 
   private final LoggedDashboardChooser<Command> autoChooser;
-  private final OperatorControllerXbox operatorController;
+  private final OperatorController operatorController;
   private final DriverController driverController;
 
   private final SwerveSubsystem swerve;
@@ -46,7 +48,7 @@ public class RobotContainer {
       modulesArray[0], modulesArray[1], modulesArray[2], modulesArray[3]);
    
     this.driverController = DriverController.getInstance();
-    this.operatorController = OperatorControllerXbox.getInstance();
+    this.operatorController = OperatorController.getInstance();
 
     this.scorer.setIntakeUpSupplier(this.intake.getIntakeUpSupplier());
     this.swerve.setDefaultCommand(Commands.run(() -> swerve.driveAlignAngleJoystick(), this.swerve));
@@ -82,10 +84,36 @@ public class RobotContainer {
       new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L4))
     );
 
+    bindAutoScoreCommands();
+
     //driverController.x().and(() -> DriverStation.isDisabled()).whileTrue(Commands
     //    .runEnd(() -> new CoastState(scorer, intake), () -> new BrakeState(scorer, intake)).ignoringDisable(true));
 
     //driverController.y().and(() -> DriverStation.isDisabled()).whileTrue(new UpdatePivotInternalEncoder(scorer).ignoringDisable(true));
+  }
+
+  private void bindAutoScoreCommands() {
+    this.operatorController.goToReefA().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.A));
+
+    this.operatorController.goToReefB().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.B));
+
+    this.operatorController.goToReefC().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.C));
+
+    this.operatorController.goToReefD().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.D));
+
+    this.operatorController.goToReefF().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.F));
+
+    this.operatorController.goToReefG().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.G));
+
+    this.operatorController.goToReefH().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.H));
+
+    this.operatorController.goToReefI().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.I));
+
+    this.operatorController.goToReefJ().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.J));
+
+    this.operatorController.goToReefK().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.K));
+
+    this.operatorController.goToReefL().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.L));
   }
   
   public Command getAutonomousCommand() {
