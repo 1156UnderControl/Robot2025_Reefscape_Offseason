@@ -29,24 +29,24 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
 
   private final LoggedDashboardChooser<Command> autoChooser;
-  private final OperatorControllerXbox operatorController;
-  private final DriverController driverController;
-
-  private final SwerveSubsystem swerve;
-  private final IntakeSubsystem intake;
-  private final ScorerSubsystem scorer;
-
-  private SwerveModuleConstants[] modulesArray = SwerveConstants.getModuleConstants();
-
-  public RobotContainer() {
-    this.scorer = ScorerSubsystem.getInstance();
-    
-    this.intake = IntakeSubsystem.getInstance();
-    this.swerve = new SwerveSubsystem(this.scorer.getReefScoringModeSupplier(), this.scorer.getTargetCoralReefLevelSupplier(), this.scorer.getTargetAlgaeReefLevelSupplier(), SwerveConstants.getSwerveDrivetrainConstants(),
-      modulesArray[0], modulesArray[1], modulesArray[2], modulesArray[3]);
-   
-    this.driverController = DriverController.getInstance();
-    this.operatorController = OperatorControllerXbox.getInstance();
+    private final OperatorController keyboard;
+    private final DriverController driverController;
+  
+    private final SwerveSubsystem swerve;
+    private final IntakeSubsystem intake;
+    private final ScorerSubsystem scorer;
+  
+    private SwerveModuleConstants[] modulesArray = SwerveConstants.getModuleConstants();
+  
+    public RobotContainer() {
+      this.scorer = ScorerSubsystem.getInstance();
+      
+      this.intake = IntakeSubsystem.getInstance();
+      this.swerve = new SwerveSubsystem(this.scorer.getReefScoringModeSupplier(), this.scorer.getTargetCoralReefLevelSupplier(), this.scorer.getTargetAlgaeReefLevelSupplier(), SwerveConstants.getSwerveDrivetrainConstants(),
+        modulesArray[0], modulesArray[1], modulesArray[2], modulesArray[3]);
+     
+      this.driverController = DriverController.getInstance();
+      this.keyboard = OperatorController.getInstance();
 
     this.scorer.setIntakeUpSupplier(this.intake.getIntakeUpSupplier());
     this.swerve.setDefaultCommand(Commands.run(() -> swerve.driveAlignAngleJoystick(), this.swerve));
@@ -61,24 +61,25 @@ public class RobotContainer {
     this.driverController.a().onTrue(
       new CollectCoralPosition(intake, scorer)
     );
+  
 
-    this.driverController.x().and(() -> scorer.hasObject()).onTrue(
+    this.keyboard.scoreObject().and(() -> scorer.hasObject()).onTrue(
       new ScoreObjectPosition(scorer)
     );
 
-    this.operatorController.reefL1().onTrue(
+    this.keyboard.reefL1().onTrue(
       new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L1))
     );
 
-    this.operatorController.reefL2().onTrue(
+    this.keyboard.reefL2().onTrue(
       new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L2))
     );
 
-    this.operatorController.reefL3().onTrue(
+    this.keyboard.reefL3().onTrue(
       new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L3))
     );
 
-    this.operatorController.reefL4().onTrue(
+    this.keyboard.reefL4().onTrue(
       new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L4))
     );
 
