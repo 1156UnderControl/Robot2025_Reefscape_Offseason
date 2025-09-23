@@ -109,7 +109,7 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
     }
 
     private void runCoralIntakeDetection(){
-        this.indexerHasCoral = !this.intakePivot.getLimitSwitch(true);
+        this.indexerHasCoral = this.intakePivot.getLimitSwitch(true);
     }
 
     @Override
