@@ -12,19 +12,14 @@ import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.path.PathConstraints;
 
-import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import frc.Java_Is_UnderControl.Control.PIDConfig;
 import frc.Java_Is_UnderControl.Logging.EnhancedLoggers.CustomBooleanLogger;
 import frc.Java_Is_UnderControl.Logging.EnhancedLoggers.CustomDoubleLogger;
@@ -56,10 +51,6 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
 
   private DriverController controller = DriverController.getInstance();
 
-  private Matrix<N3, N1> defaultVisionStandardDeviation;
-
-  private Matrix<N3, N1> defaultOdometryStandardDeviation;
-
   private TargetBranch targetBranch = TargetBranch.A;
 
   private double goToPoseTranslationDeadband = 0.03;
@@ -90,17 +81,11 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
 
   CustomStringLogger targetBranchLogger = new CustomStringLogger("SwerveSubsystem/Target Branch");
 
-  CustomBooleanLogger isUsingAngleCorrection = new CustomBooleanLogger("SwerveSubsystem/UsingAngleCorrection");
-
   CustomDoubleLogger targetVelocity = new CustomDoubleLogger("SwerveSubsystem/TargetVelocity");
 
   CustomDoubleLogger distanceToTargetBranchLog = new CustomDoubleLogger("SwerveSubsystem/DistanceToTargetBranch");
 
   CustomDoubleLogger distanceToTargetFaceLog = new CustomDoubleLogger("SwerveSubsystem/DistanceToTargetFace");
-
-  private PoseEstimatorState poseEstimatorState = PoseEstimatorState.GLOBAL_POSE_ESTIMATION;
-
-  private boolean forceReefPoseEstimation = false;
 
   private Rotation2d bestAngleForClimb = new Rotation2d();
 
@@ -140,8 +125,8 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
       SwerveDrivetrainConstants drivetrainConstants,
       SwerveModuleConstants<?, ?, ?>... modules) {
     super(new OdometryEnabledSwerveConfig(0.75, pathPlannerConfig,
-        configureMulticameraPoseEstimation(),
-        configureMulticameraPoseEstimation(),
+        new LimelightPoseEstimator("limelight-front", false, false, 2),
+        new LimelightPoseEstimator("limelight-front", false, false, 2),
         new PIDConfig(6, 0, 0),
         new MoveToPosePIDConfig(SwerveConstants.MOVE_TO_POSE_TRANSLATION_PID,
             SwerveConstants.MOVE_TO_POSE_Y_CONSTRAINTS)),
@@ -153,14 +138,6 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     this.configureGoToObjects();
     this.getPigeon2().setYaw(0);
     this.resetOdometry(new Pose2d());
-  }
-
-  private static PoseEstimator configureMulticameraPoseEstimation() {
-    List<PoseEstimator> listOfEstimators = new ArrayList<PoseEstimator>();
-    PoseEstimator limelightLeft = new LimelightPoseEstimator("limelight-front", false, false, 2);
-    listOfEstimators.add(limelightLeft);
-    PoseEstimator estimatorMultiCamera = new MultiCameraPoseEstimator(listOfEstimators, "Teleop Multi Pose Estimator");
-    return estimatorMultiCamera;
   }
 
   private void configureGoToObjects() {
@@ -209,7 +186,6 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
 
   @Override
   public void driveAlignAngleJoystick() {
-    forceReefPoseEstimation(false);
     if (elevatorAtHighPositionSupplier.get()) {
       driveAlignAngleJoystickSuperSlow();
       return;
@@ -236,15 +212,6 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     this.driveFieldOriented(desiredSpeeds);
   }
 
-  public Command goToPoseWithPathfind(Pose2d pose) {
-    return driveToPoseWithPathfinding(pose);
-  }
-
-  public Command goToPoseWithPathfind(Pose3d pose) {
-    this.state = "PATHFIND_TO_POSE";
-    return driveToPoseWithPathfinding(pose.toPose2d());
-  }
-
   public void setTargetBranch(TargetBranch targetBranch) {
     this.targetBranch = targetBranch;
   }
@@ -252,49 +219,11 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
   @Override
   public void periodic() {
     SmartDashboard.putBoolean("BACKUP NECESSARY", checkBackupNecessary());
-    selectPoseEstimator();
     super.periodic();
     updateLogs();
-    LimelightHelpers.SetRobotOrientation("limelight-left",
+    LimelightHelpers.SetRobotOrientation("limelight-front",
         OdometryEnabledSwerveSubsystem.robotOrientation,
         OdometryEnabledSwerveSubsystem.robotAngularVelocity, 0, 0, 0, 0);
-    LimelightHelpers.SetRobotOrientation("limelight-right",
-        OdometryEnabledSwerveSubsystem.robotOrientation,
-        OdometryEnabledSwerveSubsystem.robotAngularVelocity, 0, 0, 0, 0);
-  }
-
-  private void selectPoseEstimator() {
-    forcingReefPoseEstimatorLogger.append(forceReefPoseEstimation);
-    if (getPose().getTranslation()
-        .getDistance(AllianceFlipUtil
-            .apply(FieldConstants.Reef.center)) < SwerveConstants.DISTANCE_FROM_REEF_CENTER_TO_USE_REEF_POSE_ESTIMATION
-        && (state.contains("DRIVE_TO_BRANCH") || state.contains("STOP") || this.forceReefPoseEstimation)) {
-      poseEstimatorState = PoseEstimatorState.REEF_ESTIMATION;
-    } else {
-      poseEstimatorState = PoseEstimatorState.GLOBAL_POSE_ESTIMATION;
-    }
-    switch (poseEstimatorState) {
-      case GLOBAL_POSE_ESTIMATION:
-        LimelightHelpers.SetFiducialIDFiltersOverride("limelight-left", this.apriltagsIDs);
-        LimelightHelpers.SetFiducialIDFiltersOverride("limelight-right", this.apriltagsIDs);
-        overrideTeleOpPoseEstimator(null);
-        overrideAutonomousPoseEstimator(null);
-        break;
-      case REEF_ESTIMATION:
-        overrideTeleOpPoseEstimator(reefPoseEstimator);
-        overrideAutonomousPoseEstimator(reefPoseEstimator);
-        break;
-      default:
-        LimelightHelpers.SetFiducialIDFiltersOverride("limelight-left", this.apriltagsIDs);
-        LimelightHelpers.SetFiducialIDFiltersOverride("limelight-right", this.apriltagsIDs);
-        overrideTeleOpPoseEstimator(null);
-        overrideAutonomousPoseEstimator(null);
-        break;
-    }
-  }
-
-  public void forceReefPoseEstimation(boolean forceReefPoseEstimation) {
-    this.forceReefPoseEstimation = forceReefPoseEstimation;
   }
 
   protected void updateLogs() {
@@ -321,7 +250,6 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     this.distanceToTargetBranch = goToBranchFastSetpointDefiner.getDistanceToTargetBranch();
     this.targetVelocity.append(goToBranchFastSetpointDefiner.getFinalVelocity());
     this.distanceToTargetBranchLog.append(distanceToTargetBranch);
-    this.isUsingAngleCorrection.append(false);
     driveToPose(this.goToBranchFastSetpointDefiner.getFinalPose(),
         this.goToBranchFastSetpointDefiner.getFinalVelocity());
     this.state = this.goToBranchFastSetpointDefiner.getGoToState();
@@ -336,7 +264,6 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     this.targetVelocity.append(goToBranchTeleoperatedSetpointDefiner.getFinalVelocity());
     this.distanceToTargetBranchLog.append(distanceToTargetBranch);
     if (this.goToBranchTeleoperatedSetpointDefiner.getDistanceToTargetBranch() < 3.5) {
-      this.isUsingAngleCorrection.append(false);
       driveToPose(this.goToBranchTeleoperatedSetpointDefiner.getFinalPose(),
           this.goToBranchTeleoperatedSetpointDefiner.getFinalVelocity());
       this.state = this.goToBranchTeleoperatedSetpointDefiner.getGoToState();
@@ -354,7 +281,6 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     this.distanceToTargetFace = goToFaceTeleoperatedSetpointDefiner.getDistanceToTargetFace();
     this.targetVelocity.append(goToFaceTeleoperatedSetpointDefiner.getFinalVelocity());
     this.distanceToTargetFaceLog.append(distanceToTargetFace);
-    this.isUsingAngleCorrection.append(false);
     driveToPose(this.goToFaceTeleoperatedSetpointDefiner.getFinalPose(),
         this.goToFaceTeleoperatedSetpointDefiner.getFinalVelocity());
     this.targetFacePose = this.goToFaceTeleoperatedSetpointDefiner.getFinalPose();
@@ -370,7 +296,6 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     this.distanceToTargetFace = goToFaceAutonomousSetpointDefiner.getDistanceToTargetFace();
     this.targetVelocity.append(goToFaceAutonomousSetpointDefiner.getFinalVelocity());
     this.distanceToTargetFaceLog.append(distanceToTargetFace);
-    this.isUsingAngleCorrection.append(false);
     driveToPose(this.goToFaceAutonomousSetpointDefiner.getFinalPose(),
         this.goToFaceAutonomousSetpointDefiner.getFinalVelocity());
     this.targetFacePose = this.goToFaceAutonomousSetpointDefiner.getFinalPose();
@@ -386,7 +311,6 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     this.distanceToTargetFace = goToFaceTeleoperatedSetpointDefiner.getDistanceToTargetFace();
     this.targetVelocity.append(goToFaceTeleoperatedSetpointDefiner.getFinalVelocity());
     this.distanceToTargetFaceLog.append(distanceToTargetFace);
-    this.isUsingAngleCorrection.append(false);
     driveToPose(this.goToFaceTeleoperatedSetpointDefiner.getFinalPose(),
         this.goToFaceTeleoperatedSetpointDefiner.getFinalVelocity());
     this.targetFacePose = this.goToFaceTeleoperatedSetpointDefiner.getFinalPose();
