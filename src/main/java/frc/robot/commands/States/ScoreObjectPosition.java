@@ -1,5 +1,6 @@
 package frc.robot.commands.States;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.Scorer.MoveScorerToPrepareScore;
@@ -21,8 +22,8 @@ ScoreObjectPosition (ScorerSubsystem scorer){
     addCommands(
         new MoveScorerToPrepareScore(scorer),
                 Commands.waitUntil(driverController.y()),
-                new MoveScorerToScorePosition(scorer)
-                .until(driverController.b()),
+                new MoveScorerToScorePosition(scorer),
+                Commands.waitUntil(driverController.b()),
                 new StopEndEffector(scorer));
         
     }
