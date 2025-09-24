@@ -89,9 +89,15 @@ public class RobotContainer {
       new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L4))
     );
     
-    this.driverController.y().whileTrue(
-      new IntakeExpellCoral(intake)
-    );
+   // this.driverController.y().whileTrue(
+    //  new IntakeExpellCoral(intake)
+   // );
+    
+
+    this.driverController.y().onTrue(
+      new InstantCommand(() -> this.scorer.forcedcollectCoralFromIndexer()));
+    
+
 
     //driverController.x().and(() -> DriverStation.isDisabled()).whileTrue(Commands
     //    .runEnd(() -> new CoastState(scorer, intake), () -> new BrakeState(scorer, intake)).ignoringDisable(true));

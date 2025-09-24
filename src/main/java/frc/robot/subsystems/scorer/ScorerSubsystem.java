@@ -79,6 +79,8 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
 
     private Timer collectTimer;
 
+    private boolean clickbutton;
+
     private boolean goingToTargetPivotPosition;
 
     public static ScorerSubsystem getInstance() {
@@ -196,6 +198,21 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     @Override
     public void collectCoralFromIndexer(){
         if(!this.hasCoral && !hasAlgae){
+            this.transitionModeEnabled = true;
+            this.scorerState = "Collecting_Coral_From_Indexer";
+            this.setEndEffectorDutyCycle(EndEffectorConstants.tunning_values_endeffector.setpoints.DUTY_CYCLE_INTAKE_CORAL);
+            if(this.endEffectorMotor.getVelocity() > 2000){
+                moveElevatorToCollectCoral();
+                if(this.isElevatorAtTargetPosition()){
+                    this.collectTimer.start();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void forcedcollectCoralFromIndexer(){
+        if(clickbutton = true){
             this.transitionModeEnabled = true;
             this.scorerState = "Collecting_Coral_From_Indexer";
             this.setEndEffectorDutyCycle(EndEffectorConstants.tunning_values_endeffector.setpoints.DUTY_CYCLE_INTAKE_CORAL);
