@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
 import frc.robot.constants.FieldConstants.ReefLevel;
+import frc.robot.commands.Intake.IntakeExpellCoral;
 import frc.robot.commands.Scorer.MoveScorerToPrepareScore;
 import frc.robot.commands.Scorer.UpdatePivotInternalEncoder;
 import frc.robot.commands.States.CollectCoralPosition;
@@ -81,6 +82,10 @@ public class RobotContainer {
 
     this.keyboard.reefL4().onTrue(
       new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L4))
+    );
+    
+    this.driverController.y().whileTrue(
+      new IntakeExpellCoral(intake)
     );
 
     //driverController.x().and(() -> DriverStation.isDisabled()).whileTrue(Commands
