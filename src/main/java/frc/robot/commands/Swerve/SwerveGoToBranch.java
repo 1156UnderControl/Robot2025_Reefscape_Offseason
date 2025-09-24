@@ -15,10 +15,9 @@ public class SwerveGoToBranch extends Command {
   boolean isGoingToNonBackupPosition;
   boolean goDirect;
 
-  public SwerveGoToBranch(SwerveSubsystem swerve, ScorerIO superStructure, TargetBranch branch) {
+  public SwerveGoToBranch(SwerveSubsystem swerve, TargetBranch branch) {
     this.swerve = swerve;
     this.targetBranch = branch;
-    this.superStructure = superStructure;
     addRequirements(swerve);
   }
 
