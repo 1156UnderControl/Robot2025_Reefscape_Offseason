@@ -14,8 +14,10 @@ import frc.robot.commands.Scorer.MoveScorerToPrepareScore;
 import frc.robot.commands.Scorer.UpdatePivotInternalEncoder;
 import frc.robot.commands.States.CollectCoralPosition;
 import frc.robot.commands.States.DefaultPosition;
+import frc.robot.commands.States.PreparedToIntakeCageState;
 import frc.robot.commands.States.ScoreObjectPosition;
 import frc.robot.commands.States.BrakeState;
+import frc.robot.commands.States.ClimbState;
 import frc.robot.commands.States.CoastState;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.OperatorController;
@@ -24,6 +26,7 @@ import frc.robot.subsystems.Intake.IntakeSubsystem;
 import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.scorer.ScorerSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
+import frc.robot.commands.States.PreparedToIntakeCageState;
 
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -90,6 +93,12 @@ public class RobotContainer {
     //    .runEnd(() -> new CoastState(scorer, intake), () -> new BrakeState(scorer, intake)).ignoringDisable(true));
 
     //driverController.y().and(() -> DriverStation.isDisabled()).whileTrue(new UpdatePivotInternalEncoder(scorer).ignoringDisable(true));
+    this.driverController.y().onTrue(
+      new PreparedToIntakeCageState(climber) );
+      
+      this.driverController.b().onTrue(
+        new ClimbState(climber)
+      );
   }
   
   public Command getAutonomousCommand() {

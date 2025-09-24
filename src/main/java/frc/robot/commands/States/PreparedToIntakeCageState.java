@@ -5,11 +5,14 @@ import frc.robot.subsystems.climber.ClimberSubsystem;
 
 public class PreparedToIntakeCageState extends Command {
     private ClimberSubsystem climber;
-
-@Override
-public void initialize(){
+    
+public PreparedToIntakeCageState (ClimberSubsystem climber){
     this.climber = ClimberSubsystem.getInstance();
     this.addRequirements(this.climber);
+}
+@Override
+public void initialize(){
+    
     this.climber.unlockClimber();
 }
 
@@ -18,10 +21,7 @@ public void execute(){
     this.climber.intakeCagePosition();
     if(this.climber.isPreparedToIntake()){
     this.climber.stopClimber();
-    }
+    } 
  }
-
-
-
 
 }
