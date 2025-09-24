@@ -113,6 +113,11 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
     }
 
     @Override
+    public void setIndexerHasCoral(){
+        indexerHasCoral = true;
+    }
+
+    @Override
     public void periodic(){
         this.runCoralIntakeDetection();
         this.updateLogs();

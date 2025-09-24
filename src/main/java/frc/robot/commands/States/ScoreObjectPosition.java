@@ -18,11 +18,12 @@ public
 ScoreObjectPosition (ScorerSubsystem scorer){ 
     this.scorer = scorer; 
     this.driverController = DriverController.getInstance();
+    this.operatorController = operatorController.getInstance();
     addCommands(
         new MoveScorerToPrepareScore(scorer),
-                Commands.waitUntil(driverController.y()),
+                Commands.waitUntil(operatorController.scoreObject()),
                 new MoveScorerToScorePosition(scorer)
-                .until(driverController.b()),
+                .until(operatorController.cancelAction()),
                 new StopEndEffector(scorer));
         
     }

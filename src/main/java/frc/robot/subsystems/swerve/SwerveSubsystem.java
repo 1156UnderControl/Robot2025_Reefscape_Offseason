@@ -74,7 +74,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
 
   int[] apriltagsIDs = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22 };
 
-  private ReefPoseEstimatorWithLimelight reefPoseEstimator = new ReefPoseEstimatorWithLimelight("limelight-left",
+  private ReefPoseEstimatorWithLimelight reefPoseEstimator = new ReefPoseEstimatorWithLimelight("limelight-ggg",
       "limelight-right", () -> getTargetBranch());
 
   CustomStringLogger swerveStateLogger = new CustomStringLogger("SwerveSubsystem/State");
@@ -192,7 +192,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
   }
 
   public void resetOdometryLimelight(Translation2d defaultPosition) {
-    PoseEstimator limelightLeft = new LimelightPoseEstimator("limelight-left", false, false, 2);
+    PoseEstimator limelightLeft = new LimelightPoseEstimator("limelight-ggg", false, false, 2);
     Optional<PoseEstimation> limelightPoseEstimation = limelightLeft.getEstimatedPose(this.getPose());
     if (limelightPoseEstimation.isEmpty()) {
       resetTranslation(defaultPosition);
@@ -255,7 +255,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     selectPoseEstimator();
     super.periodic();
     updateLogs();
-    LimelightHelpers.SetRobotOrientation("limelight-left",
+    LimelightHelpers.SetRobotOrientation("limelight-ggg",
         OdometryEnabledSwerveSubsystem.robotOrientation,
         OdometryEnabledSwerveSubsystem.robotAngularVelocity, 0, 0, 0, 0);
     LimelightHelpers.SetRobotOrientation("limelight-right",
@@ -275,7 +275,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     }
     switch (poseEstimatorState) {
       case GLOBAL_POSE_ESTIMATION:
-        LimelightHelpers.SetFiducialIDFiltersOverride("limelight-left", this.apriltagsIDs);
+        LimelightHelpers.SetFiducialIDFiltersOverride("limelight-ggg", this.apriltagsIDs);
         LimelightHelpers.SetFiducialIDFiltersOverride("limelight-right", this.apriltagsIDs);
         overrideTeleOpPoseEstimator(null);
         overrideAutonomousPoseEstimator(null);
@@ -285,7 +285,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
         overrideAutonomousPoseEstimator(reefPoseEstimator);
         break;
       default:
-        LimelightHelpers.SetFiducialIDFiltersOverride("limelight-left", this.apriltagsIDs);
+        LimelightHelpers.SetFiducialIDFiltersOverride("limelight-ggg", this.apriltagsIDs);
         LimelightHelpers.SetFiducialIDFiltersOverride("limelight-right", this.apriltagsIDs);
         overrideTeleOpPoseEstimator(null);
         overrideAutonomousPoseEstimator(null);

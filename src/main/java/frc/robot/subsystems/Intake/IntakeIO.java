@@ -13,6 +13,8 @@ public interface IntakeIO {
 
     void collectCoral();
 
+    void setIndexerHasCoral();
+
     void stopIntaking();
 
     void expellCoral();

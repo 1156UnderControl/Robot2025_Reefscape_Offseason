@@ -59,13 +59,21 @@ public class RobotContainer {
 
   private void configureButtonBindings() {
     
-    this.driverController.a().onTrue(
-      new CollectCoralPosition(intake, scorer)
+    this.driverController.x().onTrue(
+      new CollectCoralPosition(intake, scorer, keyboard)
+    );
+
+    this.driverController.b().onTrue(
+      Commands.runOnce(() -> this.intake.stopIntaking(), intake)
     );
   
 
-    this.keyboard.scoreObject().and(() -> scorer.hasObject()).onTrue(
+    this.keyboard.prepareToScore().and(() -> scorer.hasObject()).onTrue(
       new ScoreObjectPosition(scorer)
+    );
+
+    this.keyboard.collectCoral().onTrue(
+      Commands.runOnce(() -> this.intake.setIndexerHasCoral(), intake)
     );
 
     this.keyboard.reefL1().onTrue(

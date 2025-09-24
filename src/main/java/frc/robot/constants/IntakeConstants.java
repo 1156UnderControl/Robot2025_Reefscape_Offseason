@@ -19,7 +19,7 @@ public class IntakeConstants {
       public static final double INTAKE_SPEED = 1;
       public static final double EXPELL_SPEED = -1;
       public static final double STOP_SPEED = 0;
-      public static final double INDEXER_SPEED = 0.7;
+      public static final double INDEXER_SPEED = 0.6;
       public static final double ANGLE_ERROR_ALLOWED = 1;
       
       public class PID {
