@@ -72,9 +72,6 @@ public class RobotContainer {
       new ScoreObjectPosition(scorer)
     );
 
-    this.keyboard.collectCoral().onTrue(
-      Commands.runOnce(() -> this.intake.setIndexerHasCoral(), intake)
-    );
 
     this.keyboard.reefL1().onTrue(
       new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L1))

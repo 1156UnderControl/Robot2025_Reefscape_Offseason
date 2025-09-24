@@ -112,10 +112,6 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
         this.indexerHasCoral = this.intakePivot.getLimitSwitch(true);
     }
 
-    @Override
-    public void setIndexerHasCoral(){
-        indexerHasCoral = true;
-    }
 
     @Override
     public void periodic(){
