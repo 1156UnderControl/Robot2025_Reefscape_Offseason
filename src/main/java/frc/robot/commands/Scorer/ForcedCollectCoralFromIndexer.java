@@ -19,7 +19,7 @@ public class ForcedCollectCoralFromIndexer extends Command{
 
     @Override
     public void execute(){
-        this.scorer.forcedcollectCoralFromIndexer();
+        this.scorer.forcedcollectCoralFromIndexer(true);
     }
 
     @Override

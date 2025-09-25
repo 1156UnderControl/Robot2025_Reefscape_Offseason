@@ -37,7 +37,7 @@ public interface ScorerIO {
 
     void collectCoralFromIndexer();
 
-    void forcedcollectCoralFromIndexer();
+    void forcedcollectCoralFromIndexer(boolean forced);
 
     boolean runEndEffectorObjectDetection();
 

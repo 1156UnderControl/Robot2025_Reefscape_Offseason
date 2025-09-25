@@ -60,6 +60,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
 
     private boolean manualScoreCoral;
     private boolean manualScoreAlgae;
+    private boolean forced = true;
 
     private boolean pivotSafeMeasuresEnabled;
     
@@ -82,6 +83,8 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     private boolean clickbutton;
 
     private boolean goingToTargetPivotPosition;
+
+   private boolean isSensorAtLessMode = true;
 
     public static ScorerSubsystem getInstance() {
         if (instance == null) {
@@ -211,19 +214,18 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     }
 
     @Override
-    public void forcedcollectCoralFromIndexer(){
-        if(clickbutton = true){
+    public void forcedcollectCoralFromIndexer(boolean forced){
             this.transitionModeEnabled = true;
             this.scorerState = "Collecting_Coral_From_Indexer";
             this.setEndEffectorDutyCycle(EndEffectorConstants.tunning_values_endeffector.setpoints.DUTY_CYCLE_INTAKE_CORAL);
-            if(this.endEffectorMotor.getVelocity() > 2000){
-                moveElevatorToCollectCoral();
-                if(this.isElevatorAtTargetPosition()){
+             if (forced || isSensorAtLessMode)
+              moveElevatorToCollectCoral();
+            if (this.isElevatorAtTargetPosition()){
                     this.collectTimer.start();
                 }
             }
-        }
-    }
+        
+    
 
     @Override
     public boolean isScorerAtTargetPosition(){
@@ -574,4 +576,6 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         goalPivotPosition = targetPivotPosition;
         this.pivotMotor.setPositionReference(targetPivotPosition);
     }
+
+    
 }
