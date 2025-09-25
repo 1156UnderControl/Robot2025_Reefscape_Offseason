@@ -97,8 +97,8 @@ public class RobotContainer {
       new PreparedToIntakeCageState(climber) );
       
       this.driverController.b().onTrue(
-        new ClimbState(climber)
-      );
+        new InstantCommand(() -> this.climber.climb()));
+      
   }
   
   public Command getAutonomousCommand() {
