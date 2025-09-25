@@ -155,12 +155,12 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
         AutoAlignConstants.PoseDeadBand.Fast.MIN_ERROR_AUTO_ALIGN_FAST,
         AutoAlignConstants.PoseDeadBand.Fast.MAX_ERROR_AUTO_ALIGN_FAST, "FAST",
         AutoAlignConstants.VelocitiesRelatedToDistance.Fast.MIN_VELOCITY_POSITION,
-        AutoAlignConstants.VelocitiesRelatedToDistance.Fast.MAX_VELOCITY_POSITION);
+        AutoAlignConstants.VelocitiesRelatedToDistance.Fast.MAX_VELOCITY_POSITION, true);
     this.goToBranchConfigurationTeleoperated = new GoToBranchConfiguration(
         AutoAlignConstants.PoseDeadBand.Teleoperated.MIN_ERROR_AUTO_ALIGN_TELEOPERATED,
         AutoAlignConstants.PoseDeadBand.Teleoperated.MAX_ERROR_AUTO_ALIGN_TELEOPERATED, "TELEOPERATED",
         AutoAlignConstants.VelocitiesRelatedToDistance.Teleoperated.MIN_VELOCITY_POSITION,
-        AutoAlignConstants.VelocitiesRelatedToDistance.Teleoperated.MAX_VELOCITY_POSITION);
+        AutoAlignConstants.VelocitiesRelatedToDistance.Teleoperated.MAX_VELOCITY_POSITION, true);
 
     this.goToFaceTeleoperatedSetpointDefiner = new GoToFace(removeAlgaeFromBranchTeleoperatedConfiguration);
     this.goToFaceAutonomousSetpointDefiner = new GoToFace(removeAlgaeFromBranchTeleoperatedConfiguration);

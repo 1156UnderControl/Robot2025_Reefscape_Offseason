@@ -6,15 +6,17 @@ public class GoToBranchConfiguration {
   public double maxErrorPose;
   public double maxVelocity;
   public double minVelocity;
+  public boolean invertRotation;
   public String goToBranchMode;
 
   public GoToBranchConfiguration(double minErrorPose,
       double maxErrorPose, String goToBranchMode,
-      double minVelocity, double maxVelocity) {
+      double minVelocity, double maxVelocity, boolean invertRotation) {
     this.minErrorPose = minErrorPose;
     this.maxErrorPose = maxErrorPose;
     this.goToBranchMode = goToBranchMode;
     this.minVelocity = minVelocity;
     this.maxVelocity = maxVelocity;
+    this.invertRotation = invertRotation;
   }
 }

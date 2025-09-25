@@ -4,6 +4,7 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.Java_Is_UnderControl.Util.CoordinatesTransform;
 import frc.Java_Is_UnderControl.Util.GeomUtil;
 import frc.robot.constants.FieldConstants.Algae.AlgaeHeightReef;
@@ -113,10 +114,13 @@ public class GoToBranch {
   }
 
   public Pose2d getFinalPose() {
+    if(this.configuration.invertRotation){
+      return new Pose2d(this.finalTargetPose.getX(), this.finalTargetPose.getY(), this.finalTargetPose.getRotation().rotateBy(Rotation2d.k180deg));
+    }
     return this.finalTargetPose;
   }
 
-  public double getFinalVelocity() {
+  public double getFinalVelocity() {  
     return this.finalVelocity;
   }
 
