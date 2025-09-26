@@ -164,6 +164,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         SmartDashboard.putNumber("CollectTimer", this.getCollectTimer());
     }
 
+
     @Override
     public boolean hasCoral() {
         return this.hasCoral;

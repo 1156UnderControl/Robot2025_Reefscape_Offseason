@@ -1,7 +1,6 @@
 package frc.robot.commands.Scorer;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.joysticks.OperatorController;
 import frc.robot.subsystems.scorer.ScorerSubsystem;
 
 public class MoveScorerToPrepareScore extends Command{
@@ -27,6 +26,6 @@ public class MoveScorerToPrepareScore extends Command{
 
     @Override
     public boolean isFinished() {
-        return this.scorer.isElevatorAtTargetPosition() && this.scorer.isPivotAtTargetPosition();
+        return false;
     }
 }
