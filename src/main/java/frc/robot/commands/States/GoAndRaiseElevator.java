@@ -13,8 +13,8 @@ public class GoAndRaiseElevator extends SequentialCommandGroup {
   public GoAndRaiseElevator(SwerveSubsystem swerve, ScorerSubsystem scorer, TargetBranch branch) {
     addCommands(
       new SwerveGoToBackupIfNecessary(swerve, branch),
-      new MoveScorerToPrepareScore(scorer)
-        .alongWith(new SwerveGoToBranch(swerve, branch))
+      new MoveScorerToPrepareScore(scorer),
+      new SwerveGoToBranch(swerve, branch)
       );
   }
 }
