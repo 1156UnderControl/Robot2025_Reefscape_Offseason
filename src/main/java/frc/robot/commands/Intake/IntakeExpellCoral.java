@@ -14,7 +14,6 @@ public class IntakeExpellCoral extends Command{
 
   @Override
   public void execute() {
-    
     this.intake.expellCoral();
   }
 

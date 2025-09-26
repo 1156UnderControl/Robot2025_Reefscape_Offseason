@@ -75,6 +75,10 @@ public class RobotContainer {
       new OverrideCoralMode(intake, true)
     );
 
+    this.driverController.y().onTrue(
+      new IntakeExpellCoral(intake)
+    );
+
     this.keyboard.prepareToScore().and(() -> scorer.hasObject()).onTrue(
       new ScoreObjectPosition(scorer)
     );
