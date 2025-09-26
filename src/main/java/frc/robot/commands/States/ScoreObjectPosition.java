@@ -14,9 +14,9 @@ public class ScoreObjectPosition extends SequentialCommandGroup {
     OperatorController operatorController;
     ScorerSubsystem scorer;
 
-public 
-ScoreObjectPosition (ScorerSubsystem scorer){ 
-    this.scorer = scorer; 
+    public 
+    ScoreObjectPosition (ScorerSubsystem scorer){ 
+    this.scorer = scorer;
     this.driverController = DriverController.getInstance();
     this.operatorController = operatorController.getInstance();
     addCommands(

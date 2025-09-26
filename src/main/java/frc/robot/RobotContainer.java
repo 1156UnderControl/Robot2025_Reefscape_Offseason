@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
 import frc.robot.constants.FieldConstants.ReefLevel;
 import frc.robot.commands.Intake.IntakeExpellCoral;
+import frc.robot.commands.Intake.MoveIntakeToCollectPosition;
+import frc.robot.commands.Intake.MoveIntakeToHomedPosition;
 import frc.robot.commands.Scorer.MoveScorerToPrepareScore;
 import frc.robot.commands.Scorer.UpdatePivotInternalEncoder;
 import frc.robot.commands.States.CollectCoralPosition;
@@ -52,7 +54,7 @@ public class RobotContainer {
     this.scorer.setIntakeUpSupplier(this.intake.getIntakeUpSupplier());
     this.swerve.setDefaultCommand(Commands.run(() -> swerve.driveAlignAngleJoystick(), this.swerve));
     this.scorer.setDefaultCommand(new DefaultPosition(intake, scorer));
-    //this.intake.setDefaultCommand(Commands.run(() -> this.intake.goToIntakePosition(), this.intake));
+    this.intake.setDefaultCommand(Commands.run(() -> this.intake.goToIntakePosition(), this.intake));
     this.configureButtonBindings();
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
   }
@@ -60,13 +62,13 @@ public class RobotContainer {
   private void configureButtonBindings() {
     
     this.driverController.x().onTrue(
-      new CollectCoralPosition(intake, scorer, keyboard)
+      new CollectCoralPosition(intake, scorer)
     );
 
     this.driverController.b().onTrue(
       Commands.runOnce(() -> this.intake.stopIntaking(), intake)
-    );
-  
+    );  
+
 
     this.keyboard.prepareToScore().and(() -> scorer.hasObject()).onTrue(
       new ScoreObjectPosition(scorer)
@@ -89,9 +91,7 @@ public class RobotContainer {
       new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L4))
     );
     
-    this.driverController.y().whileTrue(
-      new IntakeExpellCoral(intake)
-    );
+ 
 
     //driverController.x().and(() -> DriverStation.isDisabled()).whileTrue(Commands
     //    .runEnd(() -> new CoastState(scorer, intake), () -> new BrakeState(scorer, intake)).ignoringDisable(true));

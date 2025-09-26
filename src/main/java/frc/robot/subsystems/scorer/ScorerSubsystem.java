@@ -61,6 +61,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     private boolean manualScoreCoral;
     private boolean manualScoreAlgae;
 
+
     private boolean pivotSafeMeasuresEnabled;
     
     private StabilizeChecker stablePosition = new StabilizeChecker(0.2);
@@ -110,6 +111,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         this.hasAlgae = false;
         this.coralHeightReef = ReefLevel.L1;
         this.scorerState = "Idle";
+
 
         this.goalElevatorPosition = 0;
         this.goalPivotPosition = 0;
