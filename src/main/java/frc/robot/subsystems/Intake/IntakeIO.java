@@ -31,4 +31,8 @@ public interface IntakeIO {
     void setCoastMode();
 
     void setBrakeMode();
+
+    void setOverrideCoralModeActive(boolean isActive);
+
+    boolean getOverrideCoralModeActive();
 }
