@@ -66,7 +66,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
   int[] apriltagsIDs = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22 };
 
   private ReefPoseEstimatorWithLimelight reefPoseEstimator = new ReefPoseEstimatorWithLimelight("limelight-ggg",
-      "limelight-ggg", () -> getTargetBranch());
+      "limelight-right", () -> getTargetBranch());
 
   CustomStringLogger swerveStateLogger = new CustomStringLogger("SwerveSubsystem/State");
 
@@ -125,7 +125,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
       SwerveDrivetrainConstants drivetrainConstants,
       SwerveModuleConstants<?, ?, ?>... modules) {
     super(new OdometryEnabledSwerveConfig(0.75, pathPlannerConfig,
-        new LimelightPoseEstimator("limelight-ggg", false, false, 2),
+        new LimelightPoseEstimator("limelight-right", false, false, 2),
         new LimelightPoseEstimator("limelight-ggg", false, false, 2),
         new PIDConfig(6, 0, 0),
         new MoveToPosePIDConfig(SwerveConstants.MOVE_TO_POSE_TRANSLATION_PID,
