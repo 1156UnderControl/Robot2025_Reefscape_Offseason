@@ -22,7 +22,6 @@ public class CollectCoralFromIndexer extends Command{
 
     @Override
     public void execute(){
-        if(!this.intake.indexerHasCoral())
         this.scorer.collectCoralFromIndexer();
     }
 
