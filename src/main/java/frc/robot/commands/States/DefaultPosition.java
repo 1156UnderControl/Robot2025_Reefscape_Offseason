@@ -13,7 +13,7 @@ public class DefaultPosition extends SequentialCommandGroup{
   public DefaultPosition(IntakeSubsystem intake, ScorerSubsystem scorer) {
     addCommands(
       new MoveScorerToDefaultPosition(scorer),
-      //new MoveIntakeToHomedPosition(intake),
+      new MoveIntakeToHomedPosition(intake),
       Commands.idle(intake, scorer));
   }
 }

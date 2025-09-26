@@ -16,7 +16,7 @@ public class MoveIntakeToCollectPosition extends Command {
 
   @Override
   public void execute() {
-    //this.intake.goToIntakePosition();
+    this.intake.goToIntakePosition();
     this.intake.collectCoral();
   }
 

@@ -25,6 +25,8 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
 
     private boolean indexerHasCoral;
 
+    private boolean isOverrideCoralModeActive;
+
     public static IntakeSubsystem getInstance() {
         if (instance == null) {
           instance = new IntakeSubsystem();
@@ -42,6 +44,7 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
         this.indexerInputs = new MotorIOInputsAutoLogged();
         this.intakeInputs = new IntakeIOInputsAutoLogged();
         this.indexerHasCoral = false;
+        this.isOverrideCoralModeActive = false;
 
         this.setConfigsIntakePivot();
     }
@@ -109,9 +112,13 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
     }
 
     private void runCoralIntakeDetection(){
+        if(this.isOverrideCoralModeActive){
+            this.indexerHasCoral = true;
+            return;
+        } 
+
         this.indexerHasCoral = this.intakePivot.getLimitSwitch(true);
     }
-
 
     @Override
     public void periodic(){
@@ -149,8 +156,13 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
         this.intakeWheels.burnFlash();
     }
 
-    private void goToTargetPosition(double targetPosition){
-        double securedTargetPosition = Math.clamp(targetPosition, IntakeConstants.tunning_values_intake.setpoints.MIN_ANGLE, IntakeConstants.tunning_values_intake.setpoints.MAX_ANGLE);
-        this.intakePivot.setPositionReference(securedTargetPosition);
+    @Override
+    public void setOverrideCoralModeActive(boolean isActive){
+        this.isOverrideCoralModeActive = isActive;
+    }
+
+    @Override
+    public boolean getOverrideCoralModeActive(){
+        return this.isOverrideCoralModeActive;
     }
 }

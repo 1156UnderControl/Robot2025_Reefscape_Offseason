@@ -26,6 +26,6 @@ public class MoveScorerToPrepareScore extends Command{
 
     @Override
     public boolean isFinished() {
-        return this.scorer.isElevatorAtTargetPosition() && this.scorer.isPivotAtTargetPosition();
+        return false;
     }
 }

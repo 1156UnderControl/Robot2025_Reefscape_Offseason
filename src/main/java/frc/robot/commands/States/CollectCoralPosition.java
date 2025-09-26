@@ -13,12 +13,16 @@ import frc.robot.subsystems.scorer.ScorerSubsystem;
 
 public class CollectCoralPosition extends SequentialCommandGroup {
 
-  OperatorController operatorController;
+  ScorerSubsystem scorer;
+  IntakeSubsystem intake;
 
-  public CollectCoralPosition(IntakeSubsystem intake, ScorerSubsystem scorer, OperatorController operatorController) {
+
+  public CollectCoralPosition(IntakeSubsystem intake, ScorerSubsystem scorer) {
+    this.scorer = scorer;
+    this.intake = intake;
 
     addCommands(
       new MoveIntakeToCollectPosition(intake),
-      new CollectCoralFromIndexer(scorer));
+      new CollectCoralFromIndexer(scorer, intake));
   }
 }
