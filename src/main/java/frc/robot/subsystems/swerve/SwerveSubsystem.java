@@ -65,7 +65,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
 
   int[] apriltagsIDs = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22 };
 
-  private ReefPoseEstimatorWithLimelight reefPoseEstimator = new ReefPoseEstimatorWithLimelight("limelight-left",
+  private ReefPoseEstimatorWithLimelight reefPoseEstimator = new ReefPoseEstimatorWithLimelight("limelight-ggg",
       "limelight-right", () -> getTargetBranch());
 
   CustomStringLogger swerveStateLogger = new CustomStringLogger("SwerveSubsystem/State");
@@ -125,8 +125,8 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
       SwerveDrivetrainConstants drivetrainConstants,
       SwerveModuleConstants<?, ?, ?>... modules) {
     super(new OdometryEnabledSwerveConfig(0.75, pathPlannerConfig,
-        new LimelightPoseEstimator("limelight-front", false, false, 2),
-        new LimelightPoseEstimator("limelight-front", false, false, 2),
+        new LimelightPoseEstimator("limelight-right", false, false, 2),
+        new LimelightPoseEstimator("limelight-ggg", false, false, 2),
         new PIDConfig(6, 0, 0),
         new MoveToPosePIDConfig(SwerveConstants.MOVE_TO_POSE_TRANSLATION_PID,
             SwerveConstants.MOVE_TO_POSE_Y_CONSTRAINTS)),
@@ -169,7 +169,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
   }
 
   public void resetOdometryLimelight(Translation2d defaultPosition) {
-    PoseEstimator limelightLeft = new LimelightPoseEstimator("limelight-left", false, false, 2);
+    PoseEstimator limelightLeft = new LimelightPoseEstimator("limelight-ggg", false, false, 2);
     Optional<PoseEstimation> limelightPoseEstimation = limelightLeft.getEstimatedPose(this.getPose());
     if (limelightPoseEstimation.isEmpty()) {
       resetTranslation(defaultPosition);
@@ -221,7 +221,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     SmartDashboard.putBoolean("BACKUP NECESSARY", checkBackupNecessary());
     super.periodic();
     updateLogs();
-    LimelightHelpers.SetRobotOrientation("limelight-front",
+    LimelightHelpers.SetRobotOrientation("limelight-ggg",
         OdometryEnabledSwerveSubsystem.robotOrientation,
         OdometryEnabledSwerveSubsystem.robotAngularVelocity, 0, 0, 0, 0);
   }
