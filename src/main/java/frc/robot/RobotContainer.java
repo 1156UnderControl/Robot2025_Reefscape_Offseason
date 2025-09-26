@@ -94,7 +94,7 @@ public class RobotContainer {
    // );
     
 
-    this.driverController.y().onTrue(
+    this.driverController.a().onTrue(
       new InstantCommand(() -> this.scorer.forcedcollectCoralFromIndexer(true)));
     
 
