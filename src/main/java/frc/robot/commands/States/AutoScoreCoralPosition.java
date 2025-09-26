@@ -25,24 +25,24 @@ public class AutoScoreCoralPosition extends SequentialCommandGroup {
   public AutoScoreCoralPosition(ScorerSubsystem scorer, SwerveSubsystem swerve, TargetBranch branch) {
     addCommands(
       new InstantCommand(() -> {
-      hasCancelledAutoMove = false;
-      driverHasCancelledAutoMove = false;
+        hasCancelledAutoMove = false;
+        driverHasCancelledAutoMove = false;
       }),
       new GoAndRaiseElevator(swerve, scorer, branch)
-                            .until(
-                            new Trigger(() -> {
-                              if (driverController.isForcingDriverControl().getAsBoolean()) {
-                                driverHasCancelledAutoMove = true;
-                              }
-                              return driverHasCancelledAutoMove;
-                            })
-                            .or(() -> {
-                                if (operatorKeyboard.scoreObject().getAsBoolean()) {
-                                  hasCancelledAutoMove = true;
-                                }
-                                return hasCancelledAutoMove;
-                              })
-                          ),
+        .until(
+          new Trigger(() -> {
+            if (driverController.isForcingDriverControl().getAsBoolean()) {
+              driverHasCancelledAutoMove = true;
+            }
+            return driverHasCancelledAutoMove;
+          })
+          .or(() -> {
+            if (operatorKeyboard.scoreObject().getAsBoolean()) {
+              hasCancelledAutoMove = true;
+            }
+            return hasCancelledAutoMove;
+            })
+        ),
       new ParallelRaceGroup(new MoveScorerToPrepareScore(scorer)
                             .until(operatorKeyboard.scoreObject()
                                   .or(() -> (swerve.isAtTargetPositionWithoutHeading() && scorer.isScorerAtTargetPosition())
@@ -52,7 +52,7 @@ public class AutoScoreCoralPosition extends SequentialCommandGroup {
       new MoveScorerToScorePosition(scorer),
       Commands.waitTime(Seconds.of(0.3)),
       Commands.idle(scorer).alongWith(Commands.run(() -> swerve.driveAlignAngleJoystick(), swerve))
-                                      .until(operatorKeyboard.removeAlgaeFromBranch())
+        .until(operatorKeyboard.removeAlgaeFromBranch())
     );
   }
 }
