@@ -381,11 +381,6 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     }
 
     @Override
-    public Supplier<Boolean> getReefScoringModeSupplier() {
-        return () -> this.elevatorLead.getPosition() > ElevatorConstants.tunning_values_elevator.POSITION_FOR_REDUCING_SWERVE_SPEED;
-    }
-
-    @Override
     public Supplier<ReefLevel> getTargetCoralReefLevelSupplier() {
         return () -> this.coralHeightReef;
     }

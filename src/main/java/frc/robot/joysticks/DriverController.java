@@ -34,6 +34,11 @@ public class DriverController implements IDriverController {
               performAllianceInputDirectionCorrection(driverController.getLeftX()), this.deadBand)
           * 1;
     }
+    if(this.slowActivate().getAsBoolean()){
+      return -MathUtil.applyDeadband(
+              performAllianceInputDirectionCorrection(driverController.getLeftX()), this.deadBand)
+          * 0.12;
+    }
     return -MathUtil.applyDeadband(
             performAllianceInputDirectionCorrection(driverController.getLeftX()), this.deadBand)
         * 0.7;
@@ -45,6 +50,11 @@ public class DriverController implements IDriverController {
       return -MathUtil.applyDeadband(
               performAllianceInputDirectionCorrection(driverController.getLeftY()), this.deadBand)
           * 1.0;
+    }
+    if(this.slowActivate().getAsBoolean()){
+      return -MathUtil.applyDeadband(
+              performAllianceInputDirectionCorrection(driverController.getLeftY()), this.deadBand)
+          * 0.12;
     }
     return -MathUtil.applyDeadband(
             performAllianceInputDirectionCorrection(driverController.getLeftY()), this.deadBand)
@@ -64,6 +74,11 @@ public class DriverController implements IDriverController {
   @Override
   public Trigger turboActivate() {
     return driverController.rightTrigger(0.2);
+  }
+
+  @Override
+  public Trigger slowActivate() {
+    return driverController.leftTrigger(0.2);
   }
 
   @Override

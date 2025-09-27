@@ -38,8 +38,7 @@ public class GoToBranch {
   }
 
   public void updateBranchData(Pose2d robotPose, Supplier<ReefLevel> scorerTargetReefLevelSupplier,
-      Supplier<AlgaeHeightReef> scorerTargetReefLevelAlgaeSupplier,
-      Supplier<Boolean> elevatorAtHighPositionSupplier, boolean backup) {
+      Supplier<AlgaeHeightReef> scorerTargetReefLevelAlgaeSupplier, boolean backup) {
 
     this.distanceToTargetBranch = branch.getTargetPoseToScore().getTranslation()
         .getDistance(robotPose.getTranslation());

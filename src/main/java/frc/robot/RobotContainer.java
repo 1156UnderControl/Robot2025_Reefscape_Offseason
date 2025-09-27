@@ -42,7 +42,7 @@ public class RobotContainer {
     public RobotContainer() {
       this.scorer = ScorerSubsystem.getInstance();
       this.intake = IntakeSubsystem.getInstance();
-      this.swerve = new SwerveSubsystem(this.scorer.getReefScoringModeSupplier(), this.scorer.getTargetCoralReefLevelSupplier(), this.scorer.getTargetAlgaeReefLevelSupplier(), SwerveConstants.getSwerveDrivetrainConstants(),
+      this.swerve = new SwerveSubsystem(this.scorer.getTargetCoralReefLevelSupplier(), this.scorer.getTargetAlgaeReefLevelSupplier(), SwerveConstants.getSwerveDrivetrainConstants(),
         modulesArray[0], modulesArray[1], modulesArray[2], modulesArray[3]);
       //this.climber = ClimberSubsystem.getInstance();
      

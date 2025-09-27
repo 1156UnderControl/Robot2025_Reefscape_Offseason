@@ -39,8 +39,7 @@ public class GoToFace {
   }
 
   public void updateFaceData(Pose2d robotPose, Supplier<ReefLevel> scorerTargetReefLevelSupplier,
-      Supplier<AlgaeHeightReef> scorerTargetReefLevelAlgaeSupplier,
-      Supplier<Boolean> elevatorAtHighPositionSupplier, boolean backup) {
+      Supplier<AlgaeHeightReef> scorerTargetReefLevelAlgaeSupplier, boolean backup) {
     this.face = this.getReefFace(branch);
     this.distanceToTargetFace = face.getTargetPoseToScore().getTranslation().getDistance(robotPose.getTranslation());
     Pose2d targetFaceScorePose;

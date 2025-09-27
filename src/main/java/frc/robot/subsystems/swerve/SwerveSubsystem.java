@@ -61,8 +61,6 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
 
   Supplier<AlgaeHeightReef> scorerTargetReefLevelAlgaeSupplier;
 
-  Supplier<Boolean> elevatorAtHighPositionSupplier;
-
   int[] apriltagsIDs = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22 };
 
   private ReefPoseEstimatorWithLimelight reefPoseEstimator = new ReefPoseEstimatorWithLimelight("limelight-ggg",
@@ -120,7 +118,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
           3.0, 4.0,
           Units.degreesToRadians(540), Units.degreesToRadians(720)));
 
-  public SwerveSubsystem(Supplier<Boolean> elevatorAtHighPositionSupplier, Supplier<ReefLevel> scorerTargetReefLevel,
+  public SwerveSubsystem(Supplier<ReefLevel> scorerTargetReefLevel,
       Supplier<AlgaeHeightReef> scorerTargetReefLevelAlgae,
       SwerveDrivetrainConstants drivetrainConstants,
       SwerveModuleConstants<?, ?, ?>... modules) {
@@ -132,7 +130,6 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
             SwerveConstants.MOVE_TO_POSE_Y_CONSTRAINTS)),
         drivetrainConstants,
         modules);
-    this.elevatorAtHighPositionSupplier = elevatorAtHighPositionSupplier;
     this.scorerTargetReefLevelSupplier = scorerTargetReefLevel;
     this.scorerTargetReefLevelAlgaeSupplier = scorerTargetReefLevelAlgae;
     this.configureGoToObjects();
@@ -186,10 +183,6 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
 
   @Override
   public void driveAlignAngleJoystick() {
-    if (elevatorAtHighPositionSupplier.get()) {
-      driveAlignAngleJoystickSuperSlow();
-      return;
-    }
     if (controller.leftBumper().getAsBoolean()) {
       driveRotating(false);
       return;
@@ -245,8 +238,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
   private void driveToBranchFast(TargetBranch branch, boolean backup, boolean goDirect) {
     this.goToBranchFastSetpointDefiner.setBranch(branch, goDirect);
     this.goToBranchFastSetpointDefiner.updateBranchData(getPose(), scorerTargetReefLevelSupplier,
-        scorerTargetReefLevelAlgaeSupplier,
-        elevatorAtHighPositionSupplier, backup);
+        scorerTargetReefLevelAlgaeSupplier, backup);
     this.distanceToTargetBranch = goToBranchFastSetpointDefiner.getDistanceToTargetBranch();
     this.targetVelocity.append(goToBranchFastSetpointDefiner.getFinalVelocity());
     this.distanceToTargetBranchLog.append(distanceToTargetBranch);
@@ -258,8 +250,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
   private void goToBranchTeleoperated(TargetBranch branch, boolean backup, boolean goDirect) {
     this.goToBranchTeleoperatedSetpointDefiner.setBranch(branch, goDirect);
     this.goToBranchTeleoperatedSetpointDefiner.updateBranchData(getPose(), scorerTargetReefLevelSupplier,
-        scorerTargetReefLevelAlgaeSupplier,
-        elevatorAtHighPositionSupplier, backup);
+        scorerTargetReefLevelAlgaeSupplier, backup);
     this.distanceToTargetBranch = goToBranchTeleoperatedSetpointDefiner.getDistanceToTargetBranch();
     this.targetVelocity.append(goToBranchTeleoperatedSetpointDefiner.getFinalVelocity());
     this.distanceToTargetBranchLog.append(distanceToTargetBranch);
@@ -276,8 +267,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
   public void goToFaceTeleoperated(TargetBranch branch) {
     this.goToFaceTeleoperatedSetpointDefiner.setBranch(branch, true);
     this.goToFaceTeleoperatedSetpointDefiner.updateFaceData(getPose(), scorerTargetReefLevelSupplier,
-        scorerTargetReefLevelAlgaeSupplier,
-        elevatorAtHighPositionSupplier, true);
+        scorerTargetReefLevelAlgaeSupplier, true);
     this.distanceToTargetFace = goToFaceTeleoperatedSetpointDefiner.getDistanceToTargetFace();
     this.targetVelocity.append(goToFaceTeleoperatedSetpointDefiner.getFinalVelocity());
     this.distanceToTargetFaceLog.append(distanceToTargetFace);
@@ -291,8 +281,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
   public void goToFaceAutonomous(TargetBranch branch) {
     this.goToFaceAutonomousSetpointDefiner.setBranch(branch, true);
     this.goToFaceAutonomousSetpointDefiner.updateFaceData(getPose(), scorerTargetReefLevelSupplier,
-        scorerTargetReefLevelAlgaeSupplier,
-        elevatorAtHighPositionSupplier, true);
+        scorerTargetReefLevelAlgaeSupplier, true);
     this.distanceToTargetFace = goToFaceAutonomousSetpointDefiner.getDistanceToTargetFace();
     this.targetVelocity.append(goToFaceAutonomousSetpointDefiner.getFinalVelocity());
     this.distanceToTargetFaceLog.append(distanceToTargetFace);
@@ -306,8 +295,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
   public void goToCollectAlgaeFromFacePosition(TargetBranch branch) {
     this.goToFaceTeleoperatedSetpointDefiner.setBranch(branch, true);
     this.goToFaceTeleoperatedSetpointDefiner.updateFaceData(getPose(), scorerTargetReefLevelSupplier,
-        scorerTargetReefLevelAlgaeSupplier,
-        elevatorAtHighPositionSupplier, true);
+        scorerTargetReefLevelAlgaeSupplier, true);
     this.distanceToTargetFace = goToFaceTeleoperatedSetpointDefiner.getDistanceToTargetFace();
     this.targetVelocity.append(goToFaceTeleoperatedSetpointDefiner.getFinalVelocity());
     this.distanceToTargetFaceLog.append(distanceToTargetFace);
