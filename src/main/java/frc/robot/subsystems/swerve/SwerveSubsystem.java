@@ -359,11 +359,11 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     }
   }
 
-  public void setAngleForClimb() {
+  private void setAngleForClimb() {
     if (this.getPose().getX() >= FieldConstants.fieldLength / 2) {
-      this.bestAngleForClimb = Rotation2d.fromDegrees(25);
+      this.bestAngleForClimb = Rotation2d.fromDegrees(90);
     } else {
-      this.bestAngleForClimb = Rotation2d.fromDegrees(-25);
+      this.bestAngleForClimb = Rotation2d.fromDegrees(-90);
     }
   }
 
@@ -395,6 +395,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
 
   @Override
   public void driveLockedAngleToClimb() {
+    this.setAngleForClimb();
     if (!controller.notUsingJoystick()) {
       this.driveAlignAngleJoystick();
       return;
