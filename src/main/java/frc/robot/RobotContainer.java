@@ -90,11 +90,6 @@ public class RobotContainer {
       new ScoreObjectPosition(scorer)
     );
 
-    this.keyboard.climb()
-    .onTrue(new InstantCommand(() -> {
-      this.scorer.setTargetAlgaeLevel(AlgaeHeightReef.MID);
-    }));
-
     this.keyboard.reefL1()
     .onTrue(new InstantCommand(() -> {
       this.scorer.setTargetCoralLevel(ReefLevel.L1);
