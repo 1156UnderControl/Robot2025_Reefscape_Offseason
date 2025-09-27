@@ -5,33 +5,30 @@
 package frc.robot.commands.Scorer;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.joysticks.DriverController;
-import frc.robot.joysticks.OperatorController;
 import frc.robot.subsystems.scorer.ScorerSubsystem;
 
-public class MoveScorerToCollectAlgae extends Command {
 
-  private ScorerSubsystem scorer;
-
-  
-  public MoveScorerToCollectAlgae(ScorerSubsystem scorer) {
-    this.scorer = scorer;
-    addRequirements(scorer);
+public class ExpellAlgae extends Command {
+private ScorerSubsystem scorer;
+  public ExpellAlgae() {
+this.scorer = scorer;
+addRequirements(this.scorer);
   }
+
 
   @Override
   public void initialize() {}
 
   @Override
   public void execute() {
-    this.scorer.moveScorerToCollectAlgae();
-    this.scorer.collectAlgae();
+    this.scorer.placeAlgae();
   }
+
 
   @Override
   public void end(boolean interrupted) {
-    this.scorer.overrideHasAlgae();
   }
+
 
   @Override
   public boolean isFinished() {

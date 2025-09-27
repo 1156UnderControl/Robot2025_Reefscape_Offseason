@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
 import frc.robot.constants.FieldConstants.ReefLevel;
+import frc.robot.constants.FieldConstants.Algae.AlgaeHeightReef;
 import frc.robot.commands.Intake.IntakeExpellCoral;
 import frc.robot.commands.Intake.MoveIntakeToCollectPosition;
 import frc.robot.commands.Intake.MoveIntakeToHomedPosition;
@@ -23,6 +24,7 @@ import frc.robot.commands.States.DefaultPosition;
 import frc.robot.commands.States.ScoreObjectPosition;
 import frc.robot.commands.States.BrakeState;
 import frc.robot.commands.States.CoastState;
+import frc.robot.commands.States.CollectAlgaePosition;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.OperatorController;
 import frc.robot.joysticks.OperatorControllerXbox;
@@ -46,7 +48,6 @@ public class RobotContainer {
   
     public RobotContainer() {
       this.scorer = ScorerSubsystem.getInstance();
-      
       this.intake = IntakeSubsystem.getInstance();
       this.swerve = new SwerveSubsystem(this.scorer.getReefScoringModeSupplier(), this.scorer.getTargetCoralReefLevelSupplier(), this.scorer.getTargetAlgaeReefLevelSupplier(), SwerveConstants.getSwerveDrivetrainConstants(),
         modulesArray[0], modulesArray[1], modulesArray[2], modulesArray[3]);
@@ -78,27 +79,45 @@ public class RobotContainer {
     this.driverController.y().onTrue(
       new IntakeExpellCoral(intake)
     );
+  
+
+    this.keyboard.removeAlgaeFromBranch().onTrue(
+      new CollectAlgaePosition(scorer, keyboard)
+  );
 
 
     this.keyboard.prepareToScore().and(() -> scorer.hasObject()).onTrue(
       new ScoreObjectPosition(scorer)
     );
 
-    this.keyboard.reefL1().onTrue(
-      new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L1))
-    );
+    this.keyboard.climb()
+    .onTrue(new InstantCommand(() -> {
+      this.scorer.setTargetAlgaeLevel(AlgaeHeightReef.MID);
+    }));
 
-    this.keyboard.reefL2().onTrue(
-      new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L2))
-    );
+    this.keyboard.reefL1()
+    .onTrue(new InstantCommand(() -> {
+      this.scorer.setTargetCoralLevel(ReefLevel.L1);
+      this.scorer.setTargetAlgaeLevel(AlgaeHeightReef.GROUND);
+    }));
 
-    this.keyboard.reefL3().onTrue(
-      new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L3))
-    );
+    this.keyboard.reefL2()
+    .onTrue(new InstantCommand(() -> {
+      this.scorer.setTargetCoralLevel(ReefLevel.L2);
+      this.scorer.setTargetAlgaeLevel(AlgaeHeightReef.LOW);
+    }));
+
+    this.keyboard.reefL3()
+    .onTrue(new InstantCommand(() -> {
+      this.scorer.setTargetCoralLevel(ReefLevel.L3);
+      this.scorer.setTargetAlgaeLevel(AlgaeHeightReef.MID);
+    }));
 
     this.keyboard.reefL4().onTrue(
       new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L4))
     );
+
+
     
 
     //driverController.x().and(() -> DriverStation.isDisabled()).whileTrue(Commands

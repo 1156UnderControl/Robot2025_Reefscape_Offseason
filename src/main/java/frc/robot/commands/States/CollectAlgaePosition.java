@@ -20,7 +20,7 @@ public class CollectAlgaePosition extends SequentialCommandGroup {
 
     addCommands(
       new MoveScorerToCollectAlgae(scorer)
-      .until(((keyboard.cancelAction())))
+      .until(() -> keyboard.cancelAction().getAsBoolean() && this.scorer.isElevatorAtTargetPosition() && this.scorer.isPivotAtTargetPosition())
     );
   }
 }

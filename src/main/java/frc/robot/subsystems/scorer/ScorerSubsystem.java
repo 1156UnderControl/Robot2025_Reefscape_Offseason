@@ -112,6 +112,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         this.hasCoral = DriverStation.isAutonomous();
         this.hasAlgae = false;
         this.coralHeightReef = ReefLevel.L1;
+        this.algaeHeightReef = AlgaeHeightReef.LOW;
         this.scorerState = "Idle";
 
 
@@ -263,8 +264,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     }
 
     @Override
-    public void 
-    setTargetCoralLevel(ReefLevel coralHeightReef) {
+    public void setTargetCoralLevel(ReefLevel coralHeightReef) {
         this.coralHeightReef = coralHeightReef;
     }
 
@@ -290,9 +290,11 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
 
     @Override
     public void moveToPrepareScoreCoral(){
+        if(hasCoral){
         this.assignmentReefLevelGoalsForPreparing();
         this.setElevatorGoals(this.goalElevatorPosition);
         this.setPivotGoals(this.goalPivotPosition);
+        }
     }
 
     @Override
@@ -361,6 +363,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         this.setPivotGoals(goalPivotPosition);
     }
 
+
     @Override
     public void moveScorerToScoreAlgae(){
         this.assignmentReefLevelGoalsForAlgaeScore();
@@ -386,7 +389,6 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     @Override
     public void overrideHasAlgae() {
       this.hasAlgae = true;
-      this.hasCoral = false;
     }
   
     @Override
@@ -515,16 +517,16 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     private void assignmentReefLevelGoalsForAlgaeCollect(){
         switch (this.algaeHeightReef){
             case GROUND:
-            goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.L1_HEIGHT;
-            goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.L1_ANGLE;
+            goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.ALGAE_COLLECT_GROUND;
+            goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.ALGAE_COLLECT_GROUND;
             break;
         case LOW:
-            goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.L2_HEIGHT;
-            goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.L2_ANGLE_SCORING;
+            goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.ALGAE_COLLECT_LOW;
+            goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.ALGAE_COLLECT_LOW;
             break;
         case MID:
-            goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.L3_HEIGHT;
-            goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.L3_ANGLE_SCORING;
+            goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.ALGAE_COLLECT_MID;
+            goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.ALGAE_COLLECT_MID;
 
             break;
         default:
@@ -535,12 +537,12 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     private void assignmentReefLevelGoalsForAlgaeScore(){
         switch (this.algaeHeightScore){
             case PROCESSOR:
-            goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.L1_HEIGHT;
-            goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.L1_ANGLE;
+            goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.NET_HEIGHT;
+            goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.NET_ANGLE;
             break;
         case NET:
-            goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.L2_HEIGHT;
-            goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.L2_ANGLE_SCORING;
+            goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.NET_HEIGHT;
+            goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.NET_ANGLE;
             break;
         default:
             break;
