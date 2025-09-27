@@ -15,16 +15,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class ClimberSubsystem extends SubsystemBase implements ClimberIO {
     private static ClimberSubsystem instance;
 
-    private final ClimberIOInputsAutoLogged climberInputs;
     private final MotorIOInputsAutoLogged pivotInputs;
     private final MotorIOInputsAutoLogged cageIntakeInputs;
 
     private final MotorIO pivotMotor;
     private final MotorIO cageIntakeMotor;
-    private double goalPivot;
-    private boolean stopClimber = false;
-    private double LimitPosition;
-    private boolean atClimbedPosition;
 
     public static ClimberSubsystem getInstance() {
         if (instance == null) {
@@ -34,12 +29,11 @@ public class ClimberSubsystem extends SubsystemBase implements ClimberIO {
     }
 
     private ClimberSubsystem() {
-        this.climberInputs = new ClimberIOInputsAutoLogged();
         this.pivotInputs = new MotorIOInputsAutoLogged();
         this.cageIntakeInputs = new MotorIOInputsAutoLogged();
 
-        this.pivotMotor = new TalonFXMotor(17, 1, GravityTypeValue.Arm_Cosine, "Pivot Climber Motor");
-        this.cageIntakeMotor = new SparkMAXMotor(18, 1, "Cage Intake Motor");
+        this.pivotMotor = new TalonFXMotor(ClimberConstants.ID_PivotMotor, ClimberConstants.CAN_BUS_ID, GravityTypeValue.Arm_Cosine, "Pivot Climber Motor");
+        this.cageIntakeMotor = new SparkMAXMotor(ClimberConstants.ID_cageIntakeMotor, ClimberConstants.CAN_BUS_ID, "Cage Intake Motor");
 
         this.configureClimberMotor();
     }
@@ -47,22 +41,20 @@ public class ClimberSubsystem extends SubsystemBase implements ClimberIO {
         pivotMotor.setInverted(false);
         pivotMotor.setPositionFactor(250);
         pivotMotor.configurePIDF(
-            ClimberConstants.setpoints.PID.P,
-            ClimberConstants.setpoints.PID.I,
-            ClimberConstants.setpoints.PID.D, 0);
-       pivotMotor.setMinMotorOutput(-0.75);
+            ClimberConstants.PID.P,
+            ClimberConstants.PID.I,
+            ClimberConstants.PID.D, 0);
         cageIntakeMotor.burnFlash();
         pivotMotor.setMotorBrake(true);
         pivotMotor.setPosition(0);
-      }
+    }
     
-
     @Override
     public void periodic(){
-        this.updateLogs(climberInputs);
+        this.updateLogs();
     }
 
-    private void updateLogs(ClimberIOInputsAutoLogged climberInputs) {
+    private void updateLogs() {
         this.pivotMotor.updateInputs(pivotInputs);
         this.cageIntakeMotor.updateInputs(cageIntakeInputs);
 
@@ -70,66 +62,46 @@ public class ClimberSubsystem extends SubsystemBase implements ClimberIO {
         Logger.processInputs("Motors/Climber/cageIntake", cageIntakeInputs);
     }
     
-    public void climb(){
-     pivotMotor.setPositionReference(ClimberConstants.setpoints.CLIMB);
-    }
-    
-    public double limitPosition(){
-        if (goalPivot >= ClimberConstants.setpoints.LIMIT_POSITION);
-        return (goalPivot > ClimberConstants.setpoints.MAX_ANGLE)?
-        ClimberConstants.setpoints.MAX_ANGLE:
-        (goalPivot<ClimberConstants.setpoints.MIN_ANGLE?
-        ClimberConstants.setpoints.MIN_ANGLE: goalPivot);
+    @Override
+    public void goToClimbedPosition(){
+        pivotMotor.setPositionReference(ClimberConstants.setpoints.CLIMBED_ANGLE);
     }
 
+    @Override
+    public void goToPrepareClimbPosition(){
+        pivotMotor.setPositionReference(ClimberConstants.setpoints.PREPARE_CLIMBED_ANGLE);
+    }
 
+    @Override
+    public void goToDefaultPosition(){
+        pivotMotor.setPositionReference(ClimberConstants.setpoints.DEFAULT_ANGLE);
+    }
 
+    @Override
     public boolean isPreparedToIntake(){
-    return Math.abs(
-    cageIntakeMotor.getPosition()-
-    ClimberConstants.setpoints.MIN_ANGLE) < 0.01;
-}
-    
-    public void intakeCagePosition(){
-        if (stopClimber){
-            pivotMotor.set(0); }else{
-                pivotMotor.setPositionReference(ClimberConstants.setpoints.INTAKE_CAGE_ANGLE);
-            }
-        }
-   public void isAtClimbedPosition(){
-        if(this.pivotMotor.getPosition() > ClimberConstants.setpoints.MIN_STOW_ANGLE_TOLERANCE && this.pivotMotor.getPosition() < ClimberConstants.setpoints.MAX_ANGLE){
-            pivotMotor.set(ClimberConstants.setpoints.GOAL_CLIMBED);
-            atClimbedPosition = true;
-        }
+        return Math.abs(cageIntakeMotor.getPosition() - ClimberConstants.setpoints.PREPARE_CLIMBED_ANGLE) < 1;
     }
 
-        public boolean getIsAtClimbedPosition(){
-            return atClimbedPosition;
-        }
-   
-
+    @Override
     public void setCoastClimber(){
-    pivotMotor.setMotorBrake(false);
-    cageIntakeMotor.setMotorBrake(false);
+        pivotMotor.setMotorBrake(false);
+        cageIntakeMotor.setMotorBrake(false);
     }
 
+    @Override
     public void setBrakeClimber(){
         pivotMotor.setMotorBrake(true);
         pivotMotor.setMotorBrake(true);
     }
+
     @Override
     public void setCageIntakeDutyCicle(double dutyCicle) {
         cageIntakeMotor.set(dutyCicle);
     }
-    public void lockClimber(){
-    pivotMotor.set(1);
-    }
 
-    public void unlockClimber(){
-        pivotMotor.set(0);
-    }
+    @Override
     public void stopClimber(){
-    cageIntakeMotor.set(0);
+        cageIntakeMotor.set(0);
     }
 
     @Override
