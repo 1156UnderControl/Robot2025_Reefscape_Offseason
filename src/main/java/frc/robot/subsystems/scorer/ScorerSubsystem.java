@@ -350,7 +350,9 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     public void moveScorerToCollectAlgae(){
         this.assignmentReefLevelGoalsForAlgaeCollect();
         this.setElevatorGoals(goalElevatorPosition);
-        this.setPivotGoals(goalPivotPosition);
+        if(isElevatorAtTargetPosition()){
+            this.setPivotGoals(goalPivotPosition);
+        }
     }
 
 
@@ -358,7 +360,9 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     public void moveScorerToScoreAlgae(){
         this.assignmentReefLevelGoalsForAlgaeScore();
         this.setElevatorGoals(goalElevatorPosition);
-        this.setPivotGoals(goalPivotPosition);
+        if(isElevatorAtTargetPosition()){
+            this.setPivotGoals(goalPivotPosition);
+        }
     }
 
     @Override
@@ -598,8 +602,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     }
 
     private void setElevatorGoals(double targetElevatorPosition){
-        double securedTargetElevatorPosition;
-        securedTargetElevatorPosition = Math.clamp(targetElevatorPosition, ElevatorConstants.tunning_values_elevator.setpoints.MIN_HEIGHT, ElevatorConstants.tunning_values_elevator.setpoints.MAX_HEIGHT);
+        double securedTargetElevatorPosition = Math.clamp(targetElevatorPosition, ElevatorConstants.tunning_values_elevator.setpoints.MIN_HEIGHT, ElevatorConstants.tunning_values_elevator.setpoints.MAX_HEIGHT);
         goalElevatorPosition = securedTargetElevatorPosition;
         this.elevatorLead.setPositionReference(securedTargetElevatorPosition, ElevatorConstants.tunning_values_elevator.PID.arbFF);    
     }
