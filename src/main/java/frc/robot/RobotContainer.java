@@ -9,21 +9,14 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
 import frc.robot.constants.FieldConstants.ReefLevel;
 import frc.robot.constants.SwerveConstants.TargetBranch;
-import frc.robot.commands.Scorer.MoveScorerToPrepareScore;
-import frc.robot.commands.Scorer.UpdatePivotInternalEncoder;
 import frc.robot.commands.States.CollectCoralPosition;
 import frc.robot.commands.States.DefaultPosition;
 import frc.robot.commands.States.ScoreObjectPosition;
 import frc.robot.commands.States.AutoScoreCoralPosition;
-import frc.robot.commands.States.BrakeState;
-import frc.robot.commands.States.CoastState;
 import frc.robot.commands.Intake.IntakeExpellCoral;
 import frc.robot.commands.Intake.OverrideCoralMode;
 import frc.robot.commands.Intake.StopCollecting;
 import frc.robot.commands.States.AlignToClimb;
-import frc.robot.commands.States.CollectCoralPosition;
-import frc.robot.commands.States.DefaultPosition;
-import frc.robot.commands.States.ScoreObjectPosition;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.OperatorController;
 import frc.robot.subsystems.Intake.IntakeSubsystem;
@@ -102,7 +95,7 @@ public class RobotContainer {
       new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L4))
     );
 
-    this.operatorController.cancelAction().onTrue(
+    this.keyboard.cancelAction().onTrue(
       new DefaultPosition(intake, scorer)
     );
     
@@ -120,27 +113,27 @@ public class RobotContainer {
   }
 
   private void bindAutoScoreCommands() {
-    this.operatorController.goToReefA().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.A));
+    this.keyboard.goToReefA().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.A));
 
-    this.operatorController.goToReefB().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.B));
+    this.keyboard.goToReefB().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.B));
 
-    this.operatorController.goToReefC().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.C));
+    this.keyboard.goToReefC().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.C));
 
-    this.operatorController.goToReefD().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.D));
+    this.keyboard.goToReefD().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.D));
 
-    this.operatorController.goToReefF().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.F));
+    this.keyboard.goToReefF().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.F));
 
-    this.operatorController.goToReefG().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.G));
+    this.keyboard.goToReefG().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.G));
 
-    this.operatorController.goToReefH().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.H));
+    this.keyboard.goToReefH().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.H));
 
-    this.operatorController.goToReefI().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.I));
+    this.keyboard.goToReefI().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.I));
 
-    this.operatorController.goToReefJ().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.J));
+    this.keyboard.goToReefJ().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.J));
 
-    this.operatorController.goToReefK().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.K));
+    this.keyboard.goToReefK().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.K));
 
-    this.operatorController.goToReefL().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.L));
+    this.keyboard.goToReefL().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.L));
   }
   
   public Command getAutonomousCommand() {
