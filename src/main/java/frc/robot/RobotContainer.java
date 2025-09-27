@@ -8,8 +8,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
 import frc.robot.constants.FieldConstants.ReefLevel;
+import frc.robot.commands.Intake.IntakeExpellCoral;
+import frc.robot.commands.Intake.MoveIntakeToCollectPosition;
+import frc.robot.commands.Intake.MoveIntakeToHomedPosition;
+import frc.robot.commands.Intake.OverrideCoralMode;
+import frc.robot.commands.Intake.StopCollecting;
 import frc.robot.commands.Scorer.MoveScorerToPrepareScore;
 import frc.robot.commands.Scorer.UpdatePivotInternalEncoder;
 import frc.robot.commands.States.CollectCoralPosition;
@@ -33,61 +39,70 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
 
   private final LoggedDashboardChooser<Command> autoChooser;
-  private final OperatorControllerXbox operatorController;
-  private final DriverController driverController;
+    private final OperatorController keyboard;
+    private final DriverController driverController;
+  
+    private final SwerveSubsystem swerve;
+    private final IntakeSubsystem intake;
+    private final ScorerSubsystem scorer;
+  
+    private SwerveModuleConstants[] modulesArray = SwerveConstants.getModuleConstants();
+  
+    public RobotContainer() {
+      this.scorer = ScorerSubsystem.getInstance();
+      
+      this.intake = IntakeSubsystem.getInstance();
+      this.swerve = new SwerveSubsystem(this.scorer.getReefScoringModeSupplier(), this.scorer.getTargetCoralReefLevelSupplier(), this.scorer.getTargetAlgaeReefLevelSupplier(), SwerveConstants.getSwerveDrivetrainConstants(),
+        modulesArray[0], modulesArray[1], modulesArray[2], modulesArray[3]);
+     
+      this.driverController = DriverController.getInstance();
+      this.keyboard = OperatorController.getInstance();
 
-
-  private final SwerveSubsystem swerve;
-  private final IntakeSubsystem intake;
-  private final ScorerSubsystem scorer;
-  private final ClimberSubsystem climber;
-
-  private SwerveModuleConstants[] modulesArray = SwerveConstants.getModuleConstants();
-
-  public RobotContainer() {
-    
-    this.intake = IntakeSubsystem.getInstance();
-    this.scorer = ScorerSubsystem.getInstance();
-    this.climber = ClimberSubsystem.getInstance();
-    this.swerve = new SwerveSubsystem(this.scorer.getReefScoringModeSupplier(), this.scorer.getTargetCoralReefLevelSupplier(), this.scorer.getTargetAlgaeReefLevelSupplier(), SwerveConstants.getSwerveDrivetrainConstants(),
-      modulesArray[0], modulesArray[1], modulesArray[2], modulesArray[3]);
-   
-    this.driverController = DriverController.getInstance();
-    this.operatorController = OperatorControllerXbox.getInstance();
-
-    this.scorer.setIntakeUpSupplier(this.intake.getIntakeUpSupplier());
-    this.swerve.setDefaultCommand(Commands.run(() -> swerve.driveAlignAngleJoystick(), this.swerve));
-    this.scorer.setDefaultCommand(new DefaultPosition(intake, scorer));
-    //this.intake.setDefaultCommand(Commands.run(() -> this.intake.goToIntakePosition(), this.intake));
-    this.configureButtonBindings();
-    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+      this.scorer.setIntakeUpSupplier(this.intake.getIntakeUpSupplier());
+      this.swerve.setDefaultCommand(Commands.run(() -> swerve.driveAlignAngleJoystick(), this.swerve));
+      this.scorer.setDefaultCommand(new DefaultPosition(intake, scorer));
+      this.configureButtonBindings();
+      autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
   }
 
   private void configureButtonBindings() {
     
-    this.driverController.a().onTrue(
+    this.driverController.x().onTrue(
       new CollectCoralPosition(intake, scorer)
+    ).and(() -> !scorer.hasObject());
+
+    this.driverController.b().onTrue(
+      new StopCollecting(intake)
     );
 
-    this.driverController.x().and(() -> scorer.hasObject()).onTrue(
+    this.driverController.a().onTrue(
+      new OverrideCoralMode(intake, true)
+    );
+
+    this.driverController.y().onTrue(
+      new IntakeExpellCoral(intake)
+    );
+
+    this.keyboard.prepareToScore().and(() -> scorer.hasObject()).onTrue(
       new ScoreObjectPosition(scorer)
     );
 
-    this.operatorController.reefL1().onTrue(
+    this.keyboard.reefL1().onTrue(
       new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L1))
     );
 
-    this.operatorController.reefL2().onTrue(
+    this.keyboard.reefL2().onTrue(
       new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L2))
     );
 
-    this.operatorController.reefL3().onTrue(
+    this.keyboard.reefL3().onTrue(
       new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L3))
     );
 
-    this.operatorController.reefL4().onTrue(
+    this.keyboard.reefL4().onTrue(
       new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L4))
     );
+    
 
     //driverController.x().and(() -> DriverStation.isDisabled()).whileTrue(Commands
     //    .runEnd(() -> new CoastState(scorer, intake), () -> new BrakeState(scorer, intake)).ignoringDisable(true));

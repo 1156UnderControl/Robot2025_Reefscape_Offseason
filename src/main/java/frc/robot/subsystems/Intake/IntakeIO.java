@@ -13,6 +13,7 @@ public interface IntakeIO {
 
     void collectCoral();
 
+
     void stopIntaking();
 
     void expellCoral();
@@ -30,4 +31,8 @@ public interface IntakeIO {
     void setCoastMode();
 
     void setBrakeMode();
+
+    void setOverrideCoralModeActive(boolean isActive);
+
+    boolean getOverrideCoralModeActive();
 }

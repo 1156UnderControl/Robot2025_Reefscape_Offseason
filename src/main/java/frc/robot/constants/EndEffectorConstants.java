@@ -18,6 +18,7 @@ public class EndEffectorConstants {
       public static final double DUTY_CYCLE_EXPELL_CORAL = -0.3;
       public static final double DUTY_CYCLE_EXPELL_ALGAE = 0;
       public static final double DUTY_CYCLE_EXPELL_CORAL_L1 = 0;
+      public static final double DUTY_CYCLE_HOLDING_CORAL = 0;
       public static final double DUTY_CYCLE_HOLDING_ALGAE = 0;
       public static final double DUTY_CYCLE_HOLDING_ALGAE_DURING_MOVEMENT = 0;
     }
