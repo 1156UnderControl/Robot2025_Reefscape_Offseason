@@ -1,5 +1,7 @@
 package frc.robot.commands.States;
 
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.Scorer.MoveScorerToPrepareScore;
 import frc.robot.commands.Scorer.MoveScorerToScorePosition;
@@ -23,6 +25,5 @@ public class ScoreObjectPosition extends SequentialCommandGroup {
                     new MoveScorerToScorePosition(scorer)
                     .until(operatorController.cancelAction()),
                     new StopEndEffector(scorer));
-
     }
 }

@@ -20,6 +20,7 @@ public class MoveScorerToDefaultPosition extends Command {
   @Override
   public void execute() {
     this.scorer.moveScorerToDefaultPosition();
+    this.scorer.stopEndEffector();
   }
 
   @Override
