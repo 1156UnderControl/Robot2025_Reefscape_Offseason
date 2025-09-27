@@ -1,14 +1,16 @@
 package frc.robot.commands.Scorer;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.Intake.IntakeSubsystem;
 import frc.robot.subsystems.scorer.ScorerSubsystem;
 
 public class CollectCoralFromIndexer extends Command{
     private ScorerSubsystem scorer;
+    private IntakeSubsystem intake;
 
-    public CollectCoralFromIndexer(ScorerSubsystem scorer){
+    public CollectCoralFromIndexer(ScorerSubsystem scorer, IntakeSubsystem intake){
         this.scorer = scorer;
+        this.intake = intake;
         addRequirements(this.scorer);
     }
 
@@ -28,6 +30,7 @@ public class CollectCoralFromIndexer extends Command{
         this.scorer.stopEndEffector();
         this.scorer.overrideHasCoral();
         this.scorer.resetCollectTimer();
+        this.intake.setOverrideCoralModeActive(false);
     }
 
     @Override

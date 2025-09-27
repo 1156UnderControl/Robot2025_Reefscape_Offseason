@@ -15,16 +15,15 @@ public class ScoreObjectPosition extends SequentialCommandGroup {
     OperatorController operatorController;
     ScorerSubsystem scorer;
 
-public 
-ScoreObjectPosition (ScorerSubsystem scorer){ 
-    this.scorer = scorer; 
-    this.driverController = DriverController.getInstance();
-    addCommands(
-        new MoveScorerToPrepareScore(scorer),
-                Commands.waitUntil(driverController.y()),
-                new MoveScorerToScorePosition(scorer),
-                Commands.waitUntil(driverController.b()),
-                new StopEndEffector(scorer));
-        
+    public ScoreObjectPosition (ScorerSubsystem scorer){ 
+        this.scorer = scorer;
+        this.driverController = DriverController.getInstance();
+        this.operatorController = OperatorController.getInstance();
+        addCommands(
+            new MoveScorerToPrepareScore(scorer)
+            .until(() -> operatorController.scoreObject().getAsBoolean() && this.scorer.isElevatorAtTargetPosition() && this.scorer.isPivotAtTargetPosition()),
+                    new MoveScorerToScorePosition(scorer)
+                    .until(operatorController.cancelAction()),
+                    new StopEndEffector(scorer));
     }
 }

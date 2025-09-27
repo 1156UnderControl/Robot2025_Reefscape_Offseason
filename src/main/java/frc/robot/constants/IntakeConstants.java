@@ -19,7 +19,7 @@ public class IntakeConstants {
       public static final double INTAKE_SPEED = 1;
       public static final double EXPELL_SPEED = -1;
       public static final double STOP_SPEED = 0;
-      public static final double INDEXER_SPEED = 0.7;
+      public static final double INDEXER_SPEED = 0.6;
       public static final double ANGLE_ERROR_ALLOWED = 1;
       
       public class PID {
@@ -38,7 +38,7 @@ public class IntakeConstants {
         public static final double ZERO_POSITION_IN_ANGLE = 0;
         public static final double MAX_ANGLE = 0;
         public static final double MIN_ANGLE = 0;
-        public static final double INTAKE_ANGLE_HOMED = 45;
+        public static final double INTAKE_ANGLE_HOMED = 50;
         public static final double INTAKE_ANGLE_FOR_NOT_TOUCHING_PIVOT = 30;
         public static final double INTAKE_ANGLE_COLLECTING = 0;
   
