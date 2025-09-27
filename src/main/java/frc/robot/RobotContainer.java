@@ -20,7 +20,7 @@ import frc.robot.commands.States.AlignToClimb;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.OperatorController;
 import frc.robot.subsystems.Intake.IntakeSubsystem;
-//import frc.robot.subsystems.climber.ClimberSubsystem;
+import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.scorer.ScorerSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 
@@ -35,7 +35,7 @@ public class RobotContainer {
     private final SwerveSubsystem swerve;
     private final IntakeSubsystem intake;
     private final ScorerSubsystem scorer;
-    //private final ClimberSubsystem climber;
+    private final ClimberSubsystem climber;
   
     private SwerveModuleConstants[] modulesArray = SwerveConstants.getModuleConstants();
   
@@ -44,7 +44,7 @@ public class RobotContainer {
       this.intake = IntakeSubsystem.getInstance();
       this.swerve = new SwerveSubsystem(this.scorer.getReefScoringModeSupplier(), this.scorer.getTargetCoralReefLevelSupplier(), this.scorer.getTargetAlgaeReefLevelSupplier(), SwerveConstants.getSwerveDrivetrainConstants(),
         modulesArray[0], modulesArray[1], modulesArray[2], modulesArray[3]);
-      //this.climber = ClimberSubsystem.getInstance();
+      this.climber = ClimberSubsystem.getInstance();
      
       this.driverController = DriverController.getInstance();
       this.keyboard = OperatorController.getInstance();
@@ -99,9 +99,9 @@ public class RobotContainer {
       new DefaultPosition(intake, scorer)
     );
     
-    //this.keyboard.alignToClimb().onTrue(
-    // new AlignToClimb(climber, swerve)
-    //);
+    this.keyboard.alignToClimb().onTrue(
+    new AlignToClimb(climber, swerve)
+    );
     
     bindAutoScoreCommands();
 
