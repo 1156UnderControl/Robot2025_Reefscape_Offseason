@@ -11,12 +11,14 @@ import frc.robot.constants.FieldConstants.ReefLevel;
 import frc.robot.commands.Intake.IntakeExpellCoral;
 import frc.robot.commands.Intake.OverrideCoralMode;
 import frc.robot.commands.Intake.StopCollecting;
+import frc.robot.commands.States.AlignToClimb;
 import frc.robot.commands.States.CollectCoralPosition;
 import frc.robot.commands.States.DefaultPosition;
 import frc.robot.commands.States.ScoreObjectPosition;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.OperatorController;
 import frc.robot.subsystems.Intake.IntakeSubsystem;
+import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.scorer.ScorerSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 
@@ -31,15 +33,16 @@ public class RobotContainer {
     private final SwerveSubsystem swerve;
     private final IntakeSubsystem intake;
     private final ScorerSubsystem scorer;
+    private final ClimberSubsystem climber;
   
     private SwerveModuleConstants[] modulesArray = SwerveConstants.getModuleConstants();
   
     public RobotContainer() {
       this.scorer = ScorerSubsystem.getInstance();
-      
       this.intake = IntakeSubsystem.getInstance();
       this.swerve = new SwerveSubsystem(this.scorer.getReefScoringModeSupplier(), this.scorer.getTargetCoralReefLevelSupplier(), this.scorer.getTargetAlgaeReefLevelSupplier(), SwerveConstants.getSwerveDrivetrainConstants(),
         modulesArray[0], modulesArray[1], modulesArray[2], modulesArray[3]);
+      this.climber = ClimberSubsystem.getInstance();
      
       this.driverController = DriverController.getInstance();
       this.keyboard = OperatorController.getInstance();
@@ -47,6 +50,7 @@ public class RobotContainer {
       this.scorer.setIntakeUpSupplier(this.intake.getIntakeUpSupplier());
       this.swerve.setDefaultCommand(Commands.run(() -> swerve.driveAlignAngleJoystick(), this.swerve));
       this.scorer.setDefaultCommand(new DefaultPosition(intake, scorer));
+      this.climber.setDefaultCommand(Commands.run(() -> this.climber.goToDefaultPosition(), climber));
       this.configureButtonBindings();
       autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
   }
@@ -87,6 +91,10 @@ public class RobotContainer {
 
     this.keyboard.reefL4().onTrue(
       new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L4))
+    );
+
+    this.keyboard.alignToClimb().onTrue(
+      new AlignToClimb(climber, swerve)
     );
     
 
