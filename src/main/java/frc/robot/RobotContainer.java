@@ -84,6 +84,10 @@ public class RobotContainer {
       new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L4))
     );
 
+    this.operatorController.cancelAction().onTrue(
+      new DefaultPosition(intake, scorer)
+    );
+
     bindAutoScoreCommands();
 
     //driverController.x().and(() -> DriverStation.isDisabled()).whileTrue(Commands
