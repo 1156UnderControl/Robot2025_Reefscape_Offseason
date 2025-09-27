@@ -79,6 +79,7 @@ public class RobotContainer {
       new IntakeExpellCoral(intake)
     );
 
+
     this.keyboard.prepareToScore().and(() -> scorer.hasObject()).onTrue(
       new ScoreObjectPosition(scorer)
     );

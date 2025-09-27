@@ -25,6 +25,7 @@ import frc.robot.constants.EndEffectorConstants;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.constants.FieldConstants.ReefLevel;
 import frc.robot.constants.FieldConstants.Algae.AlgaeHeightReef;
+import frc.robot.constants.FieldConstants.Algae.AlgaeHeightScore;
 import frc.robot.constants.SwerveConstants.TargetBranch;
 import frc.robot.constants.PivotConstants;
 
@@ -51,6 +52,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     private boolean endEffectorAccelerated = false;
     private ReefLevel coralHeightReef;
     private AlgaeHeightReef algaeHeightReef;
+    private AlgaeHeightScore algaeHeightScore;
     private TargetBranch autoAlgaeCollectBranch;
 
     private String scorerState;
@@ -180,16 +182,21 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         return this.hasAlgae || this.hasCoral;
     }
 
+    @Override
+    public void collectAlgae(){
+        endEffectorMotor.set(EndEffectorConstants.tunning_values_endeffector.setpoints.DUTY_CYCLE_INTAKE_ALGAE);
+    }
+
 
     @Override
-    public boolean runEndEffectorObjectDetection(){
+    public boolean runEndEffectorAlgaeDetection(){
         if(this.endEffectorMotor.getVelocity() >= EndEffectorConstants.tunning_values_endeffector.MINIMUM_VELOCITY_FOR_DETECTION){
             this.endEffectorAccelerated = true;
         }
 
         if(this.endEffectorMotor.getVelocity() <= EndEffectorConstants.tunning_values_endeffector.VELOCITY_TO_DETECT_RPM_FALL && endEffectorAccelerated ){
             this.endEffectorAccelerated = false;
-            return true;
+            return hasAlgae();
         }
 
         return false;
@@ -282,13 +289,6 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     }
 
     @Override
-    public void prepareToScoreAlgae(){
-        this.setScorerTargetAlgae();
-        this.setElevatorGoals(this.goalElevatorPosition);
-        this.setPivotGoals(this.goalPivotPosition);
-    }
-
-    @Override
     public void moveToPrepareScoreCoral(){
         this.assignmentReefLevelGoalsForPreparing();
         this.setElevatorGoals(this.goalElevatorPosition);
@@ -351,6 +351,21 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     private void moveElevatorToCollectCoral() {
         this.goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.CORAL_COLLECT_INDEXER;
         this.elevatorLead.setPositionReference(this.goalElevatorPosition);
+    }
+
+
+    @Override
+    public void moveScorerToCollectAlgae(){
+        this.assignmentReefLevelGoalsForAlgaeCollect();
+        this.setElevatorGoals(goalElevatorPosition);
+        this.setPivotGoals(goalPivotPosition);
+    }
+
+    @Override
+    public void moveScorerToScoreAlgae(){
+        this.assignmentReefLevelGoalsForAlgaeScore();
+        this.setElevatorGoals(goalElevatorPosition);
+        this.setPivotGoals(goalPivotPosition);
     }
 
     @Override
@@ -497,9 +512,41 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         }
     }
 
-    private void setScorerTargetAlgae(){
-        
+    private void assignmentReefLevelGoalsForAlgaeCollect(){
+        switch (this.algaeHeightReef){
+            case GROUND:
+            goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.L1_HEIGHT;
+            goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.L1_ANGLE;
+            break;
+        case LOW:
+            goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.L2_HEIGHT;
+            goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.L2_ANGLE_SCORING;
+            break;
+        case MID:
+            goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.L3_HEIGHT;
+            goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.L3_ANGLE_SCORING;
+
+            break;
+        default:
+            break;
     }
+}
+
+    private void assignmentReefLevelGoalsForAlgaeScore(){
+        switch (this.algaeHeightScore){
+            case PROCESSOR:
+            goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.L1_HEIGHT;
+            goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.L1_ANGLE;
+            break;
+        case NET:
+            goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.L2_HEIGHT;
+            goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.L2_ANGLE_SCORING;
+            break;
+        default:
+            break;
+    }
+}
+        
 
     private void setConfigsElevator() {
         this.elevatorLead.setInverted(true);

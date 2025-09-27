@@ -37,11 +37,13 @@ public interface ScorerIO {
 
     void collectCoralFromIndexer();
 
-    boolean runEndEffectorObjectDetection();
+    boolean runEndEffectorAlgaeDetection();
 
     void placeCoral();
 
     void placeAlgae();
+
+    void collectAlgae();
 
     void setTargetCoralLevel(ReefLevel coralHeightReef);
 
@@ -55,11 +57,13 @@ public interface ScorerIO {
 
     void stopEndEffector();
 
-    void prepareToScoreAlgae();
-
     void moveToPrepareScoreCoral();
 
     void moveToScoreCoral();
+
+    void moveScorerToCollectAlgae();
+
+    void moveScorerToScoreAlgae();
 
     void moveScorerToDefaultPosition();
 
