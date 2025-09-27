@@ -429,7 +429,6 @@ public abstract class BaseSwerveSubsystem extends TunerSwerveDrivetrain implemen
   }
 
   protected void driveFieldOrientedLockedAngle(ChassisSpeeds speeds, Rotation2d targetHeading) {
-    this.lastDesiredJoystickAngle = targetHeading.getRadians();
     this.targetHeadingDegrees = targetHeading.getDegrees();
     applyFieldCentricDrivePointingAtAngle.withTargetDirection(targetHeading)
         .withVelocityX(speeds.vx).withVelocityY(speeds.vy);

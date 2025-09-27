@@ -361,9 +361,9 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
 
   public void setAngleForClimb() {
     if (this.getPose().getX() >= FieldConstants.fieldLength / 2) {
-      this.bestAngleForClimb = Rotation2d.fromDegrees(90);
+      this.bestAngleForClimb = Rotation2d.fromDegrees(25);
     } else {
-      this.bestAngleForClimb = Rotation2d.fromDegrees(-90);
+      this.bestAngleForClimb = Rotation2d.fromDegrees(-25);
     }
   }
 
@@ -402,7 +402,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     ChassisSpeeds desiredSpeeds = this.inputsToChassisSpeeds(controller.getYtranslation(),
         controller.getXtranslation());
     this.state = "DRIVE_ALIGN_ANGLE_CLIMB";
-    this.driveFieldOrientedLockedAngle(desiredSpeeds.times(0.5), this.bestAngleForClimb);
+    this.driveFieldOrientedLockedAngle(desiredSpeeds, this.bestAngleForClimb);
   }
 
   @Override

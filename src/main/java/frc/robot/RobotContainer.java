@@ -51,8 +51,8 @@ public class RobotContainer {
 
       this.scorer.setIntakeUpSupplier(this.intake.getIntakeUpSupplier());
       this.swerve.setDefaultCommand(Commands.run(() -> swerve.driveAlignAngleJoystick(), this.swerve));
-      this.scorer.setDefaultCommand(new DefaultPosition(intake, scorer));
-      //this.climber.setDefaultCommand(Commands.run(() -> this.climber.goToDefaultPosition(), climber));
+      //this.scorer.setDefaultCommand(new DefaultPosition(intake, scorer));
+      this.climber.setDefaultCommand(Commands.run(() -> this.climber.goToDefaultPosition(), climber));
       this.configureButtonBindings();
       autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
   }
@@ -100,8 +100,10 @@ public class RobotContainer {
     );
     
     this.keyboard.alignToClimb().onTrue(
-    new AlignToClimb(climber, swerve)
+     new AlignToClimb(climber, swerve)
     );
+
+    
     
     bindAutoScoreCommands();
 

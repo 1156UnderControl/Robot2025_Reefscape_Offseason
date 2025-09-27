@@ -15,7 +15,8 @@ public class AlignToClimb extends SequentialCommandGroup {
     public AlignToClimb(ClimberSubsystem climber, SwerveSubsystem swerve){ 
         this.climber = climber;
         addCommands(
-            new AlignToCage(swerve).alongWith(new CollectClimber(climber)).until(operatorController.climb()),
+            //new AlignToCage(swerve).alongWith(
+                new CollectClimber(climber).until(operatorController.climb()),
             new Climb(climber)
         );
     }
