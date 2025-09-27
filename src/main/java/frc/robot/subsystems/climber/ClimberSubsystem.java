@@ -37,6 +37,7 @@ public class ClimberSubsystem extends SubsystemBase implements ClimberIO {
 
         this.configureClimberMotor();
     }
+    
     private void configureClimberMotor() {
         pivotMotor.setInverted(false);
         pivotMotor.setPositionFactor(250);
@@ -59,7 +60,7 @@ public class ClimberSubsystem extends SubsystemBase implements ClimberIO {
         this.cageIntakeMotor.updateInputs(cageIntakeInputs);
 
         Logger.processInputs("Motors/Climber/Pivot", pivotInputs);
-        Logger.processInputs("Motors/Climber/cageIntake", cageIntakeInputs);
+        Logger.processInputs("Motors/Climber/CageIntake", cageIntakeInputs);
     }
     
     @Override
@@ -90,22 +91,17 @@ public class ClimberSubsystem extends SubsystemBase implements ClimberIO {
 
     @Override
     public void setBrakeClimber(){
-        pivotMotor.setMotorBrake(true);
-        pivotMotor.setMotorBrake(true);
+        this.pivotMotor.setMotorBrake(true);
+        this.cageIntakeMotor.setMotorBrake(true);
     }
 
     @Override
-    public void setCageIntakeDutyCicle(double dutyCicle) {
-        cageIntakeMotor.set(dutyCicle);
+    public void startCollectingClimber(){
+        this.cageIntakeMotor.set(-1);
     }
 
     @Override
-    public void stopClimber(){
-        cageIntakeMotor.set(0);
-    }
-
-    @Override
-    public void setPivotDutyCicle(double dutyCycle) {
-        pivotMotor.set(dutyCycle);
+    public void stopCollectingClimber(){
+        this.cageIntakeMotor.set(0);
     }
 }

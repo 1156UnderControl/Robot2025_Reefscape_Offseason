@@ -3,36 +3,22 @@ package frc.robot;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.pathplanner.lib.auto.AutoBuilder;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
 import frc.robot.constants.FieldConstants.ReefLevel;
 import frc.robot.commands.Intake.IntakeExpellCoral;
-import frc.robot.commands.Intake.MoveIntakeToCollectPosition;
-import frc.robot.commands.Intake.MoveIntakeToHomedPosition;
 import frc.robot.commands.Intake.OverrideCoralMode;
 import frc.robot.commands.Intake.StopCollecting;
-import frc.robot.commands.Scorer.MoveScorerToPrepareScore;
-import frc.robot.commands.Scorer.UpdatePivotInternalEncoder;
 import frc.robot.commands.States.CollectCoralPosition;
 import frc.robot.commands.States.DefaultPosition;
-import frc.robot.commands.States.PreparedToIntakeCageState;
 import frc.robot.commands.States.ScoreObjectPosition;
-import frc.robot.commands.States.BrakeState;
-import frc.robot.commands.States.ClimbState;
-import frc.robot.commands.States.CoastState;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.OperatorController;
-import frc.robot.joysticks.OperatorControllerXbox;
 import frc.robot.subsystems.Intake.IntakeSubsystem;
-import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.scorer.ScorerSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
-import frc.robot.commands.States.PreparedToIntakeCageState;
 
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -108,11 +94,6 @@ public class RobotContainer {
     //    .runEnd(() -> new CoastState(scorer, intake), () -> new BrakeState(scorer, intake)).ignoringDisable(true));
 
     //driverController.y().and(() -> DriverStation.isDisabled()).whileTrue(new UpdatePivotInternalEncoder(scorer).ignoringDisable(true));
-    this.driverController.y().onTrue(
-      new PreparedToIntakeCageState(climber) );
-      
-      this.driverController.b().onTrue(
-        new InstantCommand(() -> this.climber.climb()));
       
   }
   

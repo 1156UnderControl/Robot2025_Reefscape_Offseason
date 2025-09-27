@@ -5,9 +5,8 @@ public interface ClimberIO {
     void goToDefaultPosition();
     void goToPrepareClimbPosition();
     boolean isPreparedToIntake();
-    void setPivotDutyCicle(double dutyCycle);
-    void setCageIntakeDutyCicle(double dutyCicle);
     void setCoastClimber();
     void setBrakeClimber();
-    void stopClimber();
+    void startCollectingClimber();
+    void stopCollectingClimber();
 }
