@@ -79,12 +79,14 @@ public class RobotContainer {
     this.driverController.y().onTrue(
       new IntakeExpellCoral(intake)
     );
-  
 
+    this.keyboard.cancelAction().onTrue(
+      new DefaultPosition(intake, scorer)
+    );
+  
     this.keyboard.removeAlgaeFromBranch().onTrue(
       new CollectAlgaePosition(scorer, keyboard)
-  );
-
+    );
 
     this.keyboard.prepareToScore().and(() -> scorer.hasObject()).onTrue(
       new ScoreObjectPosition(scorer)

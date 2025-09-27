@@ -37,7 +37,7 @@ public interface ScorerIO {
 
     void collectCoralFromIndexer();
 
-    boolean runEndEffectorAlgaeDetection();
+    void runEndEffectorAlgaeDetection();
 
     void placeCoral();
 
@@ -95,13 +95,17 @@ public interface ScorerIO {
 
     void setBrakeMode();
 
-    double getCollectTimer();
+    double getCollectCoralTimer();
 
-    void resetCollectTimer();
+    void resetCollectCoralTimer();
 
     boolean isUpdatingInternalPivotEncoderNecessary();
 
     void updateInternalPivotEncoder();
 
     double getEndEffectorAppliedOutput();
+
+    void holdAlgae();
+
+    void holdCoral();
 }
