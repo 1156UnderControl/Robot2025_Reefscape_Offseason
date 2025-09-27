@@ -47,10 +47,8 @@ public class AutoScoreCoralPosition extends SequentialCommandGroup {
                             .until(operatorKeyboard.scoreObject()
                                   .or(() -> (swerve.isAtTargetPositionWithoutHeading() && scorer.isScorerAtTargetPosition())
                                             && !driverHasCancelledAutoMove)
-                                  .or(() -> hasCancelledAutoMove)),
-      Commands.run(() -> swerve.driveAlignAngleJoystick(), swerve)),
+                                  .or(() -> hasCancelledAutoMove))),
       new MoveScorerToScorePosition(scorer),
-      Commands.waitTime(Seconds.of(0.3)),
       Commands.idle(scorer).alongWith(Commands.run(() -> swerve.driveAlignAngleJoystick(), swerve))
         .until(operatorKeyboard.removeAlgaeFromBranch())
     );
