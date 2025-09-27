@@ -5,7 +5,6 @@ import frc.robot.subsystems.scorer.ScorerSubsystem;
 
 public class MoveScorerToScorePosition extends Command{
     private final ScorerSubsystem scorer;
-    boolean placedCoral = false;
 
     public MoveScorerToScorePosition(ScorerSubsystem scorer){
         this.scorer = scorer;
@@ -13,16 +12,13 @@ public class MoveScorerToScorePosition extends Command{
     }
 
     @Override
-    public void initialize(){
-        placedCoral = false;
-    }
+    public void initialize(){}
 
     @Override
     public void execute(){
         this.scorer.moveToScoreCoral();
         if(this.scorer.isScorerAtTargetPosition()){
             this.scorer.placeCoral();
-            this.placedCoral = true;
         }
     }
     
@@ -31,6 +27,6 @@ public class MoveScorerToScorePosition extends Command{
 
     @Override
     public boolean isFinished() {
-        return placedCoral;
+        return false;
     }
 }
