@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
 import frc.robot.constants.FieldConstants.ReefLevel;
 import frc.robot.constants.FieldConstants.Algae.AlgaeHeightReef;
+import frc.robot.constants.FieldConstants.Algae.AlgaeHeightScore;
 import frc.robot.commands.Intake.IntakeExpellCoral;
 import frc.robot.commands.Intake.MoveIntakeToCollectPosition;
 import frc.robot.commands.Intake.MoveIntakeToHomedPosition;
@@ -21,6 +22,7 @@ import frc.robot.commands.Scorer.MoveScorerToPrepareScore;
 import frc.robot.commands.Scorer.UpdatePivotInternalEncoder;
 import frc.robot.commands.States.CollectCoralPosition;
 import frc.robot.commands.States.DefaultPosition;
+import frc.robot.commands.States.ScoreAlgaePosition;
 import frc.robot.commands.States.ScoreObjectPosition;
 import frc.robot.commands.States.BrakeState;
 import frc.robot.commands.States.CoastState;
@@ -88,14 +90,19 @@ public class RobotContainer {
       new CollectAlgaePosition(scorer, keyboard)
     );
 
-    this.keyboard.prepareToScore().and(() -> scorer.hasObject()).onTrue(
+    this.keyboard.prepareToScore().and(() -> scorer.hasCoral()).onTrue(
       new ScoreObjectPosition(scorer)
+    );
+    
+    this.keyboard.climb().and(() -> scorer.hasAlgae()).onTrue(
+      new ScoreAlgaePosition(scorer, keyboard)
     );
 
     this.keyboard.reefL1()
     .onTrue(new InstantCommand(() -> {
       this.scorer.setTargetCoralLevel(ReefLevel.L1);
       this.scorer.setTargetAlgaeLevel(AlgaeHeightReef.GROUND);
+      this.scorer.setTargetAlgaeLevelToScore(AlgaeHeightScore.PROCESSOR);
     }));
 
     this.keyboard.reefL2()
@@ -108,11 +115,15 @@ public class RobotContainer {
     .onTrue(new InstantCommand(() -> {
       this.scorer.setTargetCoralLevel(ReefLevel.L3);
       this.scorer.setTargetAlgaeLevel(AlgaeHeightReef.MID);
+      ;
     }));
 
     this.keyboard.reefL4().onTrue(
-      new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L4))
-    );
+      new InstantCommand(() -> {
+         this.scorer.setTargetCoralLevel(ReefLevel.L4);
+         this.scorer.setTargetAlgaeLevelToScore(AlgaeHeightScore.NET);
+      }
+    ));
 
 
     

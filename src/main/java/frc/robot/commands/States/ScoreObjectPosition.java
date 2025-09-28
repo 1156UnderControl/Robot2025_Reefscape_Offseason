@@ -2,7 +2,7 @@ package frc.robot.commands.States;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.Scorer.MoveScorerToPrepareScore;
-import frc.robot.commands.Scorer.MoveScorerToScorePosition;
+import frc.robot.commands.Scorer.MoveScorerToScoreCoralPosition;
 import frc.robot.commands.Scorer.StopEndEffector;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.OperatorController;
@@ -20,9 +20,8 @@ public class ScoreObjectPosition extends SequentialCommandGroup {
         addCommands(
             new MoveScorerToPrepareScore(scorer)
             .until(() -> operatorController.scoreObject().getAsBoolean() && this.scorer.isElevatorAtTargetPosition() && this.scorer.isPivotAtTargetPosition()),
-                    new MoveScorerToScorePosition(scorer)
-                    .until(operatorController.cancelAction()),
-                    new StopEndEffector(scorer));
+                    new MoveScorerToScoreCoralPosition(scorer)
+                    .until(operatorController.cancelAction()));
 
     }
 }

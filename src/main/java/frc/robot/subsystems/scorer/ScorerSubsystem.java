@@ -249,7 +249,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     }
 
     @Override
-    public void placeAlgae() {
+    public void expellAlgae() {
         this.setEndEffectorDutyCycle(EndEffectorConstants.tunning_values_endeffector.setpoints.DUTY_CYCLE_EXPELL_ALGAE);
         this.hasAlgae = false;
     }
@@ -262,6 +262,11 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     @Override
     public void setTargetAlgaeLevel(AlgaeHeightReef algaeHeightReef) {
         this.algaeHeightReef = algaeHeightReef;
+    }
+
+    @Override
+    public void setTargetAlgaeLevelToScore(AlgaeHeightScore algaeHeightScore){
+        this.algaeHeightScore = algaeHeightScore;
     }
 
     @Override
