@@ -46,6 +46,7 @@ public class PivotConstants {
       public static final double DEFAULT_ANGLE_WITH_GAME_PIECE = 90;
       public static final double DEFAULT_ANGLE_WITH_CORAL = 90;
       public static final double DEFAULT_ANGLE_WITH_ALGAE = 90;
+      public static final double ANGLE_FOR_SAFE_CANCEL = 90;
       public static final double CORAL_COLLECT_INDEXER = 265.0;
     }
   }

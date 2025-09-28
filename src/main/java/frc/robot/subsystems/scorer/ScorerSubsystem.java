@@ -301,6 +301,14 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         this.endEffectorMotor.set(-0.5);
         this.setElevatorGoals(this.goalElevatorPosition);
         this.setPivotGoals(this.goalPivotPosition);
+        }
+
+    @Override
+    public void moveScorerToSafeCancelPosition(){
+        this.goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.ANGLE_FOR_SAFE_CANCEL;
+        this.goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.HEIGHT_FOR_SAFE_CANCEL;
+        setElevatorGoals(goalElevatorPosition);
+        setPivotGoals(goalPivotPosition);
     }
 
     @Override

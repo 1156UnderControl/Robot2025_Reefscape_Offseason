@@ -57,6 +57,8 @@ public interface ScorerIO {
 
     void prepareToScoreAlgae();
 
+    void moveScorerToSafeCancelPosition();
+
     void moveToPrepareScoreCoral();
 
     void moveToScoreCoral();
