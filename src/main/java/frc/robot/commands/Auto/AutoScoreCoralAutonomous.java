@@ -1,5 +1,6 @@
 package frc.robot.commands.Auto;
 
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.Scorer.MoveScorerToPrepareScore;
@@ -16,8 +17,8 @@ public class AutoScoreCoralAutonomous extends SequentialCommandGroup {
         new CollectCoralAutonomous(intake, scorer, false).andThen(new MoveScorerToPrepareScore(scorer)).deadlineFor(new SwerveGoToBackupDirectAutonomous(swerve, branch, true)),
         new SwerveGoToBranchFastAutonomousWithoutBackup(swerve, branch, true),
         new MoveScorerToScorePosition(scorer),
-        new WaitCommand(0.3),
-        new SwerveGoToBackupDirectAutonomous(swerve, branch, true)
+        new WaitCommand(0.3).alongWith(Commands.idle(scorer)),
+        new SwerveGoToBackupDirectAutonomous(swerve, branch, true).alongWith(Commands.idle(scorer))
         );
   }
 }
