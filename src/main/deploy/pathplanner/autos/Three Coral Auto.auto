@@ -1,0 +1,49 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Set Coral Level L4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score Coral C"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "First Lollipop"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score Coral F"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Second Lollipop"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score coral G"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

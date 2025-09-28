@@ -7,6 +7,12 @@
         {
           "type": "named",
           "data": {
+            "name": "Set Coral Level L4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "Auto Score Coral C"
           }
         }
