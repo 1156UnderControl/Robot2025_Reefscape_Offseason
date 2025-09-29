@@ -7,6 +7,12 @@
         {
           "type": "named",
           "data": {
+            "name": "ResetOdometry Left"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "Set Coral Level L4"
           }
         },
@@ -38,6 +44,18 @@
           "type": "named",
           "data": {
             "name": "Score Coral A"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Third Lollipop"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score Coral B"
           }
         }
       ]
