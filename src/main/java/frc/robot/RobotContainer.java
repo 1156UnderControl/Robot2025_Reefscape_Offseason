@@ -81,7 +81,7 @@ public class RobotContainer {
     );
 
     this.keyboard.prepareToScore().and(() -> scorer.hasObject()).onTrue(
-      new ScoreObjectPosition(scorer)
+      new ScoreObjectPosition(scorer, keyboard)
     );
 
     this.keyboard.cancelAction().onTrue(
@@ -91,10 +91,6 @@ public class RobotContainer {
     this.keyboard.removeAlgaeFromBranch().onTrue(
       new CollectAlgaePosition(scorer, keyboard)
     );
-
-    //this.keyboard.climb().and(() -> this.scorer.hasAlgae()).onTrue(
-    //  new ScoreAlgaePosition(scorer, keyboard)
-    //);
 
     this.keyboard.reefL1()
     .onTrue(new InstantCommand(() -> {
