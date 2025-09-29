@@ -349,9 +349,9 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
 
   public void setAngleForClimb() {
     if (this.getPose().getX() >= FieldConstants.fieldLength / 2) {
-      this.bestAngleForClimb = Rotation2d.fromDegrees(90);
-    } else {
       this.bestAngleForClimb = Rotation2d.fromDegrees(-90);
+    } else {
+      this.bestAngleForClimb = Rotation2d.fromDegrees(90);
     }
   }
 
