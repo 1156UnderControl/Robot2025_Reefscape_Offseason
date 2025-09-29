@@ -73,8 +73,6 @@ public interface ScorerIO {
 
     boolean isPivotAtTargetPosition();
 
-    Supplier<Boolean> getReefScoringModeSupplier();
-
     Supplier<ReefLevel> getTargetCoralReefLevelSupplier();
 
     Supplier<AlgaeHeightReef> getTargetAlgaeReefLevelSupplier();

@@ -30,11 +30,16 @@ public class DriverController implements IDriverController {
   @Override
   public double getXtranslation() {
     if (turboActivate().getAsBoolean()) {
-      return MathUtil.applyDeadband(
+      return -MathUtil.applyDeadband(
               performAllianceInputDirectionCorrection(driverController.getLeftX()), this.deadBand)
           * 1;
     }
-    return MathUtil.applyDeadband(
+    if(this.slowActivate().getAsBoolean()){
+      return -MathUtil.applyDeadband(
+              performAllianceInputDirectionCorrection(driverController.getLeftX()), this.deadBand)
+          * 0.12;
+    }
+    return -MathUtil.applyDeadband(
             performAllianceInputDirectionCorrection(driverController.getLeftX()), this.deadBand)
         * 0.7;
   }
@@ -42,28 +47,38 @@ public class DriverController implements IDriverController {
   @Override
   public double getYtranslation() {
     if (turboActivate().getAsBoolean()) {
-      return MathUtil.applyDeadband(
+      return -MathUtil.applyDeadband(
               performAllianceInputDirectionCorrection(driverController.getLeftY()), this.deadBand)
           * 1.0;
     }
-    return MathUtil.applyDeadband(
+    if(this.slowActivate().getAsBoolean()){
+      return -MathUtil.applyDeadband(
+              performAllianceInputDirectionCorrection(driverController.getLeftY()), this.deadBand)
+          * 0.12;
+    }
+    return -MathUtil.applyDeadband(
             performAllianceInputDirectionCorrection(driverController.getLeftY()), this.deadBand)
         * 0.7;
   }
 
   @Override
   public double getCOS_Joystick() {
-    return performAllianceInputDirectionCorrection(driverController.getRightX());
+    return -performAllianceInputDirectionCorrection(driverController.getRightX());
   }
 
   @Override
   public double getSIN_Joystick() {
-    return performAllianceInputDirectionCorrection(driverController.getRightY());
+    return -performAllianceInputDirectionCorrection(driverController.getRightY());
   }
 
   @Override
   public Trigger turboActivate() {
     return driverController.rightTrigger(0.2);
+  }
+
+  @Override
+  public Trigger slowActivate() {
+    return driverController.leftTrigger(0.2);
   }
 
   @Override

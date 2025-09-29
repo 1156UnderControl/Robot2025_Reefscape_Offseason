@@ -61,6 +61,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     private boolean manualScoreCoral;
     private boolean manualScoreAlgae;
 
+
     private boolean pivotSafeMeasuresEnabled;
     
     private StabilizeChecker stablePosition = new StabilizeChecker(0.2);
@@ -110,6 +111,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         this.hasAlgae = false;
         this.coralHeightReef = ReefLevel.L1;
         this.scorerState = "Idle";
+
 
         this.goalElevatorPosition = 0;
         this.goalPivotPosition = 0;
@@ -161,6 +163,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         this.updateLogs(scorerInputs);
         SmartDashboard.putNumber("CollectTimer", this.getCollectTimer());
     }
+
 
     @Override
     public boolean hasCoral() {
@@ -255,7 +258,6 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     @Override
     public void 
     setTargetCoralLevel(ReefLevel coralHeightReef) {
-        SmartDashboard.putString("ESTADO" , "SETANDO POSICAO: " + coralHeightReef.toString());
         this.coralHeightReef = coralHeightReef;
     }
 
@@ -305,14 +307,17 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     public void moveScorerToDefaultPosition(){
         this.endEffectorAccelerated = false;
         if(this.hasCoral){
+            this.endEffectorMotor.set(EndEffectorConstants.tunning_values_endeffector.setpoints.DUTY_CYCLE_HOLDING_CORAL);
             this.goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.DEFAULT_POSITION_WITH_CORAL;
             this.goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.DEFAULT_ANGLE_WITH_CORAL;
             this.scorerState = "Default_Position_With_Coral";
         } else if (this.hasAlgae){
+            this.endEffectorMotor.set(EndEffectorConstants.tunning_values_endeffector.setpoints.DUTY_CYCLE_HOLDING_ALGAE);
             this.goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.DEFAULT_POSITION_WITH_ALGAE;
             this.goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.DEFAULT_ANGLE_WITH_ALGAE;
             this.scorerState = "Default_Position_With_Algae";
         } else {
+            this.endEffectorMotor.set(0);
             this.goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.DEFAULT_POSITION;
             this.goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.DEFAULT_ANGLE;
             this.scorerState = "Default_Position_Without_Objects";
@@ -373,11 +378,6 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     public void overrideNoObject() {
       this.hasCoral = false;
       this.hasAlgae = false;
-    }
-
-    @Override
-    public Supplier<Boolean> getReefScoringModeSupplier() {
-        return () -> this.elevatorLead.getPosition() > ElevatorConstants.tunning_values_elevator.POSITION_FOR_REDUCING_SWERVE_SPEED;
     }
 
     @Override

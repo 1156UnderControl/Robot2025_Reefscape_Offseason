@@ -47,6 +47,11 @@ public class ControlBoard implements IDriverController, IOperatorController {
   }
 
   @Override
+  public Trigger slowActivate() {
+    return mDriverController.slowActivate();
+  }
+
+  @Override
   public boolean notUsingJoystick() {
     return mDriverController.notUsingJoystick();
   }
