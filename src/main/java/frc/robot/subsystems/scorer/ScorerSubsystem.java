@@ -129,6 +129,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         scorerInputs.isAtPositionPivot = isPivotAtTargetPosition();
         scorerInputs.targetCoralLevel = this.coralHeightReef;
         scorerInputs.targetAlgaeLevel = this.algaeHeightReef;
+        scorerInputs.targetAlgaeScoreLevel = this.algaeHeightScore;
         scorerInputs.manualScoreCoral = this.manualScoreCoral;
         scorerInputs.manualScoreAlgae = this.manualScoreAlgae;
         scorerInputs.pivotSafeMeasuresEnabled = this.pivotSafeMeasuresEnabled;
@@ -370,9 +371,9 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     @Override
     public void moveScorerToScoreAlgae(){
         this.assignmentReefLevelGoalsForAlgaeScore();
-        this.setElevatorGoals(goalElevatorPosition);
-        if(isElevatorAtTargetPosition()){
-            this.setPivotGoals(goalPivotPosition);
+        this.setPivotGoals(goalPivotPosition);
+        if(isPivotAtTargetPosition()){
+            this.setElevatorGoals(goalElevatorPosition);
         }
     }
 

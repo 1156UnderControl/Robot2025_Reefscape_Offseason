@@ -22,6 +22,7 @@ public interface ScorerIO {
         public boolean isAtPositionElevator = false;
         public ReefLevel targetCoralLevel = ReefLevel.L1;
         public AlgaeHeightReef targetAlgaeLevel = AlgaeHeightReef.MID;
+        public AlgaeHeightScore targetAlgaeScoreLevel = AlgaeHeightScore.PROCESSOR;
         public boolean manualScoreCoral = false;
         public boolean manualScoreAlgae = false;
         public boolean pivotSafeMeasuresEnabled = false;
