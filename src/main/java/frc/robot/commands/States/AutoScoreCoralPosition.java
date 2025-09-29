@@ -31,12 +31,6 @@ public class AutoScoreCoralPosition extends SequentialCommandGroup {
       new GoAndRaiseElevator(swerve, scorer, branch)
         .until(
           new Trigger(() -> {
-            if (driverController.isForcingDriverControl().getAsBoolean()) {
-              driverHasCancelledAutoMove = true;
-            }
-            return driverHasCancelledAutoMove;
-          })
-          .or(() -> {
             if (operatorKeyboard.scoreObject().getAsBoolean()) {
               hasCancelledAutoMove = true;
             }
@@ -45,8 +39,7 @@ public class AutoScoreCoralPosition extends SequentialCommandGroup {
         ),
       new ParallelRaceGroup(new MoveScorerToPrepareScore(scorer)
                             .until(operatorKeyboard.scoreObject()
-                                  .or(() -> (swerve.isAtTargetPositionWithoutHeading() && scorer.isScorerAtTargetPosition())
-                                            && !driverHasCancelledAutoMove)
+                                  .or(() -> (swerve.isAtTargetPositionWithoutHeading() && scorer.isScorerAtTargetPosition()))
                                   .or(() -> hasCancelledAutoMove))),
       new MoveScorerToScorePosition(scorer).until(operatorKeyboard.cancelAction())
         .alongWith(Commands.run(() -> swerve.driveAlignAngleJoystick(), swerve))
