@@ -27,6 +27,6 @@ public class MoveScorerToScorePosition extends Command{
 
     @Override
     public boolean isFinished() {
-        return this.scorer.isScorerAtTargetPosition();
+        return false;
     }
 }
