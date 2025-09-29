@@ -3,10 +3,6 @@ package frc.robot.subsystems.scorer;
 import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.AutoLog;
-
-import com.pathplanner.lib.auto.AutoBuilder.TriFunction;
-
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.FieldConstants.Algae.AlgaeHeightReef;
 import frc.robot.constants.FieldConstants.Algae.AlgaeHeightScore;
 import frc.robot.constants.FieldConstants.ReefLevel;

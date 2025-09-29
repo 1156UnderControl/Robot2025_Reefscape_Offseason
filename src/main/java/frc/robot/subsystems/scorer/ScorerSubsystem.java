@@ -107,8 +107,8 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         this.hasAlgae = false;
         this.coralHeightReef = ReefLevel.L1;
         this.algaeHeightReef = AlgaeHeightReef.LOW;
+        this.algaeHeightScore = AlgaeHeightScore.PROCESSOR;
         this.scorerState = "Idle";
-
 
         this.goalElevatorPosition = 0;
         this.goalPivotPosition = 0;
@@ -552,12 +552,14 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
 
     private void assignmentReefLevelGoalsForAlgaeScore(){
         switch (this.algaeHeightScore){
-            case PROCESSOR:
+        case PROCESSOR:
             goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.PROCESSOR_HEIGHT;
             goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.PROCESSOR_ANGLE;
+            break;
         case NET:
             goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.NET_HEIGHT;
             goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.NET_ANGLE;
+            break;
         default:
             break;
     }
