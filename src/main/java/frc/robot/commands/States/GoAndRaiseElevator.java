@@ -5,6 +5,7 @@ import frc.robot.commands.Scorer.MoveScorerToPrepareScore;
 import frc.robot.commands.Swerve.SwerveGoToBackupIfNecessary;
 import frc.robot.commands.Swerve.SwerveGoToBranch;
 import frc.robot.constants.SwerveConstants.TargetBranch;
+import frc.robot.joysticks.OperatorController;
 import frc.robot.subsystems.scorer.ScorerSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 
@@ -12,7 +13,7 @@ public class GoAndRaiseElevator extends SequentialCommandGroup {
   public GoAndRaiseElevator(SwerveSubsystem swerve, ScorerSubsystem scorer, TargetBranch branch) {
     addCommands(
       new SwerveGoToBackupIfNecessary(swerve, branch),
-      new MoveScorerToPrepareScore(scorer),
+      new MoveScorerToPrepareScore(scorer).until(() -> scorer.isScorerAtTargetPosition()),
       new SwerveGoToBranch(swerve, branch)
       );
   }
