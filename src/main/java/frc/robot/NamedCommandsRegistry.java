@@ -58,7 +58,7 @@ public class NamedCommandsRegistry {
   }
 
   private void registerIntakeCommands(ScorerSubsystem scorer) {
-    NamedCommands.registerCommand("Intake Coral", new CollectCoralAutonomous(intake, scorer, true));
+    NamedCommands.registerCommand("Intake Coral", new CollectCoralAutonomous(intake, scorer));
   }
 
   private void registerCoralScoringCommands(IntakeSubsystem intake, ScorerSubsystem scorer, SwerveSubsystem drivetrain) {
