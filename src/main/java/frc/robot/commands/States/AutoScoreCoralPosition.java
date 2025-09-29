@@ -39,7 +39,7 @@ public class AutoScoreCoralPosition extends SequentialCommandGroup {
                             .until(operatorKeyboard.scoreObject()
                                   .or(() -> (swerve.isAtTargetPositionWithoutHeading() && scorer.isScorerAtTargetPosition()))
                                   .or(() -> hasCancelledAutoMove))),
-      new MoveScorerToScoreCoralPosition(scorer).until(operatorKeyboard.cancelAction())
+      new MoveScorerToScorePosition(scorer)
         .alongWith(Commands.run(() -> swerve.driveAlignAngleJoystick(), swerve))
     );
   }

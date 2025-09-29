@@ -12,6 +12,7 @@ import frc.robot.constants.FieldConstants.ReefLevel;
 import frc.robot.constants.SwerveConstants.TargetBranch;
 import frc.robot.constants.FieldConstants.Algae.AlgaeHeightReef;
 import frc.robot.constants.FieldConstants.Algae.AlgaeHeightScore;
+import frc.robot.commands.Intake.IntakeExpellCoral;
 import frc.robot.commands.Intake.OverrideCoralMode;
 import frc.robot.commands.Intake.StopCollecting;
 import frc.robot.commands.States.CollectCoralPosition;
@@ -72,6 +73,10 @@ public class RobotContainer {
 
     this.driverController.a().onTrue(
       new OverrideCoralMode(intake, true)
+    );
+
+    this.driverController.y().whileTrue(
+      new IntakeExpellCoral(intake)
     );
 
     this.keyboard.prepareToScore().and(() -> scorer.hasObject()).onTrue(
