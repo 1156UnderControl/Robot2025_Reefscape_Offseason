@@ -19,37 +19,25 @@
         {
           "type": "named",
           "data": {
-            "name": "Score Coral I"
+            "name": "Score Coral F"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "First Lollipop"
+            "pathName": "First Lollipop Right"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Score Coral L"
+            "name": "Score Coral C"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Second Lollipop"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Score Coral A"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Third Lollipop"
+            "pathName": "Second Lollipop Right"
           }
         },
         {
@@ -57,11 +45,23 @@
           "data": {
             "name": "Score Coral B"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Third Lollipop Right"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score Coral A"
+          }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Right Autos",
   "choreoAuto": false
 }

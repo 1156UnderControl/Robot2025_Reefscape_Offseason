@@ -3,9 +3,15 @@
   "robotLength": 0.792,
   "holonomicMode": true,
   "pathFolders": [
+    "Left Paths",
+    "Right Paths",
     "Odometry"
   ],
-  "autoFolders": [],
+  "autoFolders": [
+    "Left Autos",
+    "Odometry Autos",
+    "Right Autos"
+  ],
   "defaultMaxVel": 3.5,
   "defaultMaxAccel": 2.5,
   "defaultMaxAngVel": 540.0,

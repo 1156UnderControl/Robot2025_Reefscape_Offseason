@@ -13,25 +13,25 @@
         {
           "type": "named",
           "data": {
-            "name": "Score Coral I"
+            "name": "Score Coral F"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "First Lollipop"
+            "pathName": "First Lollipop Right"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Score Coral L"
+            "name": "Score Coral C"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Second Lollipop"
+            "pathName": "Second Lollipop Right"
           }
         },
         {
@@ -44,6 +44,6 @@
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Right Autos",
   "choreoAuto": false
 }

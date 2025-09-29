@@ -5,21 +5,15 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Set Coral Level L4"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Score Coral I"
+            "pathName": "Two Meter Test"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Odometry Autos",
   "choreoAuto": false
 }
