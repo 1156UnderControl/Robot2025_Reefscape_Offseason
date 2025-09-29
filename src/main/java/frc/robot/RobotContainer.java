@@ -93,8 +93,8 @@ public class RobotContainer {
     this.keyboard.prepareToScore().and(() -> scorer.hasCoral()).onTrue(
       new ScoreObjectPosition(scorer)
     );
-    
-    this.keyboard.climb().and(() -> scorer.hasAlgae()).onTrue(
+
+    this.keyboard.climb().and(() -> this.scorer.hasAlgae()).onTrue(
       new ScoreAlgaePosition(scorer, keyboard)
     );
 

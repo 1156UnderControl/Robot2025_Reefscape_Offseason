@@ -350,13 +350,19 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         this.elevatorLead.setPositionReference(this.goalElevatorPosition);
     }
 
-
     @Override
     public void moveScorerToCollectAlgae(){
         this.assignmentReefLevelGoalsForAlgaeCollect();
-        this.setElevatorGoals(goalElevatorPosition);
-        if(isElevatorAtTargetPosition()){
+        if(this.algaeHeightReef == AlgaeHeightReef.GROUND){
             this.setPivotGoals(goalPivotPosition);
+            if(this.isPivotAtTargetPosition()){
+                this.setElevatorGoals(goalElevatorPosition);
+            }
+        } else {
+            this.setElevatorGoals(goalElevatorPosition);
+            if(isElevatorAtTargetPosition()){
+                this.setPivotGoals(goalPivotPosition);
+            }
         }
     }
 
@@ -546,13 +552,11 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     private void assignmentReefLevelGoalsForAlgaeScore(){
         switch (this.algaeHeightScore){
             case PROCESSOR:
-            goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.NET_HEIGHT;
-            goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.NET_ANGLE;
-            break;
+            goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.PROCESSOR_HEIGHT;
+            goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.PROCESSOR_ANGLE;
         case NET:
             goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.NET_HEIGHT;
             goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.NET_ANGLE;
-            break;
         default:
             break;
     }

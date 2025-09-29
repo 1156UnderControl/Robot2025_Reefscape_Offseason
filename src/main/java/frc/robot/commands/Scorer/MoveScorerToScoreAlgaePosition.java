@@ -14,7 +14,6 @@ private ScorerSubsystem scorer;
     addRequirements(scorer);
   }
 
-
   @Override
   public void initialize() {}
 

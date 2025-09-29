@@ -5,15 +5,12 @@ import frc.robot.subsystems.scorer.ScorerSubsystem;
 
 
 public class ExpellAlgae extends Command {
-private ScorerSubsystem scorer;
+  private ScorerSubsystem scorer;
+
   public ExpellAlgae(ScorerSubsystem scorer) {
-
-this.scorer = scorer;
-
-addRequirements(this.scorer);
-
+    this.scorer = scorer;
+    addRequirements(this.scorer);
   }
-
 
   @Override
   public void initialize() {}
@@ -23,11 +20,8 @@ addRequirements(this.scorer);
     this.scorer.expellAlgae();
   }
 
-
   @Override
-  public void end(boolean interrupted) {
-  }
-
+  public void end(boolean interrupted) {}
 
   @Override
   public boolean isFinished() {

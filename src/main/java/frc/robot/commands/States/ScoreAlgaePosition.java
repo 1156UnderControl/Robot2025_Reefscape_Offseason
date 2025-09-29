@@ -17,12 +17,9 @@ OperatorController keyboard;
 
     addCommands(
       new MoveScorerToScoreAlgaePosition(scorer)
-          .until(() -> keyboard.scoreObject().getAsBoolean()
-              && this.scorer.isElevatorAtTargetPosition()
-              && this.scorer.isPivotAtTargetPosition()),
-  
+          .until(keyboard.scoreObject().and(() -> this.scorer.isScorerAtTargetPosition())),
       new ExpellAlgae(scorer)
-          .until(() -> keyboard.cancelAction().getAsBoolean())
-  );
+          .until(keyboard.cancelAction())
+      );
   }
 }
