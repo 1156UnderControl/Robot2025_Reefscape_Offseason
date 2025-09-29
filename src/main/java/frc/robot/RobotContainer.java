@@ -10,14 +10,16 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
 import frc.robot.constants.FieldConstants.ReefLevel;
 import frc.robot.constants.SwerveConstants.TargetBranch;
-import frc.robot.commands.States.CollectCoralPosition;
-import frc.robot.commands.States.DefaultPosition;
-import frc.robot.commands.States.ScoreObjectPosition;
-import frc.robot.commands.States.AutoScoreCoralPosition;
-import frc.robot.commands.Intake.IntakeExpellCoral;
+import frc.robot.constants.FieldConstants.Algae.AlgaeHeightReef;
+import frc.robot.constants.FieldConstants.Algae.AlgaeHeightScore;
 import frc.robot.commands.Intake.OverrideCoralMode;
 import frc.robot.commands.Intake.StopCollecting;
-import frc.robot.commands.States.AlignToClimb;
+import frc.robot.commands.States.CollectCoralPosition;
+import frc.robot.commands.States.DefaultPosition;
+import frc.robot.commands.States.ScoreAlgaePosition;
+import frc.robot.commands.States.ScoreObjectPosition;
+import frc.robot.commands.States.AutoScoreCoralPosition;
+import frc.robot.commands.States.CollectAlgaePosition;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.OperatorController;
 import frc.robot.subsystems.Intake.IntakeSubsystem;
@@ -76,25 +78,44 @@ public class RobotContainer {
       new ScoreObjectPosition(scorer)
     );
 
-    this.keyboard.reefL1().onTrue(
-      new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L1))
-    );
-
-    this.keyboard.reefL2().onTrue(
-      new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L2))
-    );
-
-    this.keyboard.reefL3().onTrue(
-      new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L3))
-    );
-
-    this.keyboard.reefL4().onTrue(
-      new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L4))
-    );
-
     this.keyboard.cancelAction().onTrue(
       new DefaultPosition(intake, scorer)
     );
+  
+    this.keyboard.removeAlgaeFromBranch().onTrue(
+      new CollectAlgaePosition(scorer, keyboard)
+    );
+
+    this.keyboard.climb().and(() -> this.scorer.hasAlgae()).onTrue(
+      new ScoreAlgaePosition(scorer, keyboard)
+    );
+
+    this.keyboard.reefL1()
+    .onTrue(new InstantCommand(() -> {
+      this.scorer.setTargetCoralLevel(ReefLevel.L1);
+      this.scorer.setTargetAlgaeLevel(AlgaeHeightReef.GROUND);
+      this.scorer.setTargetAlgaeLevelToScore(AlgaeHeightScore.PROCESSOR);
+    }));
+
+    this.keyboard.reefL2()
+    .onTrue(new InstantCommand(() -> {
+      this.scorer.setTargetCoralLevel(ReefLevel.L2);
+      this.scorer.setTargetAlgaeLevel(AlgaeHeightReef.LOW);
+    }));
+
+    this.keyboard.reefL3()
+    .onTrue(new InstantCommand(() -> {
+      this.scorer.setTargetCoralLevel(ReefLevel.L3);
+      this.scorer.setTargetAlgaeLevel(AlgaeHeightReef.MID);
+      ;
+    }));
+
+    this.keyboard.reefL4().onTrue(
+      new InstantCommand(() -> {
+         this.scorer.setTargetCoralLevel(ReefLevel.L4);
+         this.scorer.setTargetAlgaeLevelToScore(AlgaeHeightScore.NET);
+      }
+    ));
     
     //this.keyboard.alignToClimb().onTrue(
     // new AlignToClimb(climber, swerve)

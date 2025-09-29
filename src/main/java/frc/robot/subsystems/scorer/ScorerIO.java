@@ -3,11 +3,8 @@ package frc.robot.subsystems.scorer;
 import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.AutoLog;
-
-import com.pathplanner.lib.auto.AutoBuilder.TriFunction;
-
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.FieldConstants.Algae.AlgaeHeightReef;
+import frc.robot.constants.FieldConstants.Algae.AlgaeHeightScore;
 import frc.robot.constants.FieldConstants.ReefLevel;
 import frc.robot.constants.SwerveConstants.TargetBranch;
 
@@ -21,6 +18,7 @@ public interface ScorerIO {
         public boolean isAtPositionElevator = false;
         public ReefLevel targetCoralLevel = ReefLevel.L1;
         public AlgaeHeightReef targetAlgaeLevel = AlgaeHeightReef.MID;
+        public AlgaeHeightScore targetAlgaeScoreLevel = AlgaeHeightScore.PROCESSOR;
         public boolean manualScoreCoral = false;
         public boolean manualScoreAlgae = false;
         public boolean pivotSafeMeasuresEnabled = false;
@@ -37,15 +35,19 @@ public interface ScorerIO {
 
     void collectCoralFromIndexer();
 
-    boolean runEndEffectorObjectDetection();
+    void runEndEffectorAlgaeDetection();
 
     void placeCoral();
 
-    void placeAlgae();
+    void expellAlgae();
+
+    void collectAlgae();
 
     void setTargetCoralLevel(ReefLevel coralHeightReef);
 
     void setTargetAlgaeLevel(AlgaeHeightReef algaeHeightReef);
+
+    void setTargetAlgaeLevelToScore(AlgaeHeightScore algaeHeightScore);
 
     void setAutoAlgaeCollectBranch(TargetBranch autoAlgaeCollectBranch);
 
@@ -55,11 +57,13 @@ public interface ScorerIO {
 
     void stopEndEffector();
 
-    void prepareToScoreAlgae();
-
     void moveToPrepareScoreCoral();
 
     void moveToScoreCoral();
+
+    void moveScorerToCollectAlgae();
+
+    void moveScorerToScoreAlgae();
 
     void moveScorerToDefaultPosition();
 
@@ -89,13 +93,17 @@ public interface ScorerIO {
 
     void setBrakeMode();
 
-    double getCollectTimer();
+    double getCollectCoralTimer();
 
-    void resetCollectTimer();
+    void resetCollectCoralTimer();
 
     boolean isUpdatingInternalPivotEncoderNecessary();
 
     void updateInternalPivotEncoder();
 
     double getEndEffectorAppliedOutput();
+
+    void holdAlgae();
+
+    void holdCoral();
 }
