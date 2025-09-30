@@ -311,9 +311,9 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
             this.goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.DEFAULT_ANGLE_WITH_CORAL;
             this.scorerState = "Default_Position_With_Coral";
         } else if (this.hasAlgae){
+            this.endEffectorMotor.set(0.05);
             this.goalElevatorPosition = ElevatorConstants.tunning_values_elevator.setpoints.DEFAULT_POSITION_WITH_ALGAE;
             this.goalPivotPosition = PivotConstants.tunning_values_pivot.setpoints.DEFAULT_ANGLE_WITH_ALGAE;
-            this.endEffectorMotor.set(0.05);
             this.scorerState = "Default_Position_With_Algae";
         } else {
             this.endEffectorMotor.set(0);
