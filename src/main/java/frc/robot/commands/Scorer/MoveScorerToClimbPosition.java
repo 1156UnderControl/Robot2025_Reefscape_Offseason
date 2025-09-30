@@ -1,6 +1,8 @@
 package frc.robot.commands.Scorer;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.constants.ElevatorConstants;
+import frc.robot.constants.PivotConstants;
 import frc.robot.subsystems.scorer.ScorerSubsystem;
 
 public class MoveScorerToClimbPosition extends Command{
@@ -26,6 +28,6 @@ public class MoveScorerToClimbPosition extends Command{
 
     @Override
     public boolean isFinished() {
-        return false;
+        return this.scorer.isElevatorAtTargetPosition(ElevatorConstants.tunning_values_elevator.setpoints.CLIMB_POSITION) && this.scorer.isPivotAtTargetPosition(PivotConstants.tunning_values_pivot.setpoints.CLIMB_ANGLE);
     }
 }

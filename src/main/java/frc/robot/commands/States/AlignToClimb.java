@@ -1,6 +1,5 @@
 package frc.robot.commands.States;
 
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.Climber.Climb;
 import frc.robot.commands.Climber.CollectClimber;
@@ -20,7 +19,8 @@ public class AlignToClimb extends SequentialCommandGroup {
         this.climber = climber;
         this.scorer = scorer;
         addCommands(
-            new AlignToCage(swerve).alongWith(new CollectClimber(climber).alongWith(new MoveScorerToClimbPosition(scorer))).until(operatorController.climb()),
+            new MoveScorerToClimbPosition(scorer),
+            new AlignToCage(swerve).alongWith(new CollectClimber(climber)).until(operatorController.climb()),
             new Climb(climber)
         );
     }
