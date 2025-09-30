@@ -8,9 +8,9 @@ public class ClimberConstants {
   
     public class setpoints {
       public static final double DUTY_CYCLE_INTAKE = 1.0;
-      public static final double CLIMBED_ANGLE = 0.32;
-      public static final double PREPARE_CLIMBED_ANGLE = -0.28;
-      public static final double DEFAULT_ANGLE = 0;
+      public static final double CLIMBED_ANGLE = 0.14;
+      public static final double PREPARE_CLIMBED_ANGLE = -0.41;
+      public static final double DEFAULT_ANGLE = 0.13;
     }
     public class PID {
       public static final double P = 500;
