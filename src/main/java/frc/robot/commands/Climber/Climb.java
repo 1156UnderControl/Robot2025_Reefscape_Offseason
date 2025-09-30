@@ -16,7 +16,6 @@ public class Climb extends Command{
 
     @Override
     public void execute() {
-        this.climber.stopCollectingClimber();
         this.climber.goToClimbedPosition();
     }
 

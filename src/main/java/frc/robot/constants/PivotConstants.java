@@ -41,7 +41,7 @@ public class PivotConstants {
       public static final double L4_ANGLE_PREPARED = 140.6;
       public static final double ALGAE_COLLECT_MID = 180;
       public static final double ALGAE_COLLECT_LOW = 180;
-      public static final double CLIMB_ANGLE = 180;
+      public static final double CLIMB_ANGLE = 204;
       public static final double ALGAE_COLLECT_GROUND = 213.8;
       //182
       public static final double DEFAULT_ANGLE = 266.0;
