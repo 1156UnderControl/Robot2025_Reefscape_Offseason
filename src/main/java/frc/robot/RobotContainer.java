@@ -15,9 +15,9 @@ import frc.robot.constants.FieldConstants.Algae.AlgaeHeightScore;
 import frc.robot.commands.Intake.IntakeExpellCoral;
 import frc.robot.commands.Intake.OverrideCoralMode;
 import frc.robot.commands.Intake.StopCollecting;
+import frc.robot.commands.Scorer.CollectCoralFromIndexer;
 import frc.robot.commands.States.CollectCoralPosition;
 import frc.robot.commands.States.DefaultPosition;
-import frc.robot.commands.States.ScoreAlgaePosition;
 import frc.robot.commands.States.ScoreObjectPosition;
 import frc.robot.commands.States.AlignToClimb;
 import frc.robot.commands.States.AutoScoreCoralPosition;
@@ -63,17 +63,17 @@ public class RobotContainer {
   }
 
   private void configureButtonBindings() {
+
+    this.driverController.a().onTrue(
+      new CollectCoralFromIndexer(scorer, intake)
+    ).and(() -> !scorer.hasObject() && intake.indexerHasCoral());
     
     this.driverController.x().onTrue(
-      new CollectCoralPosition(intake, scorer)
-    ).and(() -> !scorer.hasObject());
+      new CollectCoralPosition(intake)
+    ).and(() -> !intake.indexerHasCoral());
 
     this.driverController.b().onTrue(
       new StopCollecting(intake)
-    );
-
-    this.driverController.a().onTrue(
-      new OverrideCoralMode(intake, true)
     );
 
     this.driverController.y().whileTrue(
