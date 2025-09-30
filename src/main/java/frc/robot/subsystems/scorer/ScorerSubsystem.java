@@ -78,6 +78,8 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
 
     private boolean goingToTargetPivotPosition;
 
+    private boolean goingToClimbElevatorPosition;
+
     public static ScorerSubsystem getInstance() {
         if (instance == null) {
           instance = new ScorerSubsystem();
@@ -120,6 +122,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         this.collectCoralTimer = new Timer();
         this.goingToTargetPivotPosition = false;
         this.stablePositionForAlgaeDetection = new StabilizeChecker(0.2);
+        this.goingToClimbElevatorPosition = false;
     }
 
     private void updateLogs(ScorerIOInputsAutoLogged scorerInputs) {
@@ -617,5 +620,22 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
     private void setPivotGoals(double targetPivotPosition){
         goalPivotPosition = targetPivotPosition;
         this.pivotMotor.setPositionReference(targetPivotPosition);
+    }
+
+    public void moveScorerToClimbPosition() {
+        if(!this.goingToClimbElevatorPosition){
+            this.setElevatorGoals(ElevatorConstants.tunning_values_elevator.setpoints.SAFE_TO_DEFAULT_POSITION);
+            if(this.isElevatorAtTargetPosition()){
+                this.setPivotGoals(PivotConstants.tunning_values_pivot.setpoints.CLIMB_ANGLE);
+                if(isPivotAtTargetPosition()){
+                    this.setElevatorGoals(ElevatorConstants.tunning_values_elevator.setpoints.CLIMB_POSITION);
+                    this.goingToClimbElevatorPosition = true;
+                }
+            }
+        }
+    }
+
+    public void setGoingToClimbElevatorPositionFalse(){
+        this.goingToClimbElevatorPosition = false;
     }
 }

@@ -106,4 +106,6 @@ public interface ScorerIO {
     void holdAlgae();
 
     void holdCoral();
+    
+    void moveScorerToClimbPosition();
 }
