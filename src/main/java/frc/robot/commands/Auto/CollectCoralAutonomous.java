@@ -16,7 +16,7 @@ public class CollectCoralAutonomous extends Command {
 
   @Override
   public void initialize() {
-    this.scorer.resetCollectTimer();
+    this.scorer.resetCollectCoralTimer();
   }
 
   @Override
@@ -31,13 +31,13 @@ public class CollectCoralAutonomous extends Command {
 
   @Override
   public boolean isFinished() {
-    return this.scorer.getCollectTimer() > 0.5 || this.scorer.hasCoral();
+    return this.scorer.getCollectCoralTimer() > 0.5 || this.scorer.hasCoral();
   }
 
   @Override
   public void end(boolean interrupted) {
     this.scorer.overrideHasCoral();
     this.scorer.stopEndEffector();
-    this.scorer.resetCollectTimer();
+    this.scorer.resetCollectCoralTimer();
   }
 }
