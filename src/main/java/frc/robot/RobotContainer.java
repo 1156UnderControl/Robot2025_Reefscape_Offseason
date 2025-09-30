@@ -13,9 +13,11 @@ import frc.robot.constants.SwerveConstants.TargetBranch;
 import frc.robot.constants.FieldConstants.Algae.AlgaeHeightReef;
 import frc.robot.constants.FieldConstants.Algae.AlgaeHeightScore;
 import frc.robot.commands.Intake.IntakeExpellCoral;
+import frc.robot.commands.Intake.MoveIntakeToHomedPosition;
 import frc.robot.commands.Intake.OverrideCoralMode;
 import frc.robot.commands.Intake.StopCollecting;
 import frc.robot.commands.Scorer.CollectCoralFromIndexer;
+import frc.robot.commands.Scorer.MoveScorerToDefaultPosition;
 import frc.robot.commands.States.CollectCoralPosition;
 import frc.robot.commands.States.DefaultPosition;
 import frc.robot.commands.States.ScoreObjectPosition;
@@ -55,7 +57,8 @@ public class RobotContainer {
       this.keyboard = OperatorController.getInstance();
       this.scorer.setIntakeUpSupplier(this.intake.getIntakeUpSupplier());
       this.swerve.setDefaultCommand(Commands.run(() -> swerve.driveAlignAngleJoystick(), this.swerve));
-      this.scorer.setDefaultCommand(new DefaultPosition(intake, scorer));
+      this.scorer.setDefaultCommand(new MoveScorerToDefaultPosition(scorer));
+      this.intake.setDefaultCommand(new MoveIntakeToHomedPosition(intake));
       this.climber.setDefaultCommand(Commands.run(() -> this.climber.goToDefaultPosition(), climber));
       this.configureButtonBindings();
       this.namedCommandsRegistry = new NamedCommandsRegistry(swerve, scorer, intake);
@@ -68,14 +71,10 @@ public class RobotContainer {
   }
 
   private void configureButtonBindings() {
-
-    this.driverController.a().onTrue(
-      new CollectCoralFromIndexer(scorer, intake)
-    ).and(() -> !scorer.hasObject() && intake.indexerHasCoral());
     
     this.driverController.x().onTrue(
-      new CollectCoralPosition(intake)
-    ).and(() -> !intake.indexerHasCoral());
+      new CollectCoralPosition(intake, scorer, driverController)
+    );
 
     this.driverController.b().onTrue(
       new StopCollecting(intake)
