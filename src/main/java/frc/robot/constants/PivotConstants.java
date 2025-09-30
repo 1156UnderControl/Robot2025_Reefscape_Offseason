@@ -42,7 +42,7 @@ public class PivotConstants {
       public static final double ALGAE_COLLECT_MID = 180;
       public static final double ALGAE_COLLECT_LOW = 180;
       public static final double CLIMB_ANGLE = 204;
-      public static final double ALGAE_COLLECT_GROUND = 213.8;
+      public static final double ALGAE_COLLECT_GROUND = 197;
       //182
       public static final double DEFAULT_ANGLE = 266.0;
       public static final double DEFAULT_ANGLE_WITH_GAME_PIECE = 90;

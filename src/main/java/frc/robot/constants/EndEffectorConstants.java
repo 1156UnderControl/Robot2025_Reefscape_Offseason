@@ -9,12 +9,12 @@ public class EndEffectorConstants {
 
   public class tunning_values_endeffector {
     public static final double APPLIED_OUTPUT_ERROR_ALLOWED = 0.1;
-    public static final double VELOCITY_TO_DETECT_RPM_FALL = 2500;
-    public static final double MINIMUM_VELOCITY_FOR_DETECTION = 3000;
+    public static final double VELOCITY_TO_DETECT_RPM_FALL = 2600;
+    public static final double MINIMUM_VELOCITY_FOR_DETECTION = 4000;
 
     public class setpoints {
       public static final double DUTY_CYCLE_INTAKE_CORAL = 1;
-      public static final double DUTY_CYCLE_INTAKE_ALGAE = 0.5;
+      public static final double DUTY_CYCLE_INTAKE_ALGAE = 0.7;
       public static final double DUTY_CYCLE_EXPELL_CORAL = -0.3;
       public static final double DUTY_CYCLE_EXPELL_ALGAE = -1;
       public static final double DUTY_CYCLE_EXPELL_CORAL_L1 = 0;
