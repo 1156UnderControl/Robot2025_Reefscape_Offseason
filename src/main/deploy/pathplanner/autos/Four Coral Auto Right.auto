@@ -1,0 +1,67 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "ResetOdometry Left"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Set Coral Level L4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score Coral F"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "First Lollipop Right"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score Coral C"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Second Lollipop Right"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score Coral B"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Third Lollipop Right"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score Coral A"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Right Autos",
+  "choreoAuto": false
+}

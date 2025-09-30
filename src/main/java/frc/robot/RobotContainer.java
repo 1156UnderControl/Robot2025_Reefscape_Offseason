@@ -41,6 +41,7 @@ public class RobotContainer {
     private final IntakeSubsystem intake;
     private final ScorerSubsystem scorer;
     private final ClimberSubsystem climber;
+    private NamedCommandsRegistry namedCommandsRegistry;
   
     private SwerveModuleConstants[] modulesArray = SwerveConstants.getModuleConstants();
   
@@ -50,16 +51,20 @@ public class RobotContainer {
       this.swerve = new SwerveSubsystem(this.scorer.getTargetCoralReefLevelSupplier(), this.scorer.getTargetAlgaeReefLevelSupplier(), SwerveConstants.getSwerveDrivetrainConstants(),
         modulesArray[0], modulesArray[1], modulesArray[2], modulesArray[3]);
       this.climber = ClimberSubsystem.getInstance();
-     
       this.driverController = DriverController.getInstance();
       this.keyboard = OperatorController.getInstance();
-
       this.scorer.setIntakeUpSupplier(this.intake.getIntakeUpSupplier());
       this.swerve.setDefaultCommand(Commands.run(() -> swerve.driveAlignAngleJoystick(), this.swerve));
       this.scorer.setDefaultCommand(new DefaultPosition(intake, scorer));
       this.climber.setDefaultCommand(Commands.run(() -> this.climber.goToDefaultPosition(), climber));
       this.configureButtonBindings();
+      this.namedCommandsRegistry = new NamedCommandsRegistry(swerve, scorer, intake);
+      setNamedCommandsForAuto();
       autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+  }
+
+  private void setNamedCommandsForAuto() {
+    this.namedCommandsRegistry.registerAllAutoCommands();
   }
 
   private void configureButtonBindings() {
