@@ -7,6 +7,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
 import frc.robot.constants.FieldConstants.ReefLevel;
 import frc.robot.constants.SwerveConstants.TargetBranch;
@@ -73,7 +74,12 @@ public class RobotContainer {
   private void configureButtonBindings() {
     
     this.driverController.x().onTrue(
-      new CollectCoralPosition(intake, scorer, driverController)
+      new CollectCoralPosition(intake)
+    );
+
+    this.driverController.a().onTrue(
+      new SequentialCommandGroup(Commands.run(() -> this.intake.setOverrideCoralModeActive(true), scorer).until(() -> this.intake.indexerHasCoral()),
+      new CollectCoralFromIndexer(scorer, intake))
     );
 
     this.driverController.b().onTrue(
