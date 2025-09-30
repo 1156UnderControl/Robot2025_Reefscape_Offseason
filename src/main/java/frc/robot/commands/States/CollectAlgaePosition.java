@@ -12,7 +12,7 @@ public class CollectAlgaePosition extends SequentialCommandGroup {
   public CollectAlgaePosition(ScorerSubsystem scorer, OperatorController keyboard) {
     addCommands(
       new MoveScorerToCollectAlgae(scorer),
-      Commands.idle(scorer)
+      Commands.run(() -> scorer.holdAlgae(), scorer)
     );
   }
 }
