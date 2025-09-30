@@ -3,7 +3,6 @@ package frc.robot.subsystems.Intake;
 import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.Java_Is_UnderControl.Motors.MotorIO;
 import frc.Java_Is_UnderControl.Motors.MotorIOInputsAutoLogged;
@@ -12,7 +11,6 @@ import frc.robot.constants.IntakeConstants;
 
 public class IntakeSubsystem extends SubsystemBase implements IntakeIO{
     private static IntakeSubsystem instance;
-    private final XboxController controller = new XboxController(0);
 
     private final MotorIO intakeWheels;
     private final MotorIO intakePivot;

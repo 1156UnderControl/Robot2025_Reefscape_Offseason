@@ -31,7 +31,7 @@ public class ElevatorConstants {
       public static final double L2_HEIGHT = 0.61;
       public static final double L3_HEIGHT = 0.98;
       public static final double L4_HEIGHT = 1.68;
-      public static final double ALGAE_COLLECT_MID = 1.32;
+      public static final double ALGAE_COLLECT_MID = 1.37;
       public static final double ALGAE_COLLECT_LOW = 0.95;
       public static final double ALGAE_COLLECT_GROUND = 0.757;
       public static final double DEFAULT_POSITION = 0.922;
