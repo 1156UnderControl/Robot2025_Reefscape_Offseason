@@ -14,7 +14,7 @@ public class AutoScoreCoralAutonomous extends SequentialCommandGroup {
 
   public AutoScoreCoralAutonomous(IntakeSubsystem intake, ScorerSubsystem scorer, SwerveSubsystem swerve, TargetBranch branch) {
     addCommands(
-        new CollectCoralAutonomous(intake, scorer).andThen(new MoveScorerToPrepareScore(scorer)).deadlineFor(new SwerveGoToBackupDirectAutonomous(swerve, branch, true)),
+        new MoveScorerToPrepareScore(scorer).deadlineFor(new SwerveGoToBackupDirectAutonomous(swerve, branch, true)),
         new SwerveGoToBranchFastAutonomousWithoutBackup(swerve, branch, true),
         new MoveScorerToScoreCoralPosition(scorer).until(() -> !scorer.hasCoral()),
         new WaitCommand(0.3).alongWith(Commands.idle(scorer)),

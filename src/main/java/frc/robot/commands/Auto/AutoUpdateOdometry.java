@@ -15,6 +15,7 @@ public class AutoUpdateOdometry extends Command {
 
   @Override
   public void initialize() {
+    System.out.println("RESETANDO ODOMETRIA");
   }
 
   @Override

@@ -246,7 +246,6 @@ public abstract class BaseSwerveSubsystem extends TunerSwerveDrivetrain implemen
   }
 
   private void configureAutoBuilder() {
-
     try {
       var config = RobotConfig.fromGUISettings();
       // Configure AutoBuilder last

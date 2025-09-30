@@ -7,13 +7,19 @@
         {
           "type": "named",
           "data": {
+            "name": "ResetOdometry Left XY With Vision"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "Set Coral Level L4"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Score Coral I"
+            "name": "Score Coral J"
           }
         },
         {

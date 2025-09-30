@@ -123,7 +123,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
       SwerveDrivetrainConstants drivetrainConstants,
       SwerveModuleConstants<?, ?, ?>... modules) {
     super(new OdometryEnabledSwerveConfig(0.75, pathPlannerConfig,
-        new LimelightPoseEstimator("limelight-right", false, false, 2),
+        new LimelightPoseEstimator("limelight-ggg", false, false, 2),
         new LimelightPoseEstimator("limelight-ggg", false, false, 2),
         new PIDConfig(6, 0, 0),
         new MoveToPosePIDConfig(SwerveConstants.MOVE_TO_POSE_TRANSLATION_PID,
@@ -171,7 +171,9 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     if (limelightPoseEstimation.isEmpty()) {
       resetTranslation(defaultPosition);
       this.positionUpdated = true;
+      System.out.println("POSE DA LIME É NULA");
     } else {
+      System.out.println("USANDO A POSE DA LIME");
       resetTranslation(limelightPoseEstimation.get().estimatedPose.getTranslation().toTranslation2d());
       this.positionUpdated = true;
     }

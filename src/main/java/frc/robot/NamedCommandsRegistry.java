@@ -72,7 +72,7 @@ public class NamedCommandsRegistry {
   private void registerLevelCommands(ScorerSubsystem scorer) {
     for (ReefLevel level : ReefLevel.values()) {
       if (level != ReefLevel.TO_L4) {
-        NamedCommands.registerCommand("Set Coral Level " + level.name().replace("L", ""),
+        NamedCommands.registerCommand("Set Coral Level " + level.name(),
             new InstantCommand(() -> scorer.setTargetCoralLevel(level)));
       }
     }
