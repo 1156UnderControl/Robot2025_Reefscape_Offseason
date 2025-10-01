@@ -10,10 +10,9 @@ import frc.robot.subsystems.Intake.IntakeSubsystem;
 import frc.robot.subsystems.scorer.ScorerSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 
-public class AutoScoreCoralAutonomous extends SequentialCommandGroup {
-
-  public AutoScoreCoralAutonomous(IntakeSubsystem intake, ScorerSubsystem scorer, SwerveSubsystem swerve, TargetBranch branch) {
-    addCommands(
+public class AutoScoreCoralAutonomous extends SequentialCommandGroup{
+    public AutoScoreCoralAutonomous(ScorerSubsystem scorer, IntakeSubsystem intake, SwerveSubsystem swerve, TargetBranch branch){
+        addCommands(
         new MoveScorerToPrepareScore(scorer).deadlineFor(new SwerveGoToBackupDirectAutonomous(swerve, branch, true)),
         new SwerveGoToBranchFastAutonomousWithoutBackup(swerve, branch, true),
         new MoveScorerToScoreCoralPosition(scorer).until(() -> !scorer.hasCoral()),

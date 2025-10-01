@@ -7,7 +7,19 @@
         {
           "type": "named",
           "data": {
+            "name": "ResetOdometry Left XY With Vision"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "Set Coral Level L4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Start Path Left"
           }
         },
         {

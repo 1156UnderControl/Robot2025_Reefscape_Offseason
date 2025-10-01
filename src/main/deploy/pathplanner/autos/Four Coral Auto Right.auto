@@ -17,6 +17,12 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "Start Path Right"
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "Score Coral E"
@@ -26,6 +32,12 @@
           "type": "path",
           "data": {
             "pathName": "First Lollipop Right"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Coral"
           }
         },
         {
@@ -43,6 +55,12 @@
         {
           "type": "named",
           "data": {
+            "name": "Intake Coral"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "Score Coral B"
           }
         },
@@ -55,13 +73,19 @@
         {
           "type": "named",
           "data": {
+            "name": "Intake Coral"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "Score Coral A"
           }
         }
       ]
     }
   },
-  "resetOdom": true,
+  "resetOdom": false,
   "folder": "Right Autos",
   "choreoAuto": false
 }

@@ -10,6 +10,7 @@ import frc.Java_Is_UnderControl.Util.AllianceFlipUtil;
 import frc.robot.commands.Auto.AutoScoreCoralAutonomous;
 import frc.robot.commands.Auto.AutoUpdateOdometry;
 import frc.robot.commands.Auto.CollectCoralAutonomous;
+import frc.robot.commands.States.DefaultPosition;
 import frc.robot.constants.FieldConstants.ReefLevel;
 import frc.robot.constants.SwerveConstants.TargetBranch;
 import frc.robot.subsystems.Intake.IntakeSubsystem;
@@ -65,7 +66,7 @@ public class NamedCommandsRegistry {
     for (TargetBranch branch : TargetBranch.values()) {
       String name = branch.name();
       NamedCommands.registerCommand("Score Coral " + name,
-          new AutoScoreCoralAutonomous(intake, scorer, drivetrain, branch));
+          new AutoScoreCoralAutonomous(scorer, intake, drivetrain, branch));
     }
   }
 

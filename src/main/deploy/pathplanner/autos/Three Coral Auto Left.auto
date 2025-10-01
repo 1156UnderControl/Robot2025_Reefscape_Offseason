@@ -17,6 +17,12 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "Start Path Left"
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "Score Coral J"
@@ -26,6 +32,12 @@
           "type": "path",
           "data": {
             "pathName": "First Lollipop Left"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Coral"
           }
         },
         {
@@ -43,13 +55,19 @@
         {
           "type": "named",
           "data": {
+            "name": "Intake Coral"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "Score Coral A"
           }
         }
       ]
     }
   },
-  "resetOdom": true,
+  "resetOdom": false,
   "folder": "Left Autos",
   "choreoAuto": false
 }

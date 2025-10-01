@@ -27,11 +27,29 @@
           "data": {
             "name": "Score Coral E"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "First Lollipop Right"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Coral"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score Coral C"
+          }
         }
       ]
     }
   },
-  "resetOdom": true,
+  "resetOdom": false,
   "folder": "Right Autos",
   "choreoAuto": false
 }

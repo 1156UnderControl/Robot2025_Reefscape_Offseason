@@ -3,44 +3,39 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.9081027178697183,
-        "y": 4.351841714348591
+        "x": 7.159338206976233,
+        "y": 5.315067259022888
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.0123053752200706,
-        "y": 5.032641257702465
+        "x": 6.791379772777288,
+        "y": 5.354252860915492
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.0329067176496478,
-        "y": 6.018718364876761
+        "x": 5.9101462780589795,
+        "y": 5.2029819542253515
       },
       "prevControl": {
-        "x": 1.6105523767605634,
-        "y": 5.429968777508802
+        "x": 6.2352178009463035,
+        "y": 5.266910004951585
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.3862670068027215,
-      "rotationDegrees": 136.25724000372207
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.36285148575638515,
+      "minWaypointRelativePos": 0,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 0.8,
+        "maxVelocity": 1.0,
         "maxAcceleration": 2.5,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -50,19 +45,7 @@
     }
   ],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "Intake Coral",
-      "waypointRelativePos": 0.37936671168958724,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "Intake Coral"
-        }
-      }
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.5,
     "maxAcceleration": 2.5,
@@ -73,13 +56,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 132.36999580711623
+    "rotation": 43.05896217906607
   },
   "reversed": false,
-  "folder": "Right Paths",
+  "folder": "Left Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -177.64074435241366
+    "rotation": 59.0413830247402
   },
   "useDefaultConstraints": true
 }

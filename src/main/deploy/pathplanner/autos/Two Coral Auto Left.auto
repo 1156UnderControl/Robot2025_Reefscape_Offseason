@@ -7,31 +7,31 @@
         {
           "type": "named",
           "data": {
-            "name": "ResetOdometry Right XY With Vision"
+            "name": "ResetOdometry Left XY With Vision"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Set Coral Level 4"
+            "name": "Set Coral Level L4"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Start Path Right"
+            "pathName": "Start Path Left"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Score Coral E"
+            "name": "Score Coral J"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "First Lollipop Right"
+            "pathName": "First Lollipop Left"
           }
         },
         {
@@ -43,31 +43,13 @@
         {
           "type": "named",
           "data": {
-            "name": "Score Coral C"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Second Lollipop Right"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake Coral"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Score Coral A"
+            "name": "Score Coral L"
           }
         }
       ]
     }
   },
   "resetOdom": false,
-  "folder": "Right Autos",
+  "folder": "Left Autos",
   "choreoAuto": false
 }

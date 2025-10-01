@@ -34,12 +34,26 @@
       "rotationDegrees": -141.51629882342914
     }
   ],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.4088746316306485,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 0.3,
+        "maxAcceleration": 2.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
       "name": "Intake Coral",
-      "waypointRelativePos": 0.5091708619842826,
+      "waypointRelativePos": 0.3542331777996064,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
