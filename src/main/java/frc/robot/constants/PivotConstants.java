@@ -30,7 +30,7 @@ public class PivotConstants {
     public class setpoints {
       public static final double MAX_ANGLE = 540;
       public static final double MIN_ANGLE = 0;
-      public static final double NET_ANGLE = 103;
+      public static final double NET_ANGLE = 108;
       public static final double PROCESSOR_ANGLE = 179;
       public static final double L1_ANGLE = 196.5;
       public static final double L2_ANGLE_SCORING = 154.4;
