@@ -51,11 +51,11 @@ public class NamedCommandsRegistry {
             AllianceFlipUtil.apply(new Translation2d(7.18, 3.317)))));
 
     NamedCommands.registerCommand("ResetOdometry Center XY With Vision",
-        new AutoUpdateOdometry(drivetrain, new Translation2d(7.18, 4)));
+        new AutoUpdateOdometry(drivetrain, AllianceFlipUtil.apply(new Translation2d(7.18, 4))));
     NamedCommands.registerCommand("ResetOdometry Right XY With Vision",
-        new AutoUpdateOdometry(drivetrain, new Translation2d(7.18, 3.317)));
+        new AutoUpdateOdometry(drivetrain, AllianceFlipUtil.apply(new Translation2d(7.18, 3.317))));
     NamedCommands.registerCommand("ResetOdometry Left XY With Vision",
-        new AutoUpdateOdometry(drivetrain, new Translation2d(7.18, 4.730)));
+        new AutoUpdateOdometry(drivetrain, AllianceFlipUtil.apply(new Translation2d(7.18, 4.730))));
   }
 
   private void registerIntakeCommands(ScorerSubsystem scorer) {

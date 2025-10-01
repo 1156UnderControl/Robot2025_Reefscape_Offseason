@@ -169,9 +169,9 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     PoseEstimator limelightLeft = new LimelightPoseEstimator("limelight-ggg", false, false, 2);
     Optional<PoseEstimation> limelightPoseEstimation = limelightLeft.getEstimatedPose(this.getPose());
     if (limelightPoseEstimation.isEmpty()) {
-      resetTranslation(defaultPosition);
-      this.positionUpdated = true;
+      resetOdometry(new Pose2d(defaultPosition, this.getHeading()));
       System.out.println("POSE DA LIME É NULA");
+      this.positionUpdated = true;
     } else {
       System.out.println("USANDO A POSE DA LIME");
       resetTranslation(limelightPoseEstimation.get().estimatedPose.getTranslation().toTranslation2d());

@@ -288,7 +288,7 @@ public abstract class BaseSwerveSubsystem extends TunerSwerveDrivetrain implemen
   }
 
   public void resetTranslation(Translation2d translationToReset) {
-    this.resetTranslation(translationToReset);
+    super.resetTranslation(translationToReset);
   }
 
   public void zeroGyro() {
