@@ -17,12 +17,6 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "Start Path Right"
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "Score Coral E"

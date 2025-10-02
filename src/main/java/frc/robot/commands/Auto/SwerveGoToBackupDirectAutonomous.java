@@ -29,7 +29,7 @@ public class SwerveGoToBackupDirectAutonomous extends Command {
 
   @Override
   public boolean isFinished() {
-    return this.swerve.isAtTargetPositionWithoutHeading();
+    return false;
   }
 
   @Override

@@ -17,12 +17,6 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "Start Path Left"
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "Score Coral J"

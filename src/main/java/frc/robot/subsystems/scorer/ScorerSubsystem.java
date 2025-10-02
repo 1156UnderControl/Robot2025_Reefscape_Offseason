@@ -105,7 +105,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         this.setConfigsPivot();
         this.setConfigsEndEffector();
 
-        this.hasCoral = DriverStation.isAutonomous();
+        this.hasCoral = false;
         this.hasAlgae = false;
         this.coralHeightReef = ReefLevel.L1;
         this.algaeHeightReef = AlgaeHeightReef.LOW;

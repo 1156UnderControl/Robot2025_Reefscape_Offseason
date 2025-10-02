@@ -114,8 +114,8 @@ public class SwerveConstants {
       }
 
       public class Fast {
-        public static final double MIN_VELOCITY_POSITION = 0.7;
-        public static final double MAX_VELOCITY_POSITION = 3.4;
+        public static final double MIN_VELOCITY_POSITION = 0.8;
+        public static final double MAX_VELOCITY_POSITION = 4.5;
       }
 
       public class RemoveAlgae {
@@ -130,7 +130,7 @@ public class SwerveConstants {
       }
 
       public class Teleoperated {
-        public static final double MIN_VELOCITY_POSITION = 1.0;
+        public static final double MIN_VELOCITY_POSITION = 1.4;
         public static final double MAX_VELOCITY_POSITION = 4.5;
       }
 
