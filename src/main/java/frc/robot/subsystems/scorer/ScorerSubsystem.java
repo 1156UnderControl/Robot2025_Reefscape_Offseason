@@ -601,7 +601,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         pivotMotor.setMinMotorOutput(-0.65);
         pivotMotor.setMaxMotorOutput(0.65);
         pivotMotor.burnFlash();
-        pivotMotor.setPosition(pivotMotor.getPositionExternalAbsoluteEncoder());
+        pivotMotor.setPosition(90);
     }
     
     private void setConfigsEndEffector() {
