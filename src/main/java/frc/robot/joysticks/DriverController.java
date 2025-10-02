@@ -63,12 +63,12 @@ public class DriverController implements IDriverController {
 
   @Override
   public double getCOS_Joystick() {
-    return -performAllianceInputDirectionCorrection(driverController.getRightX());
+    return -performAllianceInputDirectionCorrection(MathUtil.applyDeadband(driverController.getRightX(), deadBand));
   }
 
   @Override
   public double getSIN_Joystick() {
-    return -performAllianceInputDirectionCorrection(driverController.getRightY());
+    return -performAllianceInputDirectionCorrection(MathUtil.applyDeadband(driverController.getRightY(), deadBand));
   }
 
   @Override
