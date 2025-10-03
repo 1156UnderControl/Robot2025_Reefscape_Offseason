@@ -11,6 +11,7 @@ public class DriverController implements IDriverController {
 
   private static DriverController mInstance = null;
   private final double deadBand;
+  private final double deadBandRotation;
 
   public static DriverController getInstance() {
     if (mInstance == null) {
@@ -24,6 +25,7 @@ public class DriverController implements IDriverController {
 
   private DriverController() {
     this.deadBand = JoystickConstants.JOYSTICK_DEAD_BAND;
+    this.deadBandRotation = 0.15;
     driverController = new CommandXboxController(0);
   }
 
@@ -63,12 +65,12 @@ public class DriverController implements IDriverController {
 
   @Override
   public double getCOS_Joystick() {
-    return -performAllianceInputDirectionCorrection(MathUtil.applyDeadband(driverController.getRightX(), deadBand));
+    return -performAllianceInputDirectionCorrection(MathUtil.applyDeadband(driverController.getRightX(), deadBandRotation));
   }
 
   @Override
   public double getSIN_Joystick() {
-    return -performAllianceInputDirectionCorrection(MathUtil.applyDeadband(driverController.getRightY(), deadBand));
+    return -performAllianceInputDirectionCorrection(MathUtil.applyDeadband(driverController.getRightY(), deadBandRotation));
   }
 
   @Override
