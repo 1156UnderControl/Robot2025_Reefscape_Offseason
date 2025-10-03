@@ -130,7 +130,7 @@ public class RobotContainer {
     ));
     
     this.keyboard.alignToClimb().onTrue(
-      new AlignToClimb(climber, swerve, scorer)
+      new AlignToClimb(climber, swerve, scorer, intake)
     );
     
     bindAutoScoreCommands();
