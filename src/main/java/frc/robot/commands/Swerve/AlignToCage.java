@@ -16,6 +16,7 @@ public class AlignToCage extends Command{
 
     @Override
     public void execute() {
+        this.swerve.setAngleForClimb();
         this.swerve.driveLockedAngleToClimb();
     }
 

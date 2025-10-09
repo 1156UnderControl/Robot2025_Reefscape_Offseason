@@ -1,0 +1,19 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Five Meter Test"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Odometry Autos",
+  "choreoAuto": false
+}

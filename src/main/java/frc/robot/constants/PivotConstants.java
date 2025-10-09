@@ -30,8 +30,8 @@ public class PivotConstants {
     public class setpoints {
       public static final double MAX_ANGLE = 540;
       public static final double MIN_ANGLE = 0;
-      public static final double NET_ANGLE = 0;
-      public static final double PROCESSOR_ANGLE = 0;
+      public static final double NET_ANGLE = 111;
+      public static final double PROCESSOR_ANGLE = 179;
       public static final double L1_ANGLE = 196.5;
       public static final double L2_ANGLE_SCORING = 154.4;
       public static final double L2_ANGLE_PREPARED = 132.3;
@@ -39,14 +39,15 @@ public class PivotConstants {
       public static final double L3_ANGLE_PREPARED = 132.3;
       public static final double L4_ANGLE_SCORING = 174.3;
       public static final double L4_ANGLE_PREPARED = 140.6;
-      public static final double ALGAE_COLLECT_MID = 0;
-      public static final double ALGAE_COLLECT_LOW = 0;
-      public static final double ALGAE_COLLECT_GROUND = 0;
-      public static final double DEFAULT_ANGLE = 266.0;
+      public static final double ALGAE_COLLECT_MID = 180;
+      public static final double ALGAE_COLLECT_LOW = 180;
+      public static final double CLIMB_ANGLE = 204;
+      public static final double ALGAE_COLLECT_GROUND = 197;
+      public static final double DEFAULT_ANGLE = 268.0;
       public static final double DEFAULT_ANGLE_WITH_GAME_PIECE = 90;
       public static final double DEFAULT_ANGLE_WITH_CORAL = 90;
       public static final double DEFAULT_ANGLE_WITH_ALGAE = 90;
-      public static final double CORAL_COLLECT_INDEXER = 265.0;
+      public static final double CORAL_COLLECT_INDEXER = 268.0;
     }
   }
 }

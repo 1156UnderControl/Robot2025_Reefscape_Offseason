@@ -17,7 +17,7 @@ public class CollectCoralFromIndexer extends Command{
     @Override
     public void initialize(){
         this.addRequirements(this.scorer);
-        this.scorer.resetCollectTimer();
+        this.scorer.resetCollectCoralTimer();
     }
 
     @Override
@@ -27,14 +27,13 @@ public class CollectCoralFromIndexer extends Command{
 
     @Override
     public void end(boolean interrupted) {
-        this.scorer.stopEndEffector();
-        this.scorer.overrideHasCoral();
-        this.scorer.resetCollectTimer();
         this.intake.setOverrideCoralModeActive(false);
+        this.scorer.resetCollectCoralTimer(); 
+        this.scorer.overrideHasCoral();
     }
 
     @Override
     public boolean isFinished() {
-        return this.scorer.getCollectTimer() > 0.5;
+        return this.scorer.getCollectCoralTimer() > 0.5;
     }
 }

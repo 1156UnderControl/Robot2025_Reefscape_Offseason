@@ -75,6 +75,7 @@ public class ClimberSubsystem extends SubsystemBase implements ClimberIO {
 
     @Override
     public void goToDefaultPosition(){
+        cageIntakeMotor.set(0);
         pivotMotor.setPositionReference(ClimberConstants.setpoints.DEFAULT_ANGLE);
     }
 

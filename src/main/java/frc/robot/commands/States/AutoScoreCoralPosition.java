@@ -1,14 +1,12 @@
 package frc.robot.commands.States;
 
-import static edu.wpi.first.units.Units.Seconds;
-
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Scorer.MoveScorerToPrepareScore;
-import frc.robot.commands.Scorer.MoveScorerToScorePosition;
+import frc.robot.commands.Scorer.MoveScorerToScoreCoralPosition;
 import frc.robot.constants.SwerveConstants.TargetBranch;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.IDriverController;
@@ -41,7 +39,7 @@ public class AutoScoreCoralPosition extends SequentialCommandGroup {
                             .until(operatorKeyboard.scoreObject()
                                   .or(() -> (swerve.isAtTargetPositionWithoutHeading() && scorer.isScorerAtTargetPosition()))
                                   .or(() -> hasCancelledAutoMove))),
-      new MoveScorerToScorePosition(scorer).until(operatorKeyboard.cancelAction())
+      new MoveScorerToScoreCoralPosition(scorer)
         .alongWith(Commands.run(() -> swerve.driveAlignAngleJoystick(), swerve))
     );
   }

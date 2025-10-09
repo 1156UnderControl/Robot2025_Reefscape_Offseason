@@ -57,8 +57,8 @@ public class SwerveConstants {
   public static final double IS_CONNECTED_DEBOUNCE_TIME = 0.5;
 
   public static final double WHEEL_RADIUS_METERS = 0.04937;
-  public static final double ROBOT_MASS = 65.163;
-  public static final double ROBOT_MOI = 4.957;
+  public static final double ROBOT_MASS = 64.3;
+  public static final double ROBOT_MOI = 6.722;
   public static final double WHEEL_COF = 1.430;
   public static final double GEARBOX_REDUCTION = 1.430;
   public static final double ROBOT_SIZE = 0.830;

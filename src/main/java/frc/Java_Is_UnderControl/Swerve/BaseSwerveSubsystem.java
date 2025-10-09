@@ -246,7 +246,6 @@ public abstract class BaseSwerveSubsystem extends TunerSwerveDrivetrain implemen
   }
 
   private void configureAutoBuilder() {
-
     try {
       var config = RobotConfig.fromGUISettings();
       // Configure AutoBuilder last
@@ -289,7 +288,7 @@ public abstract class BaseSwerveSubsystem extends TunerSwerveDrivetrain implemen
   }
 
   public void resetTranslation(Translation2d translationToReset) {
-    this.resetTranslation(translationToReset);
+    super.resetTranslation(translationToReset);
   }
 
   public void zeroGyro() {
@@ -437,13 +436,13 @@ public abstract class BaseSwerveSubsystem extends TunerSwerveDrivetrain implemen
   }
 
   protected void driveFieldOrientedLockedJoystickAngle(ChassisSpeeds speeds, double xHeading, double yHeading) {
-    double angle = Util.withinHypotDeadband(xHeading, yHeading) ? Units.degreesToRadians(lastDesiredJoystickAngle)
-        : Math.atan2(xHeading, yHeading);
-    this.targetHeadingDegrees = Units.radiansToDegrees(angle);
-    this.lastDesiredJoystickAngle = this.targetHeadingDegrees;
-    applyFieldCentricDrivePointingAtAngle
-        .withTargetDirection(Rotation2d.fromDegrees(targetHeadingDegrees))
-        .withVelocityX(speeds.vx).withVelocityY(speeds.vy);
+    double angle = Util.withinHypotDeadband(xHeading, yHeading) ? lastDesiredJoystickAngle
+          : Math.atan2(xHeading, yHeading);
+      this.targetHeadingDegrees = Units.radiansToDegrees(angle);
+      this.lastDesiredJoystickAngle = Units.degreesToRadians(this.targetHeadingDegrees);
+      applyFieldCentricDrivePointingAtAngle
+          .withTargetDirection(Rotation2d.fromDegrees(targetHeadingDegrees))
+          .withVelocityX(speeds.vx).withVelocityY(speeds.vy);
 
     setControl(applyFieldCentricDrivePointingAtAngle);
   }

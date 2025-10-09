@@ -1,0 +1,43 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Set Coral Level L4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score Coral J"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "First Lollipop Left"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Coral"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score Coral L"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": false,
+  "folder": "Left Autos",
+  "choreoAuto": false
+}

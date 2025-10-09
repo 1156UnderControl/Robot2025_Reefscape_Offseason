@@ -6,7 +6,7 @@ import frc.robot.subsystems.Intake.IntakeSubsystem;
 public class MoveIntakeToCollectPosition extends Command {
   private IntakeSubsystem intake;
   
-    public MoveIntakeToCollectPosition(IntakeSubsystem intake) {
+  public MoveIntakeToCollectPosition(IntakeSubsystem intake) {
       this.intake = intake;
       this.addRequirements(this.intake);
   }

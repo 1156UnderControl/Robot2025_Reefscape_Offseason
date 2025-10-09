@@ -123,7 +123,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
       SwerveDrivetrainConstants drivetrainConstants,
       SwerveModuleConstants<?, ?, ?>... modules) {
     super(new OdometryEnabledSwerveConfig(0.75, pathPlannerConfig,
-        new LimelightPoseEstimator("limelight-right", false, false, 2),
+        new LimelightPoseEstimator("limelight-ggg", false, false, 2),
         new LimelightPoseEstimator("limelight-ggg", false, false, 2),
         new PIDConfig(6, 0, 0),
         new MoveToPosePIDConfig(SwerveConstants.MOVE_TO_POSE_TRANSLATION_PID,
@@ -169,9 +169,11 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     PoseEstimator limelightLeft = new LimelightPoseEstimator("limelight-ggg", false, false, 2);
     Optional<PoseEstimation> limelightPoseEstimation = limelightLeft.getEstimatedPose(this.getPose());
     if (limelightPoseEstimation.isEmpty()) {
-      resetTranslation(defaultPosition);
+      resetOdometry(new Pose2d(defaultPosition, this.getHeading()));
+      System.out.println("POSE DA LIME É NULA");
       this.positionUpdated = true;
     } else {
+      System.out.println("USANDO A POSE DA LIME");
       resetTranslation(limelightPoseEstimation.get().estimatedPose.getTranslation().toTranslation2d());
       this.positionUpdated = true;
     }
@@ -349,9 +351,9 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
 
   public void setAngleForClimb() {
     if (this.getPose().getX() >= FieldConstants.fieldLength / 2) {
-      this.bestAngleForClimb = Rotation2d.fromDegrees(90);
-    } else {
       this.bestAngleForClimb = Rotation2d.fromDegrees(-90);
+    } else {
+      this.bestAngleForClimb = Rotation2d.fromDegrees(90);
     }
   }
 
@@ -390,7 +392,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     ChassisSpeeds desiredSpeeds = this.inputsToChassisSpeeds(controller.getYtranslation(),
         controller.getXtranslation());
     this.state = "DRIVE_ALIGN_ANGLE_CLIMB";
-    this.driveFieldOrientedLockedAngle(desiredSpeeds.times(0.5), this.bestAngleForClimb);
+    this.driveFieldOrientedLockedAngle(desiredSpeeds, this.bestAngleForClimb);
   }
 
   @Override

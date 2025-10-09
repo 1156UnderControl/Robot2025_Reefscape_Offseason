@@ -3,7 +3,6 @@
 package frc.robot.commands.Intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.constants.IntakeConstants;
 import frc.robot.subsystems.Intake.IntakeSubsystem;
 
 
@@ -30,6 +29,6 @@ public MoveIntakeToHomedPosition(IntakeSubsystem intake) {
 
   @Override
   public boolean isFinished() {
-    return this.intake.isIntakeAtTargetPosition(IntakeConstants.tunning_values_intake.setpoints.INTAKE_ANGLE_HOMED);
+    return false;
   }
 }

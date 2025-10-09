@@ -1,0 +1,67 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "ResetOdometry Right XY With Vision"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Set Coral Level 4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score Coral E"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "First Lollipop Right"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Coral"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score Coral C"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Second Lollipop Right"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Coral"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score Coral A"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": false,
+  "folder": "Right Autos",
+  "choreoAuto": false
+}

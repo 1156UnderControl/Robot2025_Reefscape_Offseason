@@ -7,21 +7,28 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
 import frc.robot.constants.FieldConstants.ReefLevel;
 import frc.robot.constants.SwerveConstants.TargetBranch;
+import frc.robot.constants.FieldConstants.Algae.AlgaeHeightReef;
+import frc.robot.constants.FieldConstants.Algae.AlgaeHeightScore;
+import frc.robot.commands.Intake.IntakeExpellCoral;
+import frc.robot.commands.Intake.MoveIntakeToHomedPosition;
+import frc.robot.commands.Intake.OverrideCoralMode;
+import frc.robot.commands.Intake.StopCollecting;
+import frc.robot.commands.Scorer.CollectCoralFromIndexer;
+import frc.robot.commands.Scorer.MoveScorerToDefaultPosition;
 import frc.robot.commands.States.CollectCoralPosition;
 import frc.robot.commands.States.DefaultPosition;
 import frc.robot.commands.States.ScoreObjectPosition;
-import frc.robot.commands.States.AutoScoreCoralPosition;
-import frc.robot.commands.Intake.IntakeExpellCoral;
-import frc.robot.commands.Intake.OverrideCoralMode;
-import frc.robot.commands.Intake.StopCollecting;
 import frc.robot.commands.States.AlignToClimb;
+import frc.robot.commands.States.AutoScoreCoralPosition;
+import frc.robot.commands.States.CollectAlgaePosition;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.OperatorController;
 import frc.robot.subsystems.Intake.IntakeSubsystem;
-//import frc.robot.subsystems.climber.ClimberSubsystem;
+import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.scorer.ScorerSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 
@@ -36,7 +43,8 @@ public class RobotContainer {
     private final SwerveSubsystem swerve;
     private final IntakeSubsystem intake;
     private final ScorerSubsystem scorer;
-    //private final ClimberSubsystem climber;
+    private final ClimberSubsystem climber;
+    private NamedCommandsRegistry namedCommandsRegistry;
   
     private SwerveModuleConstants[] modulesArray = SwerveConstants.getModuleConstants();
   
@@ -45,60 +53,85 @@ public class RobotContainer {
       this.intake = IntakeSubsystem.getInstance();
       this.swerve = new SwerveSubsystem(this.scorer.getTargetCoralReefLevelSupplier(), this.scorer.getTargetAlgaeReefLevelSupplier(), SwerveConstants.getSwerveDrivetrainConstants(),
         modulesArray[0], modulesArray[1], modulesArray[2], modulesArray[3]);
-      //this.climber = ClimberSubsystem.getInstance();
-     
+      this.climber = ClimberSubsystem.getInstance();
       this.driverController = DriverController.getInstance();
       this.keyboard = OperatorController.getInstance();
-
       this.scorer.setIntakeUpSupplier(this.intake.getIntakeUpSupplier());
       this.swerve.setDefaultCommand(Commands.run(() -> swerve.driveAlignAngleJoystick(), this.swerve));
-      this.scorer.setDefaultCommand(new DefaultPosition(intake, scorer));
-      //this.climber.setDefaultCommand(Commands.run(() -> this.climber.goToDefaultPosition(), climber));
+      this.scorer.setDefaultCommand(new MoveScorerToDefaultPosition(scorer));
+      this.intake.setDefaultCommand(new MoveIntakeToHomedPosition(intake));
+      this.climber.setDefaultCommand(Commands.run(() -> this.climber.goToDefaultPosition(), climber));
       this.configureButtonBindings();
+      this.namedCommandsRegistry = new NamedCommandsRegistry(swerve, scorer, intake);
+      setNamedCommandsForAuto();
       autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+  }
+
+  private void setNamedCommandsForAuto() {
+    this.namedCommandsRegistry.registerAllAutoCommands();
   }
 
   private void configureButtonBindings() {
     
     this.driverController.x().onTrue(
-      new CollectCoralPosition(intake, scorer)
-    ).and(() -> !scorer.hasObject());
+      new CollectCoralPosition(intake)
+    ).and(() -> !this.intake.indexerHasCoral() && !this.scorer.hasCoral());
+
+    this.driverController.a().onTrue(
+      new SequentialCommandGroup(Commands.run(() -> this.intake.setOverrideCoralModeActive(true), scorer).until(() -> this.intake.indexerHasCoral()),
+      new CollectCoralFromIndexer(scorer, intake))
+    );
 
     this.driverController.b().onTrue(
       new StopCollecting(intake)
     );
 
-    this.driverController.a().onTrue(
-      new OverrideCoralMode(intake, true)
+    this.driverController.y().whileTrue(
+      new IntakeExpellCoral(intake)
     );
 
     this.keyboard.prepareToScore().and(() -> scorer.hasObject()).onTrue(
-      new ScoreObjectPosition(scorer)
-    );
-
-    this.keyboard.reefL1().onTrue(
-      new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L1))
-    );
-
-    this.keyboard.reefL2().onTrue(
-      new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L2))
-    );
-
-    this.keyboard.reefL3().onTrue(
-      new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L3))
-    );
-
-    this.keyboard.reefL4().onTrue(
-      new InstantCommand(() -> this.scorer.setTargetCoralLevel(ReefLevel.L4))
+      new ScoreObjectPosition(scorer, keyboard)
     );
 
     this.keyboard.cancelAction().onTrue(
       new DefaultPosition(intake, scorer)
     );
+  
+    this.keyboard.removeAlgaeFromBranch().onTrue(
+      new CollectAlgaePosition(scorer, keyboard)
+    );
+
+    this.keyboard.reefL1()
+    .onTrue(new InstantCommand(() -> {
+      this.scorer.setTargetCoralLevel(ReefLevel.L1);
+      this.scorer.setTargetAlgaeLevel(AlgaeHeightReef.GROUND);
+      this.scorer.setTargetAlgaeLevelToScore(AlgaeHeightScore.PROCESSOR);
+    }));
+
+    this.keyboard.reefL2()
+    .onTrue(new InstantCommand(() -> {
+      this.scorer.setTargetCoralLevel(ReefLevel.L2);
+      this.scorer.setTargetAlgaeLevel(AlgaeHeightReef.LOW);
+    }));
+
+    this.keyboard.reefL3()
+    .onTrue(new InstantCommand(() -> {
+      this.scorer.setTargetCoralLevel(ReefLevel.L3);
+      this.scorer.setTargetAlgaeLevel(AlgaeHeightReef.MID);
+      ;
+    }));
+
+    this.keyboard.reefL4().onTrue(
+      new InstantCommand(() -> {
+         this.scorer.setTargetCoralLevel(ReefLevel.L4);
+         this.scorer.setTargetAlgaeLevelToScore(AlgaeHeightScore.NET);
+      }
+    ));
     
-    //this.keyboard.alignToClimb().onTrue(
-    // new AlignToClimb(climber, swerve)
-    //);
+    this.keyboard.alignToClimb().onTrue(
+      new AlignToClimb(climber, swerve, scorer, intake)
+    );
     
     bindAutoScoreCommands();
 
