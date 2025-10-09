@@ -1,4 +1,4 @@
-package frc.Java_Is_UnderControl.Swerve;
+package frc.Java_Is_UnderControl.Swerve.Configs;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;

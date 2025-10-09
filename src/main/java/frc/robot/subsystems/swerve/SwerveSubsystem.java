@@ -24,10 +24,10 @@ import frc.Java_Is_UnderControl.Control.PIDConfig;
 import frc.Java_Is_UnderControl.Logging.EnhancedLoggers.CustomBooleanLogger;
 import frc.Java_Is_UnderControl.Logging.EnhancedLoggers.CustomDoubleLogger;
 import frc.Java_Is_UnderControl.Logging.EnhancedLoggers.CustomStringLogger;
-import frc.Java_Is_UnderControl.Swerve.MoveToPosePIDConfig;
-import frc.Java_Is_UnderControl.Swerve.OdometryEnabledSwerveConfig;
-import frc.Java_Is_UnderControl.Swerve.OdometryEnabledSwerveSubsystem;
-import frc.Java_Is_UnderControl.Swerve.SwervePathPlannerConfig;
+import frc.Java_Is_UnderControl.Swerve.Configs.MoveToPosePIDConfig;
+import frc.Java_Is_UnderControl.Swerve.Configs.OdometryEnabledSwerveConfig;
+import frc.Java_Is_UnderControl.Swerve.Configs.SwervePathPlannerConfig;
+import frc.Java_Is_UnderControl.Swerve.IO.Chassi.Odometry.OdometrySwerveSubsystem;
 import frc.Java_Is_UnderControl.Util.AllianceFlipUtil;
 import frc.Java_Is_UnderControl.Util.StabilizeChecker;
 import frc.Java_Is_UnderControl.Vision.Deprecated.Cameras.LimelightHelpers;
@@ -47,7 +47,7 @@ import frc.robot.constants.SwerveConstants.TargetFace;
 import frc.robot.joysticks.DriverController;
 import frc.robot.pose_estimators.ReefPoseEstimatorWithLimelight;
 
-public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements ISwerve {
+public class SwerveSubsystem extends OdometrySwerveSubsystem implements ISwerve {
 
   private DriverController controller = DriverController.getInstance();
 
@@ -217,8 +217,8 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     super.periodic();
     updateLogs();
     LimelightHelpers.SetRobotOrientation("limelight-ggg",
-        OdometryEnabledSwerveSubsystem.robotOrientation,
-        OdometryEnabledSwerveSubsystem.robotAngularVelocity, 0, 0, 0, 0);
+        OdometrySwerveSubsystem.robotOrientation,
+        OdometrySwerveSubsystem.robotAngularVelocity, 0, 0, 0, 0);
   }
 
   protected void updateLogs() {

@@ -1,17 +1,13 @@
-package frc.Java_Is_UnderControl.Swerve;
+package frc.Java_Is_UnderControl.Swerve.IO.Chassi.Base;
 
-import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
-import static edu.wpi.first.units.Units.Second;
-import static edu.wpi.first.units.Units.Volts;
 
 import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
 
-import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
@@ -40,52 +36,36 @@ import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.Java_Is_UnderControl.Logging.EnhancedLoggers.CustomBooleanLogger;
-import frc.Java_Is_UnderControl.Logging.EnhancedLoggers.CustomChassisSpeedsLogger;
-import frc.Java_Is_UnderControl.Logging.EnhancedLoggers.CustomDoubleLogger;
-import frc.Java_Is_UnderControl.Logging.EnhancedLoggers.CustomPose2dLogger;
+import frc.Java_Is_UnderControl.Swerve.Configs.BaseSwerveConfig;
+import frc.Java_Is_UnderControl.Swerve.Configs.SwervePathPlannerConfig;
 import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants;
 import frc.Java_Is_UnderControl.Swerve.Constants.SwerveConstants.TunerSwerveDrivetrain;
 import frc.Java_Is_UnderControl.Util.AllianceFlipUtil;
 import frc.Java_Is_UnderControl.Util.CustomMath;
 import frc.Java_Is_UnderControl.Util.Util;
 
-public abstract class BaseSwerveSubsystem extends TunerSwerveDrivetrain implements Subsystem {
+public abstract class BaseSwerveSubsystem extends TunerSwerveDrivetrain implements Subsystem, BaseSwerveSubsystemIO {
+
   public double MaxSpeed = SwerveConstants.kSpeedAt12Volts.in(MetersPerSecond);
   protected double MaxAngularRate;
   protected final double driveBaseRadius = Math
       .hypot(SwerveConstants.FrontLeft.LocationX + SwerveConstants.FrontRight.LocationX / 2,
           SwerveConstants.FrontLeft.LocationY + SwerveConstants.BackLeft.LocationY / 2);
 
-  private static final double kSimLoopPeriod = 0.005; // 5 ms
+  private static final double kSimLoopPeriod = 0.005;
   private Notifier m_simNotifier = null;
   private double m_lastSimTime;
-
-  /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
-  private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.fromDegrees(0);
-  /* Red alliance sees forward as 180 degrees (toward blue alliance wall) */
-  private static final Rotation2d kRedAlliancePerspectiveRotation = Rotation2d.fromDegrees(180);
-  /* Keep track if we've ever applied the operator perspective before or not */
-  private boolean m_hasAppliedOperatorPerspective = false;
 
   private final SwerveRequest.ApplyRobotSpeeds applyRobotCentricSpeeds = new SwerveRequest.ApplyRobotSpeeds()
       .withDriveRequestType(DriveRequestType.Velocity);
   private final SwervePathPlannerConfig pathPlannerConfig;
 
-  /* Setting up bindings for necessary control of the swerve drive platform */
   private final SwerveRequest.FieldCentric applyFieldCentricDrive = new SwerveRequest.FieldCentric();
-  private final SwerveRequest.PointWheelsAt applyPointWheelsAt = new SwerveRequest.PointWheelsAt();
   private SwerveRequest.FieldCentricFacingAngle applyFieldCentricDrivePointingAtAngle = new FieldCentricFacingAngle();
   private SwerveRequest.RobotCentric applyRobotCentricDrive = new RobotCentric();
   private SwerveRequest.SwerveDriveBrake applyBrakeSwerveX = new SwerveDriveBrake();
 
-  /* Swerve requests to apply during SysId characterization */
-  private final SwerveRequest.SysIdSwerveTranslation m_translationCharacterization = new SwerveRequest.SysIdSwerveTranslation();
-  private final SwerveRequest.SysIdSwerveSteerGains m_steerCharacterization = new SwerveRequest.SysIdSwerveSteerGains();
-  private final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
-
-  private Matrix<N3, N1> actualVisionStdDev = VecBuilder.fill(0.7, 0.7, Double.POSITIVE_INFINITY);
+  private Matrix<N3, N1> actualVisionStdDev;
 
   private ChassisSpeeds targetSpeeds = new ChassisSpeeds();
 
@@ -93,88 +73,9 @@ public abstract class BaseSwerveSubsystem extends TunerSwerveDrivetrain implemen
 
   private double lastDesiredJoystickAngle;
 
-  private CustomChassisSpeedsLogger targetSpeedsLogger = new CustomChassisSpeedsLogger("/SwerveSubsystem/TargetSpeeds");
+  private final BaseSwerveSubsystemIOInputsAutoLogged swerveInputs;
 
-  private CustomDoubleLogger absoluteTargetSpeedLogger = new CustomDoubleLogger("/SwerveSubsystem/AbsoluteTargetSpeed");
-
-  private CustomChassisSpeedsLogger measuredSpeedsLogger = new CustomChassisSpeedsLogger(
-      "/SwerveSubsystem/MeasuredSpeeds");
-
-  private CustomDoubleLogger absoluteMeasuredSpeedLogger = new CustomDoubleLogger(
-      "/SwerveSubsystem/AbsoluteMeasuredSpeed");
-
-  private CustomDoubleLogger stdDevXYLogger = new CustomDoubleLogger("/SwerveSubsystem/XyStdDev");
-
-  private CustomDoubleLogger stdDevThetaLogger = new CustomDoubleLogger("/SwerveSubsystem/ThetaStdDev");
-
-  private CustomPose2dLogger poseLogger = new CustomPose2dLogger("/SwerveSubsystem/Pose");
-
-  private CustomDoubleLogger targetHeadingLogger = new CustomDoubleLogger("/SwerveSubsystem/TargetHeadingDegrees");
-
-  private CustomDoubleLogger measuredHeadingLogger = new CustomDoubleLogger("/SwerveSubsystem/MeasuredHeadingDegrees");
-
-  private CustomBooleanLogger isAtTargetHeading = new CustomBooleanLogger("/SwerveSubsystem/IsAtTargetHeading");
-
-  /*
-   * SysId routine for characterizing translation. This is used to find PID gains
-   * for the drive motors.
-   */
-  private final SysIdRoutine m_sysIdRoutineTranslation = new SysIdRoutine(
-      new SysIdRoutine.Config(
-          null, // Use default ramp rate (1 V/s)
-          Volts.of(4), // Reduce dynamic step voltage to 4 V to prevent brownout
-          null, // Use default timeout (10 s)
-          // Log state with SignalLogger class
-          state -> SignalLogger.writeString("SysIdTranslation_State", state.toString())),
-      new SysIdRoutine.Mechanism(
-          output -> setControl(m_translationCharacterization.withVolts(output)),
-          null,
-          this));
-
-  /*
-   * SysId routine for characterizing steer. This is used to find PID gains for
-   * the steer motors.
-   */
-  private final SysIdRoutine m_sysIdRoutineSteer = new SysIdRoutine(
-      new SysIdRoutine.Config(
-          null, // Use default ramp rate (1 V/s)
-          Volts.of(7), // Use dynamic voltage of 7 V
-          null, // Use default timeout (10 s)
-          // Log state with SignalLogger class
-          state -> SignalLogger.writeString("SysIdSteer_State", state.toString())),
-      new SysIdRoutine.Mechanism(
-          volts -> setControl(m_steerCharacterization.withVolts(volts)),
-          null,
-          this));
-
-  /*
-   * SysId routine for characterizing rotation.
-   * This is used to find PID gains for the FieldCentricFacingAngle
-   * HeadingController.
-   * See the documentation of SwerveRequest.SysIdSwerveRotation for info on
-   * importing the log to SysId.
-   */
-  private final SysIdRoutine m_sysIdRoutineRotation = new SysIdRoutine(
-      new SysIdRoutine.Config(
-          /* This is in radians per second², but SysId only supports "volts per second" */
-          Volts.of(Math.PI / 6).per(Second),
-          /* This is in radians per second, but SysId only supports "volts" */
-          Volts.of(Math.PI),
-          null, // Use default timeout (10 s)
-          // Log state with SignalLogger class
-          state -> SignalLogger.writeString("SysIdRotation_State", state.toString())),
-      new SysIdRoutine.Mechanism(
-          output -> {
-            /* output is actually radians per second, but SysId only supports "volts" */
-            setControl(m_rotationCharacterization.withRotationalRate(output.in(Volts)));
-            /* also log the requested output for SysId */
-            SignalLogger.writeDouble("Rotational_Rate", output.in(Volts));
-          },
-          null,
-          this));
-
-  /* The SysId routine to test */
-  private SysIdRoutine m_sysIdRoutineToApply = m_sysIdRoutineRotation;
+  private boolean isAtTargetHeading;
 
   protected BaseSwerveSubsystem(BaseSwerveConfig config,
       SwerveDrivetrainConstants drivetrainConstants, double odometryUpdateFrequency,
@@ -184,14 +85,17 @@ public abstract class BaseSwerveSubsystem extends TunerSwerveDrivetrain implemen
     applyFieldCentricDrivePointingAtAngle.HeadingController = new PhoenixPIDController(config.headingPidConfig.kP,
         config.headingPidConfig.kI, config.headingPidConfig.kD);
     applyFieldCentricDrivePointingAtAngle.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
-    MaxAngularRate = RotationsPerSecond.of(config.maxRotationRate).in(RadiansPerSecond); // fraction of a rotation per
-    // second
+    MaxAngularRate = RotationsPerSecond.of(config.maxRotationRate).in(RadiansPerSecond);
+  
     pathPlannerConfig = config.pathPlannerConfig;
     if (Utils.isSimulation()) {
       startSimThread();
     }
     configureAutoBuilder();
     this.lastDesiredJoystickAngle = AllianceFlipUtil.shouldFlip() ? 0 : 180;
+    this.swerveInputs = new BaseSwerveSubsystemIOInputsAutoLogged();
+    this.isAtTargetHeading = false;
+    this.actualVisionStdDev = VecBuilder.fill(0.7, 0.7, Double.POSITIVE_INFINITY);
   }
 
   protected BaseSwerveSubsystem(BaseSwerveConfig config, SwerveDrivetrainConstants drivetrainConstants,
@@ -201,8 +105,8 @@ public abstract class BaseSwerveSubsystem extends TunerSwerveDrivetrain implemen
         config.headingPidConfig.kI, config.headingPidConfig.kD);
     applyFieldCentricDrivePointingAtAngle.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
 
-    MaxAngularRate = RotationsPerSecond.of(config.maxRotationRate).in(RadiansPerSecond); // fraction of a rotation per
-                                                                                         // second
+    MaxAngularRate = RotationsPerSecond.of(config.maxRotationRate).in(RadiansPerSecond);
+                                                                                        
     pathPlannerConfig = config.pathPlannerConfig;
     if (Utils.isSimulation()) {
       startSimThread();
@@ -210,99 +114,70 @@ public abstract class BaseSwerveSubsystem extends TunerSwerveDrivetrain implemen
     configureAutoBuilder();
 
     this.lastDesiredJoystickAngle = AllianceFlipUtil.shouldFlip() ? 0 : 180;
+    this.swerveInputs = new BaseSwerveSubsystemIOInputsAutoLogged();
+    this.isAtTargetHeading = false;
+    this.actualVisionStdDev = VecBuilder.fill(0.7, 0.7, Double.POSITIVE_INFINITY);
   }
 
-  /**
-   * Returns a command that applies the specified control request to this swerve
-   * drivetrain.
-   *
-   * @param request Function returning the request to apply
-   * @return Command to run
-   */
+  @Override
   public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
     return run(() -> this.setControl(requestSupplier.get()));
-  }
-
-  /**
-   * Runs the SysId Quasistatic test in the given direction for the routine
-   * specified by {@link #m_sysIdRoutineToApply}.
-   *
-   * @param direction Direction of the SysId Quasistatic test
-   * @return Command to run
-   */
-  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
-    return m_sysIdRoutineToApply.quasistatic(direction);
-  }
-
-  /**
-   * Runs the SysId Dynamic test in the given direction for the routine
-   * specified by {@link #m_sysIdRoutineToApply}.
-   *
-   * @param direction Direction of the SysId Dynamic test
-   * @return Command to run
-   */
-  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
-    return m_sysIdRoutineToApply.dynamic(direction);
   }
 
   private void configureAutoBuilder() {
     try {
       var config = RobotConfig.fromGUISettings();
-      // Configure AutoBuilder last
       AutoBuilder.configure(
-          this::getPose, // Robot pose supplier
-          this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
-          this::getRobotVelocity, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+          this::getPose,
+          this::resetPose,
+          this::getRobotVelocity,
           (speeds, feedforwards) -> setControl(
 
               applyRobotCentricSpeeds.withSpeeds(speeds)
                   .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
                   .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())),
-          new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for
-                                          // holonomic drive trains
-              pathPlannerConfig.translationPid, // Translation PID constants
-              pathPlannerConfig.anglePid // Rotation PID constants
+          new PPHolonomicDriveController(
+                                        
+              pathPlannerConfig.translationPid,
+              pathPlannerConfig.anglePid
           ),
-          config, // The robot configuration
+          config,
           () -> {
-            // Boolean supplier that controls when the path will be mirrored for the red
-            // alliance
-            // This will flip the path being followed to the red side of the field.
-            // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-
             var alliance = DriverStation.getAlliance();
             if (alliance.isPresent()) {
               return alliance.get() == DriverStation.Alliance.Red;
             }
             return false;
           },
-          this // Reference to this subsystem to set requirements
+          this
       );
     } catch (Exception ex) {
       DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder", ex.getStackTrace());
     }
   }
 
+  @Override
   public void resetOdometry(Pose2d initialHolonomicPose) {
     this.resetPose(initialHolonomicPose);
   }
 
+  @Override
   public void resetTranslation(Translation2d translationToReset) {
     super.resetTranslation(translationToReset);
   }
 
+  @Override
   public void zeroGyro() {
     super.getPigeon2().setYaw(0);
   }
 
-  public void setHeadingCorrection(boolean active) {
-    // ;
-  }
+  @Override
+  public void setHeadingCorrection(boolean active) {}
 
+  @Override
   public void setMotorBrake(boolean brake) {
     if (brake) {
       super.configNeutralMode(NeutralModeValue.Brake);
-
     } else {
       super.configNeutralMode(NeutralModeValue.Coast);
     }
@@ -311,7 +186,7 @@ public abstract class BaseSwerveSubsystem extends TunerSwerveDrivetrain implemen
   protected Pose2d getPose() {
     return super.getState().Pose;
   }
-
+    
   @Override
   public void addVisionMeasurement(Pose2d visionRobotPoseMeters, double timestampSeconds,
       Matrix<N3, N1> visionMeasurementStdDevs) {
@@ -381,6 +256,7 @@ public abstract class BaseSwerveSubsystem extends TunerSwerveDrivetrain implemen
     return values;
   }
 
+  @Override
   public Supplier<SwerveRequest> lock() {
     return () -> applyBrakeSwerveX;
   }
@@ -389,42 +265,23 @@ public abstract class BaseSwerveSubsystem extends TunerSwerveDrivetrain implemen
 
   @Override
   public void periodic() {
-    /*
-     * Periodically try to apply the operator perspective.
-     * If we haven't applied the operator perspective before, then we should apply
-     * it regardless of DS state.
-     * This allows us to correct the perspective in case the robot code restarts
-     * mid-match.
-     * Otherwise, only check and apply the operator perspective if the DS is
-     * disabled.
-     * This ensures driving behavior doesn't change until an explicit disable event
-     * occurs during testing.
-     */
-    // if (!m_hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
-    // DriverStation.getAlliance().ifPresent(allianceColor -> {
-    // setOperatorPerspectiveForward(
-    // allianceColor == Alliance.Red
-    // ? kRedAlliancePerspectiveRotation
-    // : kBlueAlliancePerspectiveRotation);
-    // m_hasAppliedOperatorPerspective = true;
-    // });
-    // }
     this.updateBaseLogs();
     this.updateLogs();
-    Logger.recordOutput("TargetHeading", this.targetHeadingDegrees);
   }
 
   private void updateBaseLogs() {
-    this.stdDevXYLogger.append(actualVisionStdDev.get(0, 0));
-    this.stdDevThetaLogger.append(actualVisionStdDev.get(2, 0));
-    this.poseLogger.appendRadians(this.getPose());
-    this.targetSpeedsLogger.append(this.targetSpeeds);
-    this.absoluteTargetSpeedLogger.append(CustomMath.toAbsoluteSpeed(this.targetSpeeds));
-    this.measuredSpeedsLogger.append(this.getRobotVelocity());
-    this.absoluteMeasuredSpeedLogger.append(this.getAbsoluteRobotVelocity());
-    this.targetHeadingLogger.append(this.targetHeadingDegrees);
-    this.measuredHeadingLogger.append(this.getHeading().getDegrees());
-    this.poseLogger.appendRadians(this.getPose());
+    this.swerveInputs.stdDevXY = actualVisionStdDev.get(0, 0);
+    this.swerveInputs.stdDevTheta = actualVisionStdDev.get(2, 0);
+    this.swerveInputs.currentPose = this.getPose();
+    this.swerveInputs.targetSpeeds = this.targetSpeeds;
+    this.swerveInputs.absoluteTargetSpeed = CustomMath.toAbsoluteSpeed(this.targetSpeeds);
+    this.swerveInputs.measuredSpeeds = this.getRobotVelocity();
+    this.swerveInputs.absoluteMeasuredSpeed = this.getAbsoluteRobotVelocity();
+    this.swerveInputs.targetHeadingDegrees = this.targetHeadingDegrees;
+    this.swerveInputs.measuredHeadingDegrees = this.getHeading().getDegrees();
+    this.swerveInputs.isAtTargetHeading = this.isAtTargetHeading;
+
+    Logger.processInputs("Subsystems/Swerve/", this.swerveInputs);
   }
 
   protected void driveFieldOrientedLockedAngle(ChassisSpeeds speeds, Rotation2d targetHeading) {
@@ -473,27 +330,27 @@ public abstract class BaseSwerveSubsystem extends TunerSwerveDrivetrain implemen
 
   protected boolean isAtTargetHeading(double toleranceDegrees) {
     if (this.targetHeadingDegrees == Double.NaN) {
-      this.isAtTargetHeading.append(false);
+      this.isAtTargetHeading = false;
       return false;
     }
     Rotation2d targetHeading = Rotation2d.fromDegrees(this.targetHeadingDegrees);
     Rotation2d currentHeading = this.getHeading();
     double headingDifferenceDegrees = Math.abs(targetHeading.minus(currentHeading).getDegrees());
     boolean isAtHeading = headingDifferenceDegrees <= toleranceDegrees;
-    this.isAtTargetHeading.append(isAtHeading);
+    this.isAtTargetHeading = isAtHeading;
     return isAtHeading;
   }
 
   private void startSimThread() {
     m_lastSimTime = Utils.getCurrentTimeSeconds();
 
-    /* Run simulation at a faster rate so PID gains behave more reasonably */
+
     m_simNotifier = new Notifier(() -> {
       final double currentTime = Utils.getCurrentTimeSeconds();
       double deltaTime = currentTime - m_lastSimTime;
       m_lastSimTime = currentTime;
 
-      /* use the measured time delta, get battery voltage from WPILib */
+  
       updateSimState(deltaTime, RobotController.getBatteryVoltage());
     });
     m_simNotifier.startPeriodic(kSimLoopPeriod);

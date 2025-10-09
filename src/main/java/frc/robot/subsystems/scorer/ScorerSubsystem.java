@@ -125,7 +125,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         this.goingToClimbElevatorPosition = false;
     }
 
-    private void updateLogs(ScorerIOInputsAutoLogged scorerInputs) {
+    private void updateLogs() {
         scorerInputs.hasCoral = this.hasCoral;
         scorerInputs.hasAlgae = this.hasAlgae;
         scorerInputs.isAtPositionElevator = isElevatorAtTargetPosition();
@@ -159,7 +159,7 @@ public class ScorerSubsystem extends SubsystemBase implements ScorerIO{
         if(this.isUpdatingInternalPivotEncoderNecessary() && DriverStation.isDisabled()){
             this.updateInternalPivotEncoder();
         }
-        this.updateLogs(scorerInputs);
+        this.updateLogs();
         SmartDashboard.putNumber("CollectCoralTimer", this.getCollectCoralTimer());
     }
 

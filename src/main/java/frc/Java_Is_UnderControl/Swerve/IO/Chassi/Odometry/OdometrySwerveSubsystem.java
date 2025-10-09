@@ -1,4 +1,4 @@
-package frc.Java_Is_UnderControl.Swerve;
+package frc.Java_Is_UnderControl.Swerve.IO.Chassi.Odometry;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -27,11 +27,13 @@ import frc.Java_Is_UnderControl.Logging.EnhancedLoggers.CustomBooleanLogger;
 import frc.Java_Is_UnderControl.Logging.EnhancedLoggers.CustomDoubleLogger;
 import frc.Java_Is_UnderControl.Logging.EnhancedLoggers.CustomPose2dLogger;
 import frc.Java_Is_UnderControl.Logging.EnhancedLoggers.CustomStringLogger;
+import frc.Java_Is_UnderControl.Swerve.Configs.OdometryEnabledSwerveConfig;
+import frc.Java_Is_UnderControl.Swerve.IO.Chassi.Base.BaseSwerveSubsystem;
 import frc.Java_Is_UnderControl.Util.AllianceFlipUtil;
 import frc.Java_Is_UnderControl.Vision.Odometry.PoseEstimation;
 import frc.Java_Is_UnderControl.Vision.Odometry.PoseEstimator;
 
-public abstract class OdometryEnabledSwerveSubsystem extends BaseSwerveSubsystem {
+public abstract class OdometrySwerveSubsystem extends BaseSwerveSubsystem {
 
   public static double robotOrientation;
 
@@ -75,7 +77,7 @@ public abstract class OdometryEnabledSwerveSubsystem extends BaseSwerveSubsystem
   // the path will only be used for the path.
   PathConstraints constraints;
 
-  public OdometryEnabledSwerveSubsystem(OdometryEnabledSwerveConfig config,
+  public OdometrySwerveSubsystem(OdometryEnabledSwerveConfig config,
       SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants... modules) {
     super(config, drivetrainConstants, modules);
     this.moveToPoseXAxisPid = config.moveToPosePIDConfig.getPidTranslation();
@@ -90,7 +92,7 @@ public abstract class OdometryEnabledSwerveSubsystem extends BaseSwerveSubsystem
     this.targetAimPose = new Pose2d();
   }
 
-  public OdometryEnabledSwerveSubsystem(OdometryEnabledSwerveConfig config,
+  public OdometrySwerveSubsystem(OdometryEnabledSwerveConfig config,
       SwerveDrivetrainConstants drivetrainConstants, double odometryUpdateFrequency,
       Matrix<N3, N1> odometryStandardDeviation, Matrix<N3, N1> visionStandardDeviation,
       SwerveModuleConstants... modules) {
@@ -365,8 +367,8 @@ public abstract class OdometryEnabledSwerveSubsystem extends BaseSwerveSubsystem
   }
 
   private void updateLimelightRequiredValues() {
-    OdometryEnabledSwerveSubsystem.robotAngularVelocity = this.getRobotVelocity().omega;
-    OdometryEnabledSwerveSubsystem.robotOrientation = this.getState().Pose.getRotation().getDegrees();
+    OdometrySwerveSubsystem.robotAngularVelocity = this.getRobotVelocity().omega;
+    OdometrySwerveSubsystem.robotOrientation = this.getState().Pose.getRotation().getDegrees();
   }
 
   private void updateOdometrySwerveLogs() {

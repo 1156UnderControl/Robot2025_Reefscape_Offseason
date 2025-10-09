@@ -1,4 +1,4 @@
-package frc.Java_Is_UnderControl.Swerve;
+package frc.Java_Is_UnderControl.Swerve.Configs;
 
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.path.PathConstraints;

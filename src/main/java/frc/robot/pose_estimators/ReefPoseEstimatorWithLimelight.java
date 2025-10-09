@@ -12,7 +12,7 @@ import frc.Java_Is_UnderControl.Logging.EnhancedLoggers.CustomBooleanLogger;
 import frc.Java_Is_UnderControl.Logging.EnhancedLoggers.CustomDoubleLogger;
 import frc.Java_Is_UnderControl.Logging.EnhancedLoggers.CustomPose2dLogger;
 import frc.Java_Is_UnderControl.Logging.EnhancedLoggers.CustomStringLogger;
-import frc.Java_Is_UnderControl.Swerve.OdometryEnabledSwerveSubsystem;
+import frc.Java_Is_UnderControl.Swerve.IO.Chassi.Odometry.OdometrySwerveSubsystem;
 import frc.Java_Is_UnderControl.Vision.Deprecated.Cameras.LimelightHelpers;
 import frc.Java_Is_UnderControl.Vision.Deprecated.Cameras.LimelightHelpers.PoseEstimate;
 import frc.Java_Is_UnderControl.Vision.Odometry.PoseEstimation;
@@ -150,7 +150,7 @@ public class ReefPoseEstimatorWithLimelight implements PoseEstimator {
     PoseEstimation poseEstimationRight = null;
 
     if (LimelightHelpers.getTV(this.limelightLeftName) && isArightBranchTarget
-        && Math.abs(OdometryEnabledSwerveSubsystem.robotAngularVelocity) <= 3) {
+        && Math.abs(OdometrySwerveSubsystem.robotAngularVelocity) <= 3) {
       PoseEstimate limelightPoseEstimateLeft = LimelightHelpers
           .getBotPoseEstimate_wpiBlue_MegaTag2(this.limelightLeftName);
       if (limelightPoseEstimateLeft.pose.getX() == 0 && limelightPoseEstimateLeft.pose.getY() == 0) {

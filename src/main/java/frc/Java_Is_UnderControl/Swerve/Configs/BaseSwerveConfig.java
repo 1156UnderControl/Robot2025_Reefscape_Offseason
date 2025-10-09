@@ -1,4 +1,4 @@
-package frc.Java_Is_UnderControl.Swerve;
+package frc.Java_Is_UnderControl.Swerve.Configs;
 
 import frc.Java_Is_UnderControl.Control.PIDConfig;
 
