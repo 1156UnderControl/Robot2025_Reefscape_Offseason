@@ -75,7 +75,7 @@ public class RobotContainer {
     
     this.driverController.x().onTrue(
       new CollectCoralPosition(intake)
-    );
+    ).and(() -> !this.intake.indexerHasCoral() && !this.scorer.hasCoral());
 
     this.driverController.a().onTrue(
       new SequentialCommandGroup(Commands.run(() -> this.intake.setOverrideCoralModeActive(true), scorer).until(() -> this.intake.indexerHasCoral()),
