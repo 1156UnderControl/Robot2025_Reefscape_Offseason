@@ -8,7 +8,7 @@ Code for Ir. Paulo 2025 Reefscape Off-Season Robot
 
 • Controls
 
-Ultralisk uses a control board that merges driver and operator inputs into a single interface. The driver handles movement and scoring triggers while the operator controller provides overrides and fine control when needed.
+Ir. Paulo uses a control board that merges driver and operator inputs into a single interface. The driver handles movement and scoring triggers while the operator controller provides overrides and fine control when needed.
 
 • Vision
 
