@@ -143,41 +143,41 @@ public class RobotContainer {
   }
 
   private void bindAutoScoreCommands() {
-    this.keyboard.goToReefA().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.A));
-    NamedCommands.registerCommand("Auto Score Coral A", new AutoScoreCoralPosition(scorer, swerve, TargetBranch.A));
+    // this.keyboard.goToReefA().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.A));
+    // NamedCommands.registerCommand("Auto Score Coral A", new AutoScoreCoralPosition(scorer, swerve, TargetBranch.A));
 
-    this.keyboard.goToReefB().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.B));
-    NamedCommands.registerCommand("Auto Score Coral B", new AutoScoreCoralPosition(scorer, swerve, TargetBranch.B));
+    // this.keyboard.goToReefB().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.B));
+    // NamedCommands.registerCommand("Auto Score Coral B", new AutoScoreCoralPosition(scorer, swerve, TargetBranch.B));
 
-    this.keyboard.goToReefC().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.C));
-    NamedCommands.registerCommand("Auto Score Coral C", new AutoScoreCoralPosition(scorer, swerve, TargetBranch.C));
+    // this.keyboard.goToReefC().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.C));
+    // NamedCommands.registerCommand("Auto Score Coral C", new AutoScoreCoralPosition(scorer, swerve, TargetBranch.C));
 
-    this.keyboard.goToReefD().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.D));
-    NamedCommands.registerCommand("Auto Score Coral D", new AutoScoreCoralPosition(scorer, swerve, TargetBranch.D));
+    // this.keyboard.goToReefD().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.D));
+    // NamedCommands.registerCommand("Auto Score Coral D", new AutoScoreCoralPosition(scorer, swerve, TargetBranch.D));
 
-    this.keyboard.goToReefE().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.E));
-    NamedCommands.registerCommand("Auto Score Coral E", new AutoScoreCoralPosition(scorer, swerve, TargetBranch.E));
+    // this.keyboard.goToReefE().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.E));
+    // NamedCommands.registerCommand("Auto Score Coral E", new AutoScoreCoralPosition(scorer, swerve, TargetBranch.E));
 
-    this.keyboard.goToReefF().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.F));
-    NamedCommands.registerCommand("Auto Score Coral F", new AutoScoreCoralPosition(scorer, swerve, TargetBranch.F));
+    // this.keyboard.goToReefF().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.F));
+    // NamedCommands.registerCommand("Auto Score Coral F", new AutoScoreCoralPosition(scorer, swerve, TargetBranch.F));
 
-    this.keyboard.goToReefG().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.G));
-    NamedCommands.registerCommand("Auto Score Coral G", new AutoScoreCoralPosition(scorer, swerve, TargetBranch.G));
+    // this.keyboard.goToReefG().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.G));
+    // NamedCommands.registerCommand("Auto Score Coral G", new AutoScoreCoralPosition(scorer, swerve, TargetBranch.G));
 
-    this.keyboard.goToReefH().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.H));
-    NamedCommands.registerCommand("Auto Score Coral H", new AutoScoreCoralPosition(scorer, swerve, TargetBranch.H));
+    // this.keyboard.goToReefH().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.H));
+    // NamedCommands.registerCommand("Auto Score Coral H", new AutoScoreCoralPosition(scorer, swerve, TargetBranch.H));
 
-    this.keyboard.goToReefI().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.I));
-    NamedCommands.registerCommand("Auto Score Coral I", new AutoScoreCoralPosition(scorer, swerve, TargetBranch.I));
+    // this.keyboard.goToReefI().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.I));
+    // NamedCommands.registerCommand("Auto Score Coral I", new AutoScoreCoralPosition(scorer, swerve, TargetBranch.I));
 
-    this.keyboard.goToReefJ().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.J));
-    NamedCommands.registerCommand("Auto Score Coral J", new AutoScoreCoralPosition(scorer, swerve, TargetBranch.J));
+    // this.keyboard.goToReefJ().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.J));
+    // NamedCommands.registerCommand("Auto Score Coral J", new AutoScoreCoralPosition(scorer, swerve, TargetBranch.J));
 
-    this.keyboard.goToReefK().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.K));
-    NamedCommands.registerCommand("Auto Score Coral K", new AutoScoreCoralPosition(scorer, swerve, TargetBranch.K));
+    // this.keyboard.goToReefK().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.K));
+    // NamedCommands.registerCommand("Auto Score Coral K", new AutoScoreCoralPosition(scorer, swerve, TargetBranch.K));
 
-    this.keyboard.goToReefL().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.L));
-    NamedCommands.registerCommand("Auto Score Coral L", new AutoScoreCoralPosition(scorer, swerve, TargetBranch.L));
+    // this.keyboard.goToReefL().onTrue(new AutoScoreCoralPosition(scorer, swerve, TargetBranch.L));
+    // NamedCommands.registerCommand("Auto Score Coral L", new AutoScoreCoralPosition(scorer, swerve, TargetBranch.L));
   }
   
   public Command getAutonomousCommand() {
