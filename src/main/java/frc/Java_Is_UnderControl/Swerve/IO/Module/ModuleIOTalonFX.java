@@ -1,4 +1,4 @@
-package frc.Java_Is_UnderControl.Swerve.IO.Modules;
+package frc.Java_Is_UnderControl.Swerve.IO.Module;
 
 import static frc.robot.util.PhoenixUtil.*;
 
@@ -155,7 +155,7 @@ public class ModuleIOTalonFX implements ModuleIO {
       SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>
           constants,
       TalonFX steerTalon) {
-    var configuration = new TalonFXConfiguration();
+    TalonFXConfiguration configuration = new TalonFXConfiguration();
     configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     configuration.Slot0 = constants.SteerMotorGains;
     configuration.Feedback.FeedbackRemoteSensorID = constants.EncoderId;
@@ -291,5 +291,25 @@ public class ModuleIOTalonFX implements ModuleIO {
     SwerveModuleState state = new SwerveModuleState(speedMetersPerSecond, angle);
     previousModuleState = state;
     return state;
+  }
+
+  @Override
+  public void setModuleBrakeMode(boolean isBrake) {
+    TalonFXConfiguration configuration = new TalonFXConfiguration();
+    configuration.MotorOutput.NeutralMode = isBrake ? NeutralModeValue.Brake : NeutralModeValue.Coast;
+
+    tryUntilOk(
+        SwerveConstants.MAX_NUMBER_CONFIG_ATTEMPTS,
+        () ->
+            this.steerTalon
+                .getConfigurator()
+                .apply(configuration, SwerveConstants.TIMEOUT_SECONDS_CONFIG));
+
+    tryUntilOk(
+        SwerveConstants.MAX_NUMBER_CONFIG_ATTEMPTS,
+        () ->
+            this.driveTalon
+                .getConfigurator()
+                .apply(configuration, SwerveConstants.TIMEOUT_SECONDS_CONFIG));
   }
 }

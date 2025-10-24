@@ -1,4 +1,4 @@
-package frc.Java_Is_UnderControl.Swerve.IO.Modules;
+package frc.Java_Is_UnderControl.Swerve.IO.Module;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -40,4 +40,6 @@ public interface ModuleIO {
   public void setSteerPosition(Rotation2d rotation);
 
   public SwerveModuleState getCurrentModuleState();
+
+  public void setModuleBrakeMode(boolean isBrake);
 }
